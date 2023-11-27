@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4e67c26d682c744418c5e6631269ebee
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - grassMat: {fileID: 2100000, guid: 0e41c64224f7bbb4bbd3715c49c3ce93, type: 2}
+  - dirtMat: {fileID: 2100000, guid: b16f72ee2bc573a4dbd5a8500a5a45c4, type: 2}
+  - wetDirtMat: {fileID: 2100000, guid: cbc71e8b43ffb0742a497c384534230d, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
