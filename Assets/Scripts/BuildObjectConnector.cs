@@ -59,6 +59,8 @@ public class BuildObjectConnector : MonoBehaviour
                     list[i].isConnected = true;
                 }
 
+                parent.CreateGroupBounds();
+
                 return isConnectionComplete;
             }
 

@@ -10,12 +10,12 @@ public class BuildingSystem : MonoBehaviour
 
     public GridLayout gridLayout;
     [SerializeField] Grid grid;
-    [SerializeField] Tilemap groundTilemap;
-    [SerializeField] Tilemap objectTilemap;
+    public Tilemap groundTilemap;
+    public Tilemap objectTilemap;
 
-    [SerializeField] TileBase3D fence;
-    [SerializeField] TileBase3D fenceCorner;
-    [SerializeField] TileBase3D fenceDoor;
+    public TileBase3D fence;
+    public TileBase3D fenceCorner;
+    public TileBase3D fenceDoor;
 
     public BuildObject objectToPlace;
     public TileBase3D tileToPlace;
@@ -74,7 +74,11 @@ public class BuildingSystem : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(PlayerController.instance.currentPos, -Vector3.up, out hit, 1f))
         {
-            return hit.point;
+            if (hit.collider.gameObject.layer == 6)
+            {
+                return hit.point;
+            }
+            return Vector3.zero;
         }
         else
         {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using DelaunatorSharp;
 
 public class BuildObject : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class BuildObject : MonoBehaviour
 
     public List<BuildObject> group;
     public BuildObject groupHolder;
-    public BoxCollider groupBound;
+    public GameObject groupBound;
     public bool isConnected = false;
 
     private void Awake()
@@ -91,26 +92,62 @@ public class BuildObject : MonoBehaviour
         r.freezeRotation = true;
 
         group = new List<BuildObject>();
-        if(leftConnector.CheckConnection(this, group))
-        {
-
-        }
+        leftConnector.CheckConnection(this, group);
     }
 
-    private void CreateGroupBounds()
+    public void CreateGroupBounds()
     {
-        Vector3 upLeft = transform.position;
-        Vector3 upRight = transform.position;
-        Vector3 downLeft = transform.position;
-        Vector3 downRight = transform.position;
+        IPoint[] pointsDouble = new IPoint[group.Count];
+        Vector3[] pointsVector = new Vector3[group.Count];
 
         for (int i = 0; i < group.Count; i++)
         {
-            if (group[i].transform.position.x <= upLeft.x && group[i].transform.position.z >= upLeft.z)
-            {
-                upLeft = group[i].transform.position;
-            }
+            Vector3 pos = buildingSystem.SnapCoordinateToGrid(group[i].transform.position);
+            pointsDouble[i] = new Point(pos.x, pos.z);
+            pointsVector[i] = new Vector3((float)pointsDouble[i].X, 0, (float)pointsDouble[i].Y);
         }
+
+        Delaunator triangleDelaunay = new Delaunator(pointsDouble);
+
+        int[] triangles = triangleDelaunay.Triangles;
+
+        Mesh mesh = new Mesh();
+        mesh.vertices = pointsVector;
+        mesh.triangles = triangles;
+
+        groupBound = new GameObject();
+        groupBound.transform.position = buildingSystem.SnapCoordinateToGrid(transform.position);
+        groupBound.transform.SetParent(transform, true);
+
+        Vector3 offset = Vector3.zero;
+        if (transform.rotation.eulerAngles.y == 0)
+        {
+            Debug.Log("000");
+            offset = new Vector3(transform.position.x, 0, transform.position.z);
+        }
+        else if (transform.rotation.eulerAngles.y == 90)
+        {
+            Debug.Log("090");
+            offset = new Vector3(-transform.position.z, 0, transform.position.x);
+        }
+        else if (transform.rotation.eulerAngles.y == 180)
+        {
+            Debug.Log("180");
+            offset = new Vector3(-transform.position.x, 0, -transform.position.z);
+        }
+        else if (transform.rotation.eulerAngles.y == 270)
+        {
+            Debug.Log("270");
+            offset = new Vector3(transform.position.x, 0, -transform.position.z);
+        }
+        groupBound.transform.localPosition -= offset;
+
+        MeshFilter meshFilter = groupBound.AddComponent<MeshFilter>();
+        meshFilter.mesh = mesh;
+        MeshCollider collider = groupBound.AddComponent<MeshCollider>();
+        collider.convex = true;
+        collider.isTrigger = true;
+        collider.sharedMesh = mesh;
 
     }
 }

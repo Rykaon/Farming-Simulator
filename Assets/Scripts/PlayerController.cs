@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Component References")]
     private BuildingSystem buildingSystem;
+    private ToolManager toolManager;
     [SerializeField] Animator animator;
     [SerializeField] Rigidbody rigidBody;
 
@@ -41,6 +42,7 @@ public class PlayerController : MonoBehaviour
         instance = this;
         playerControls = new PlayerControls();
         buildingSystem = BuildingSystem.instance;
+        toolManager = ToolManager.instance;
     }
 
     private void OnEnable()
@@ -100,7 +102,7 @@ public class PlayerController : MonoBehaviour
         }
 
         currentPos = new Vector3Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y) + 1, Mathf.RoundToInt(transform.position.z));
-        forwardPos = currentPos + new Vector3Int(Mathf.RoundToInt(transform.forward.x), Mathf.RoundToInt(transform.forward.y) -1, Mathf.RoundToInt(transform.forward.z));
+        forwardPos = currentPos + new Vector3Int(Mathf.RoundToInt(transform.forward.x), 0, Mathf.RoundToInt(transform.forward.z));
 
         if (canMove)
         {
@@ -246,13 +248,79 @@ public class PlayerController : MonoBehaviour
         return isCollisionDetected;
     }
 
+    IEnumerator UseTool()
+    {
+        canMove = false;
+        canUseTool = false;
+
+        switch (toolManager.selectedTool)
+        {
+            case ToolManager.Tools.None:
+                break;
+
+            case ToolManager.Tools.Shovel:
+                animator.Play("Digging");
+                yield return new WaitForSecondsRealtime(digAnim.length);
+                
+                if (currentGroundTileManager != null)
+                {
+                    Debug.Log("yo");
+                    if (currentGroundTileManager.tileState == TileManager.TileState.Grass)
+                    {
+                        currentGroundTileManager.ChangeTileState(TileManager.TileState.Dirt);
+                    }
+                }
+                break;
+
+            case ToolManager.Tools.Water:
+                animator.Play("Watering");
+                yield return new WaitForSecondsRealtime(waterAnim.length);
+
+                if (currentGroundTileManager != null)
+                {
+                    if (currentGroundTileManager.tileState == TileManager.TileState.Dirt)
+                    {
+                        if (currentGroundTileManager.dirtToGrass != null)
+                        {
+
+                        }
+                        currentGroundTileManager.ChangeTileState(TileManager.TileState.WetDirt);
+                    }
+                    else if (currentGroundTileManager.tileState == TileManager.TileState.WetDirt)
+                    {
+                        
+                    }
+                }
+                break;
+
+            case ToolManager.Tools.Seed:
+                break;
+
+            case ToolManager.Tools.Animal:
+                break;
+
+            case ToolManager.Tools.Fence:
+                break;
+
+            case ToolManager.Tools.FenceCorner:
+                break;
+
+            case ToolManager.Tools.FenceDoor:
+                break;
+        }
+
+        canMove = true;
+        canUseTool = true;
+        yield return null;
+    }
+
     private void FixedUpdate()
     {
         Move();
 
         if (canUseTool && playerControls.Gamepad.X.IsPressed())
         {
-            //Dash();
+            StartCoroutine(UseTool());
         }
     }
 }

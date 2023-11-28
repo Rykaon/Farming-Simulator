@@ -48,6 +48,7 @@ MonoBehaviour:
   tileState: 0
   seedType: 0
   growState: 0
+  meshRenderer: {fileID: 2989601324847029700}
   grassMat: {fileID: 2100000, guid: 0e41c64224f7bbb4bbd3715c49c3ce93, type: 2}
   dirtMat: {fileID: 2100000, guid: b16f72ee2bc573a4dbd5a8500a5a45c4, type: 2}
   wetDirtMat: {fileID: 2100000, guid: cbc71e8b43ffb0742a497c384534230d, type: 2}
@@ -131,6 +132,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3392193810644391931}
   m_SourcePrefab: {fileID: 100100000, guid: 315e3037d6061204cad190d8fb3728b6, type: 3}
+--- !u!23 &2989601324847029700 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2303790651987679787, guid: 315e3037d6061204cad190d8fb3728b6, type: 3}
+  m_PrefabInstance: {fileID: 3928695735802660847}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2989601324849021700 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2303790651989673195, guid: 315e3037d6061204cad190d8fb3728b6, type: 3}
