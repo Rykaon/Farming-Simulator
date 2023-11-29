@@ -58,9 +58,16 @@ public class BuildObject : MonoBehaviour
         return transform.TransformPoint(vertices[0]);
     }
 
-    public void Rotate()
+    public void Rotate(float value)
     {
-        transform.Rotate(new Vector3(0, 90f, 0));
+        if (value == 1)
+        {
+            transform.Rotate(new Vector3(0, 90f, 0));
+        }
+        else if (value == -1)
+        {
+            transform.Rotate(new Vector3(0, -90f, 0));
+        }
         size = new Vector3Int(size.y, size.x, 1);
 
         Vector3[] vertices = new Vector3[this.vertices.Length];

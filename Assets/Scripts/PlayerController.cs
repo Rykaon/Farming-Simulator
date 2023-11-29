@@ -9,17 +9,35 @@ public class PlayerController : MonoBehaviour
     public static PlayerController instance;
     public PlayerControls playerControls { get; private set; }
 
+    public enum ControlState
+    {
+        World,
+        Inventory,
+        Market,
+        ToolMenu,
+        Builder
+    }
+
     [Header("Component References")]
-    private BuildingSystem buildingSystem;
-    private ToolManager toolManager;
+    [SerializeField] BuildingSystem buildingSystem;
+    [SerializeField] ToolManager toolManager;
     [SerializeField] Animator animator;
     [SerializeField] Rigidbody rigidBody;
+    public ControlState controlState;
 
     [Header("Properties")]
     [SerializeField] float moveSpeed;
     [SerializeField] float collisionDetectionDistance;
     [SerializeField] AnimationClip waterAnim;
     [SerializeField] AnimationClip digAnim;
+    [SerializeField] AnimationClip kneelAnim;
+    [SerializeField] AnimationClip standAnim;
+    [SerializeField] AnimationClip plantAnim;
+    [SerializeField] AnimationClip pickLowAnim;
+    [SerializeField] AnimationClip pickMediumAnim;
+    [SerializeField] AnimationClip pickHighAnim;
+    [SerializeField] AnimationClip genericToolAnim;
+
 
     private Vector3 movement;
     public Vector3Int currentPos;
@@ -36,13 +54,14 @@ public class PlayerController : MonoBehaviour
 
     public bool canMove = true;
     public bool canUseTool = true;
+    public bool inField = false;
+
+    public bool LBRBisPressed = false;
 
     private void Awake()
     {
         instance = this;
         playerControls = new PlayerControls();
-        buildingSystem = BuildingSystem.instance;
-        toolManager = ToolManager.instance;
     }
 
     private void OnEnable()
@@ -106,7 +125,7 @@ public class PlayerController : MonoBehaviour
 
         if (canMove)
         {
-            if (buildingSystem.objectToPlace == null)
+            if (!buildingSystem.isPlacing)
             {
                 if (buildingSystem.GetObjectTile() != null)
                 {
@@ -255,62 +274,119 @@ public class PlayerController : MonoBehaviour
 
         switch (toolManager.selectedTool)
         {
-            case ToolManager.Tools.None:
-                break;
-
             case ToolManager.Tools.Shovel:
-                animator.Play("Digging");
-                yield return new WaitForSecondsRealtime(digAnim.length);
-                
                 if (currentGroundTileManager != null)
                 {
-                    Debug.Log("yo");
                     if (currentGroundTileManager.tileState == TileManager.TileState.Grass)
                     {
+                        animator.Play("Digging");
+                        yield return new WaitForSecondsRealtime(digAnim.length);
                         currentGroundTileManager.ChangeTileState(TileManager.TileState.Dirt);
                     }
                 }
                 break;
 
             case ToolManager.Tools.Water:
-                animator.Play("Watering");
-                yield return new WaitForSecondsRealtime(waterAnim.length);
-
                 if (currentGroundTileManager != null)
                 {
                     if (currentGroundTileManager.tileState == TileManager.TileState.Dirt)
                     {
+                        animator.Play("Watering");
+                        yield return new WaitForSecondsRealtime(waterAnim.length);
+
                         if (currentGroundTileManager.dirtToGrass != null)
                         {
-
+                            StopCoroutine(currentGroundTileManager.dirtToGrass);
                         }
                         currentGroundTileManager.ChangeTileState(TileManager.TileState.WetDirt);
                     }
                     else if (currentGroundTileManager.tileState == TileManager.TileState.WetDirt)
                     {
-                        
+                        animator.Play("Watering");
+                        yield return new WaitForSecondsRealtime(waterAnim.length);
+
+                        if (currentGroundTileManager.wetToDirt != null)
+                        {
+                            StopCoroutine(currentGroundTileManager.wetToDirt);
+                        }
+                        currentGroundTileManager.ChangeTileState(TileManager.TileState.WetDirt);
                     }
                 }
                 break;
 
             case ToolManager.Tools.Seed:
+                if (currentGroundTileManager != null)
+                {
+                    if (currentGroundTileManager.seedType == TileManager.SeedType.None)
+                    {
+                        if (currentGroundTileManager.tileState == TileManager.TileState.Dirt)
+                        {
+                            animator.Play("KneelDown");
+                            yield return new WaitForSecondsRealtime(kneelAnim.length + plantAnim.length + standAnim.length);
+
+                            if (currentGroundTileManager.dirtToGrass != null)
+                            {
+                                StopCoroutine(currentGroundTileManager.dirtToGrass);
+                            }
+
+                            currentGroundTileManager.ChangeSeedType(TileManager.SeedType.Seeded);
+                        }
+                    }
+                }
                 break;
 
             case ToolManager.Tools.Animal:
+                animator.Play("UseGenericTool");
+                yield return new WaitForSecondsRealtime(genericToolAnim.length / 3);
+
+
                 break;
 
             case ToolManager.Tools.Fence:
+                animator.Play("UseGenericTool");
+                yield return new WaitForSecondsRealtime(genericToolAnim.length / 3);
+
+                buildingSystem.InitializeWithObject(buildingSystem.fence, buildingSystem.objectTilemap);
+                controlState = ControlState.Builder;
                 break;
 
             case ToolManager.Tools.FenceCorner:
+                animator.Play("UseGenericTool");
+                yield return new WaitForSecondsRealtime(genericToolAnim.length / 3);
+
+                buildingSystem.InitializeWithObject(buildingSystem.fenceCorner, buildingSystem.objectTilemap);
+                controlState = ControlState.Builder;
                 break;
 
             case ToolManager.Tools.FenceDoor:
+                animator.Play("UseGenericTool");
+                yield return new WaitForSecondsRealtime(genericToolAnim.length / 3);
+
+                buildingSystem.InitializeWithObject(buildingSystem.fenceDoor, buildingSystem.objectTilemap);
+                controlState = ControlState.Builder;
                 break;
         }
 
         canMove = true;
         canUseTool = true;
+    }
+
+    IEnumerator PickObject()
+    {
+        if (inField)
+        {
+
+        }
+        else if (currentGroundTileManager != null)
+        {
+            if (currentGroundTileManager.growState == TileManager.GrowState.High)
+            {
+                // PickPlant
+
+                StartCoroutine(currentGroundTileManager.ChangeGrowState(TileManager.GrowState.Low));
+            }
+        }
+
         yield return null;
     }
 
@@ -318,9 +394,70 @@ public class PlayerController : MonoBehaviour
     {
         Move();
 
-        if (canUseTool && playerControls.Gamepad.X.IsPressed())
+        if (!playerControls.Gamepad.LBRB.IsPressed())
         {
-            StartCoroutine(UseTool());
+            LBRBisPressed = false;
+        }
+
+        if (controlState == ControlState.World)
+        {
+            if (canUseTool && playerControls.Gamepad.X.IsPressed())
+            {
+                StartCoroutine(UseTool());
+            }
+            else if (canUseTool && playerControls.Gamepad.B.IsPressed())
+            {
+                StartCoroutine(PickObject());
+            }
+        }
+        else if (controlState == ControlState.Inventory)
+        {
+
+        }
+        else if (controlState == ControlState.Market)
+        {
+
+        }
+        else if (controlState == ControlState.ToolMenu)
+        {
+
+        }
+        else if (controlState == ControlState.Builder)
+        {
+            if (playerControls.Gamepad.B.IsPressed() && buildingSystem.objectToPlace != null)
+            {
+                Destroy(buildingSystem.objectToPlace.gameObject);
+                buildingSystem.objectToPlace = null;
+                buildingSystem.tileToPlace = null;
+                buildingSystem.isPlacing = false;
+                controlState = ControlState.World;
+            }
+            else if (playerControls.Gamepad.A.IsPressed() && buildingSystem.objectToPlace != null)
+            {
+                if (buildingSystem.CanBePlaced(buildingSystem.objectToPlace, buildingSystem.objectTilemap))
+                {
+                    buildingSystem.objectToPlace.Place();
+                    Vector3Int start = buildingSystem.gridLayout.WorldToCell(buildingSystem.objectToPlace.GetStartPosition());
+                    buildingSystem.TakeArea(start, buildingSystem.objectToPlace.size, buildingSystem.objectTilemap);
+                    buildingSystem.objectToPlace = null;
+                    buildingSystem.tileToPlace = null;
+                    buildingSystem.isPlacing = false;
+                    controlState = ControlState.World;
+                }
+                else
+                {
+                    Destroy(buildingSystem.objectToPlace.gameObject);
+                    buildingSystem.objectToPlace = null;
+                    buildingSystem.tileToPlace = null;
+                    buildingSystem.isPlacing = false;
+                    controlState = ControlState.World;
+                }
+            }
+            else if (playerControls.Gamepad.LBRB.IsPressed() && buildingSystem.objectToPlace != null && !LBRBisPressed)
+            {
+                buildingSystem.objectToPlace.Rotate(playerControls.Gamepad.LBRB.ReadValue<float>());
+                LBRBisPressed = true;
+            }
         }
     }
 }

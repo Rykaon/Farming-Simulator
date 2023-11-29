@@ -8,6 +8,9 @@ public class BuildingSystem : MonoBehaviour
 {
     public static BuildingSystem instance;
 
+    [SerializeField] PlayerController playerController;
+    [SerializeField] ToolManager toolManager;
+
     public GridLayout gridLayout;
     [SerializeField] Grid grid;
     public Tilemap groundTilemap;
@@ -19,6 +22,8 @@ public class BuildingSystem : MonoBehaviour
 
     public BuildObject objectToPlace;
     public TileBase3D tileToPlace;
+
+    public bool isPlacing;
 
     private void Awake()
     {
@@ -49,12 +54,14 @@ public class BuildingSystem : MonoBehaviour
                 TakeArea(start, objectToPlace.size, objectTilemap);
                 objectToPlace = null;
                 tileToPlace = null;
+                isPlacing = false;
             }
             else
             {
                 Destroy(objectToPlace.gameObject);
                 objectToPlace = null;
                 tileToPlace = null;
+                isPlacing = false;
             }
         }
         else if (Input.GetKeyDown(KeyCode.Escape) && objectToPlace != null)
@@ -62,17 +69,18 @@ public class BuildingSystem : MonoBehaviour
             Destroy(objectToPlace.gameObject);
             objectToPlace = null;
             tileToPlace = null;
+            isPlacing = false;
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
-            objectToPlace.Rotate();
+            objectToPlace.Rotate(1);
         }
     }
 
     public Vector3 GetPlayerPosition()
     {
         RaycastHit hit;
-        if (Physics.Raycast(PlayerController.instance.currentPos, -Vector3.up, out hit, 1f))
+        if (Physics.Raycast(playerController.currentPos, -Vector3.up, out hit, 1f))
         {
             if (hit.collider.gameObject.layer == 6)
             {
@@ -88,9 +96,9 @@ public class BuildingSystem : MonoBehaviour
 
     public GameObject GetGroundTile()
     {
-        if (fence.GetTile(PlayerController.instance.forwardPos, groundTilemap) != null)
+        if (fence.GetTile(playerController.forwardPos, groundTilemap) != null)
         {
-            return fence.GetTile(PlayerController.instance.forwardPos, groundTilemap);
+            return fence.GetTile(playerController.forwardPos, groundTilemap);
         }
 
         return null;
@@ -98,9 +106,9 @@ public class BuildingSystem : MonoBehaviour
 
     public GameObject GetObjectTile()
     {
-        if (fence.GetTile(PlayerController.instance.forwardPos, objectTilemap) != null)
+        if (fence.GetTile(playerController.forwardPos, objectTilemap) != null)
         {
-            return fence.GetTile(PlayerController.instance.forwardPos, objectTilemap);
+            return fence.GetTile(playerController.forwardPos, objectTilemap);
         }
 
         return null;
@@ -129,11 +137,13 @@ public class BuildingSystem : MonoBehaviour
 
     public void InitializeWithObject(TileBase3D tile, Tilemap tilemap)
     {
+        isPlacing = true;
+
         GameObject obj;
 
-        if (PlayerController.instance.currentGroundTile != null)
+        if (playerController.currentGroundTile != null)
         {
-            obj = tile.Instantiate(PlayerController.instance.currentGroundTile.transform.position, Quaternion.identity, tilemap);
+            obj = tile.Instantiate(playerController.currentGroundTile.transform.position, Quaternion.identity, tilemap);
         }
         else
         {

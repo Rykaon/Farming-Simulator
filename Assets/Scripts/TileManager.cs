@@ -38,6 +38,8 @@ public class TileManager : MonoBehaviour
     public Coroutine dirtToGrass;
     public Coroutine wetToDirt;
 
+    public bool isGrowing = false;
+
     [SerializeField] float dirtToGrassDelay;
     [SerializeField] float wetToDirtDelay;
 
@@ -58,16 +60,16 @@ public class TileManager : MonoBehaviour
                 meshRenderer.material = wetDirtMat;
                 wetToDirt = StartCoroutine(WetToDirt());
 
-                if (seedType == SeedType.Seeded)
+                if (seedType == SeedType.Seeded && !isGrowing)
                 {
                     switch (growState)
                     {
                         case GrowState.Low:
-                            ChangeGrowState(GrowState.Medium);
+                            StartCoroutine(ChangeGrowState(GrowState.Medium));
                             break;
 
                         case GrowState.Medium:
-                            ChangeGrowState(GrowState.High);
+                            StartCoroutine(ChangeGrowState(GrowState.High));
                             break;
                     }
                 }
@@ -100,6 +102,10 @@ public class TileManager : MonoBehaviour
         switch (seedType)
         {
             case SeedType.None:
+                if (tileState == TileState.Dirt)
+                {
+                    dirtToGrass = StartCoroutine(DirtToGrass());
+                }
                 break;
 
             case SeedType.Seeded:
@@ -111,9 +117,12 @@ public class TileManager : MonoBehaviour
 
     public IEnumerator ChangeGrowState(GrowState growState)
     {
+        isGrowing = true;
+
         switch (growState)
         {
             case GrowState.Low:
+                ChangeSeedType(SeedType.None);
                 break;
 
             case GrowState.Medium:
@@ -126,5 +135,6 @@ public class TileManager : MonoBehaviour
         }
 
         this.growState = growState;
+        isGrowing = false;
     }
 }
