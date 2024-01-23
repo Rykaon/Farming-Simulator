@@ -7,7 +7,7 @@ public class ActionAbility : MonoBehaviour
 {
     GameObject unit;
     UnitGridSystem unitGridSystem;
-    PathfindingMe pathfinding;
+    Pathfinding pathfinding;
     public MoveData basicLinearMove;
     public ActionData actionAbility;
     private int index;
@@ -22,7 +22,7 @@ public class ActionAbility : MonoBehaviour
 
     void Start()
     {
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         if (transform.parent != null)
         {
             InitAbility();
@@ -202,23 +202,23 @@ public class ActionAbility : MonoBehaviour
         return this.index;
     }
 
-    public void ApplyAbility(GameObject targetUnit, int implantIndex, GameObject nexus, PathNodeMe targetNode)
+    public void ApplyAbility(GameObject targetUnit, int implantIndex, GameObject nexus, PathNode targetNode)
     {
-        PathNodeMe unitNode = pathfinding.GetNode((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
-        PathNodeMe targetUnitNode = null;
+        PathNode unitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
+        PathNode targetUnitNode = null;
         if (targetUnit != null)
         {
-            targetUnitNode = pathfinding.GetNode((int)Mathf.Round(targetUnit.transform.position.x), (int)Mathf.Round(targetUnit.transform.position.z));
+            targetUnitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(targetUnit.transform.position.x), (int)Mathf.Round(targetUnit.transform.position.z));
         }
-        PathNodeMe nexusNode = null;
+        PathNode nexusNode = null;
         if (nexus != null)
         {
-            nexusNode = pathfinding.GetNode((int)Mathf.Round(nexus.transform.position.x), (int)Mathf.Round(nexus.transform.position.z));
+            nexusNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(nexus.transform.position.x), (int)Mathf.Round(nexus.transform.position.z));
         }
-        PathNodeMe nodeToMove = null;
-        PathNodeMe moveNode = null;
+        PathNode nodeToMove = null;
+        PathNode moveNode = null;
         List<GameObject> unitList = new List<GameObject>();
-        PathNodeMe unitListNode = null;
+        PathNode unitListNode = null;
 
         float audioLenght = 0;
         Debug.Log(actionAbility.abilityName);
@@ -231,33 +231,33 @@ public class ActionAbility : MonoBehaviour
                     {
                         if (unitNode.y < targetUnitNode.y)
                         {
-                            nodeToMove = pathfinding.GetNode(unitNode.x, unitNode.y + 1);
+                            nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + 1);
                             for (int i = 1; i <= targetUnitNode.y - nodeToMove.y; ++i)
                             {
-                                if (!pathfinding.GetNode(nodeToMove.x, targetUnitNode.y - i).isWalkable || pathfinding.GetNode(nodeToMove.x, targetUnitNode.y - i).isContainingUnit)
+                                if (!pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y - i).isWalkable || pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y - i).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(nodeToMove.x, (int)Mathf.Round(targetUnit.transform.position.z) - (i - 1));
+                                    moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, (int)Mathf.Round(targetUnit.transform.position.z) - (i - 1));
                                     break;
                                 }
                                 else
                                 {
-                                    moveNode = pathfinding.GetNode(nodeToMove.x, (int)Mathf.Round(targetUnit.transform.position.z) - i);
+                                    moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, (int)Mathf.Round(targetUnit.transform.position.z) - i);
                                 }
                             }
                         }
                         else if (unitNode.y > targetUnitNode.y)
                         {
-                            nodeToMove = pathfinding.GetNode(unitNode.x, unitNode.y - 1);
+                            nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - 1);
                             for (int i = 1; i <= nodeToMove.y - targetUnitNode.y; ++i)
                             {
-                                if (!pathfinding.GetNode(nodeToMove.x, targetUnitNode.y + i).isWalkable || pathfinding.GetNode(nodeToMove.x, targetUnitNode.y + i).isContainingUnit)
+                                if (!pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y + i).isWalkable || pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y + i).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(nodeToMove.x, targetUnitNode.y + (i - 1));
+                                    moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y + (i - 1));
                                     break;
                                 }
                                 else
                                 {
-                                    moveNode = pathfinding.GetNode(nodeToMove.x, targetUnitNode.y + i);
+                                    moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, targetUnitNode.y + i);
                                 }
                             }
                         }
@@ -266,33 +266,33 @@ public class ActionAbility : MonoBehaviour
                     {
                         if (unitNode.x < targetUnitNode.x)
                         {
-                            nodeToMove = pathfinding.GetNode(unitNode.x + 1, unitNode.y);
+                            nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x + 1, unitNode.y);
                             for (int i = 1; i <= targetUnitNode.x - nodeToMove.x; ++i)
                             {
-                                if (!pathfinding.GetNode(targetUnitNode.x - i, nodeToMove.y).isWalkable || pathfinding.GetNode(targetUnitNode.x - i, nodeToMove.y).isContainingUnit)
+                                if (!pathfinding.GetNodeWithCoords(targetUnitNode.x - i, nodeToMove.y).isWalkable || pathfinding.GetNodeWithCoords(targetUnitNode.x - i, nodeToMove.y).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetUnitNode.x - (i - 1), nodeToMove.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetUnitNode.x - (i - 1), nodeToMove.y);
                                     break;
                                 }
                                 else
                                 {
-                                    moveNode = pathfinding.GetNode(targetUnitNode.x - i, nodeToMove.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetUnitNode.x - i, nodeToMove.y);
                                 }
                             }
                         }
                         else if (unitNode.x > targetUnitNode.x)
                         {
-                            nodeToMove = pathfinding.GetNode(unitNode.x - 1, targetUnitNode.y);
+                            nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x - 1, targetUnitNode.y);
                             for (int i = 1; i <= nodeToMove.x - targetUnitNode.x; ++i)
                             {
-                                if (!pathfinding.GetNode(targetUnitNode.x + i, nodeToMove.y).isWalkable || pathfinding.GetNode(targetUnitNode.x + i, nodeToMove.y).isContainingUnit)
+                                if (!pathfinding.GetNodeWithCoords(targetUnitNode.x + i, nodeToMove.y).isWalkable || pathfinding.GetNodeWithCoords(targetUnitNode.x + i, nodeToMove.y).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetUnitNode.x + (i - 1), nodeToMove.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetUnitNode.x + (i - 1), nodeToMove.y);
                                     break;
                                 }
                                 else
                                 {
-                                    moveNode = pathfinding.GetNode(targetUnitNode.x + i, nodeToMove.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetUnitNode.x + i, nodeToMove.y);
                                 }
                             }
                         }
@@ -324,26 +324,26 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y > y");
                         for (int i = 0; i < actionAbility.range; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
                             {
-                                pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).SetIsFire(false);
+                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).SetIsFire(false);
 
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
                                     {
-                                        unitList.Add(pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit);
+                                        unitList.Add(pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -353,11 +353,11 @@ public class ActionAbility : MonoBehaviour
                         {
                             for (int i = 0; i < actionAbility.range - 1; ++i)
                             {
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isWalkable && !pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isWalkable && !pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
                                     {
-                                        nodeToMove = pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i));
+                                        nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i));
                                         break;
                                     }
                                 }
@@ -367,18 +367,18 @@ public class ActionAbility : MonoBehaviour
                             {
                                 foreach (GameObject unit in unitList)
                                 {
-                                    unitListNode = pathfinding.GetNode((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
+                                    unitListNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
 
                                     for (int i = 1; i <= unitListNode.y - nodeToMove.y; ++i)
                                     {
-                                        if (!pathfinding.GetNode(nodeToMove.x, unitListNode.y - i).isWalkable || pathfinding.GetNode(nodeToMove.x, unitListNode.y - i).isContainingUnit)
+                                        if (!pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y - i).isWalkable || pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y - i).isContainingUnit)
                                         {
-                                            moveNode = pathfinding.GetNode(nodeToMove.x, unitListNode.y - (i - 1));
+                                            moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y - (i - 1));
                                             break;
                                         }
                                         else
                                         {
-                                            moveNode = pathfinding.GetNode(nodeToMove.x, unitListNode.y - i);
+                                            moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y - i);
                                         }
                                     }
 
@@ -417,26 +417,26 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y < y");
                         for (int i = 0; i < actionAbility.range; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
                             {
-                                pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).SetIsFire(false);
+                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).SetIsFire(false);
 
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
                                     {
-                                        unitList.Add(pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit);
+                                        unitList.Add(pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -446,11 +446,11 @@ public class ActionAbility : MonoBehaviour
                         {
                             for (int i = 0; i < actionAbility.range - 1; ++i)
                             {
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isWalkable && !pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isWalkable && !pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
                                     {
-                                        nodeToMove = pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i));
+                                        nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i));
                                         break;
                                     }
                                 }
@@ -460,18 +460,18 @@ public class ActionAbility : MonoBehaviour
                             {
                                 foreach (GameObject unit in unitList)
                                 {
-                                    unitListNode = pathfinding.GetNode((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
+                                    unitListNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
 
                                     for (int i = 1; i <= nodeToMove.y - unitListNode.y; ++i)
                                     {
-                                        if (!pathfinding.GetNode(nodeToMove.x, unitListNode.y + i).isWalkable || pathfinding.GetNode(nodeToMove.x, unitListNode.y + i).isContainingUnit)
+                                        if (!pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y + i).isWalkable || pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y + i).isContainingUnit)
                                         {
-                                            moveNode = pathfinding.GetNode(nodeToMove.x, unitListNode.y + (i - 1));
+                                            moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y + (i - 1));
                                             break;
                                         }
                                         else
                                         {
-                                            moveNode = pathfinding.GetNode(nodeToMove.x, unitListNode.y + i);
+                                            moveNode = pathfinding.GetNodeWithCoords(nodeToMove.x, unitListNode.y + i);
                                         }
                                     }
 
@@ -513,26 +513,26 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x > x");
                         for (int i = 0; i < actionAbility.range; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
                             {
-                                pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).SetIsFire(false);
+                                pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).SetIsFire(false);
 
-                                if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        unitList.Add(pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit);
+                                        unitList.Add(pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -542,11 +542,11 @@ public class ActionAbility : MonoBehaviour
                         {
                             for (int i = 0; i < actionAbility.range - 1; ++i)
                             {
-                                if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isWalkable && !pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isWalkable && !pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
                                     {
-                                        nodeToMove = pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y);
+                                        nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y);
                                         break;
                                     }
                                 }
@@ -556,18 +556,18 @@ public class ActionAbility : MonoBehaviour
                             {
                                 foreach (GameObject unit in unitList)
                                 {
-                                    unitListNode = pathfinding.GetNode((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
+                                    unitListNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
 
                                     for (int i = 1; i <= unitListNode.x - nodeToMove.x; ++i)
                                     {
-                                        if (!pathfinding.GetNode(unitListNode.x - i, nodeToMove.y).isWalkable || pathfinding.GetNode(unitListNode.x - i, nodeToMove.y).isContainingUnit)
+                                        if (!pathfinding.GetNodeWithCoords(unitListNode.x - i, nodeToMove.y).isWalkable || pathfinding.GetNodeWithCoords(unitListNode.x - i, nodeToMove.y).isContainingUnit)
                                         {
-                                            moveNode = pathfinding.GetNode(unitListNode.x - (i - 1), nodeToMove.y);
+                                            moveNode = pathfinding.GetNodeWithCoords(unitListNode.x - (i - 1), nodeToMove.y);
                                             break;
                                         }
                                         else
                                         {
-                                            moveNode = pathfinding.GetNode(unitListNode.x - i, nodeToMove.y);
+                                            moveNode = pathfinding.GetNodeWithCoords(unitListNode.x - i, nodeToMove.y);
                                         }
                                     }
 
@@ -606,26 +606,26 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x < x");
                         for (int i = 0; i < actionAbility.range; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
                             {
-                                pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).SetIsFire(false);
+                                pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).SetIsFire(false);
 
-                                if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        unitList.Add(pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit);
+                                        unitList.Add(pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -635,11 +635,11 @@ public class ActionAbility : MonoBehaviour
                         {
                             for (int i = 0; i < actionAbility.range - 1; ++i)
                             {
-                                if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isWalkable && !pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isWalkable && !pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
                                     {
-                                        nodeToMove = pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y);
+                                        nodeToMove = pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y);
                                         break;
                                     }
                                 }
@@ -649,18 +649,18 @@ public class ActionAbility : MonoBehaviour
                             {
                                 foreach (GameObject unit in unitList)
                                 {
-                                    unitListNode = pathfinding.GetNode((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
+                                    unitListNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(unit.transform.position.x), (int)Mathf.Round(unit.transform.position.z));
 
                                     for (int i = 1; i <= nodeToMove.x - unitListNode.x; ++i)
                                     {
-                                        if (!pathfinding.GetNode(unitListNode.x + i, nodeToMove.y).isWalkable || pathfinding.GetNode(unitListNode.x + i, nodeToMove.y).isContainingUnit)
+                                        if (!pathfinding.GetNodeWithCoords(unitListNode.x + i, nodeToMove.y).isWalkable || pathfinding.GetNodeWithCoords(unitListNode.x + i, nodeToMove.y).isContainingUnit)
                                         {
-                                            moveNode = pathfinding.GetNode(unitListNode.x + (i - 1), nodeToMove.y);
+                                            moveNode = pathfinding.GetNodeWithCoords(unitListNode.x + (i - 1), nodeToMove.y);
                                             break;
                                         }
                                         else
                                         {
-                                            moveNode = pathfinding.GetNode(unitListNode.x + i, nodeToMove.y);
+                                            moveNode = pathfinding.GetNodeWithCoords(unitListNode.x + i, nodeToMove.y);
                                         }
                                     }
 
@@ -705,37 +705,37 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y > y");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
                             {
-                                pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).SetIsFire(true);
+                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).SetIsFire(true);
 
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
                                     {
-                                        for (int j = 0; j < pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.transform.childCount; ++j)
+                                        for (int j = 0; j < pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.transform.childCount; ++j)
                                         {
-                                            if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
+                                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
                                             {
-                                                pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                                 break;
                                             }
                                             else
                                             {
-                                                pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                             }
                                         }
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -746,37 +746,37 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y < y");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
                             {
-                                pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).SetIsFire(true);
+                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).SetIsFire(true);
 
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
                                     {
-                                        for (int j = 0; j < pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.transform.childCount; ++j)
+                                        for (int j = 0; j < pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.transform.childCount; ++j)
                                         {
-                                            if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
+                                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
                                             {
-                                                pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                                 break;
                                             }
                                             else
                                             {
-                                                pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                             }
                                         }
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -790,37 +790,37 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x > x");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
                             {
-                                pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).SetIsFire(true);
+                                pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).SetIsFire(true);
 
-                                if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        for (int j = 0; j < pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit.transform.childCount; ++j)
+                                        for (int j = 0; j < pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit.transform.childCount; ++j)
                                         {
-                                            if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
+                                            if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
                                             {
-                                                pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                                 break;
                                             }
                                             else
                                             {
-                                                pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                             }
                                         }
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -831,37 +831,37 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x < x");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
                             {
-                                pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).SetIsFire(true);
+                                pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).SetIsFire(true);
 
-                                if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        for (int j = 0; j < pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit.transform.childCount; ++j)
+                                        for (int j = 0; j < pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit.transform.childCount; ++j)
                                         {
-                                            if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
+                                            if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
                                             {
-                                                pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                                 break;
                                             }
                                             else
                                             {
-                                                pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                                pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit.GetComponent<UnitGridSystem>().implants[j].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                             }
                                         }
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -909,11 +909,11 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y > y");
                         for (int i = 0; i < 2; ++i)
                         {
-                            if (pathfinding.GetNode(targetNode.x, targetNode.y + i) != null)
+                            if (pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y + i) != null)
                             {
-                                if (pathfinding.GetNode(targetNode.x, targetNode.y + i).isWalkable && !pathfinding.GetNode(targetNode.x, targetNode.y + i).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y + i).isWalkable && !pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y + i).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetNode.x, targetNode.y + i);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y + i);
                                     break;
                                 }
                             }
@@ -930,11 +930,11 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y < y");
                         for (int i = 0; i < 2; ++i)
                         {
-                            if (pathfinding.GetNode(targetNode.x, targetNode.y - i) != null)
+                            if (pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y - i) != null)
                             {
-                                if (pathfinding.GetNode(targetNode.x, targetNode.y - i).isWalkable && !pathfinding.GetNode(targetNode.x, targetNode.y - i).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y - i).isWalkable && !pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y - i).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetNode.x, targetNode.y - i);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetNode.x, targetNode.y - i);
                                     break;
                                 }
                             }
@@ -954,11 +954,11 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x > x");
                         for (int i = 0; i < 2; ++i)
                         {
-                            if (pathfinding.GetNode(targetNode.x + i, targetNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y) != null)
                             {
-                                if (pathfinding.GetNode(targetNode.x + i, targetNode.y).isWalkable && !pathfinding.GetNode(targetNode.x + i, targetNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y).isWalkable && !pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetNode.x + i, targetNode.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y);
                                     break;
                                 }
                             }
@@ -976,11 +976,11 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x < x");
                         for (int i = 0; i < 2; ++i)
                         {
-                            if (pathfinding.GetNode(targetNode.x - i, targetNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(targetNode.x - i, targetNode.y) != null)
                             {
-                                if (pathfinding.GetNode(targetNode.x - i, targetNode.y).isWalkable && !pathfinding.GetNode(targetNode.x - i, targetNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(targetNode.x - i, targetNode.y).isWalkable && !pathfinding.GetNodeWithCoords(targetNode.x - i, targetNode.y).isContainingUnit)
                                 {
-                                    moveNode = pathfinding.GetNode(targetNode.x - i, targetNode.y);
+                                    moveNode = pathfinding.GetNodeWithCoords(targetNode.x - i, targetNode.y);
                                     break;
                                 }
                             }
@@ -1057,24 +1057,24 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y > y");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)) != null)
                             {
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit != unit)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -1085,25 +1085,25 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("x = x, y < y");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)) != null)
                             {
-                                if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit != unit)
                                     {
                                         Debug.Log(targetUnit.transform.position);
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + (actionAbility.range - i)).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -1117,24 +1117,24 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x > x");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y) != null)
                             {
-                                if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x - (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -1145,24 +1145,24 @@ public class ActionAbility : MonoBehaviour
                         Debug.Log("y = y, x < x");
                         for (int i = 0; i <= actionAbility.range - 1; ++i)
                         {
-                            if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
+                            if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y) != null)
                             {
-                                if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isContainingUnit)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit != unit)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).unit.transform.GetChild(implantIndex).GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
-                                else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange != null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusOrange == null && pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(unitNode.x + (actionAbility.range - i), unitNode.y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }
@@ -1233,34 +1233,34 @@ public class ActionAbility : MonoBehaviour
                 {
                     for (int j = -1; j < 2; ++j)
                     {
-                        if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j) != null)
+                        if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j) != null)
                         {
-                            if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).x == targetNode.x || pathfinding.GetNode(targetNode.x + i, targetNode.y + j).y == targetNode.y)
+                            if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).x == targetNode.x || pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).y == targetNode.y)
                             {
-                                if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).isContainingUnit)
+                                if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).isContainingUnit)
                                 {
-                                    for (int k = 0; k < pathfinding.GetNode(targetNode.x + i, targetNode.y + j).unit.transform.childCount; ++k)
+                                    for (int k = 0; k < pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).unit.transform.childCount; ++k)
                                     {
-                                        if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
+                                        if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionAbility.damage)
                                         {
-                                            pathfinding.GetNode(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                            pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                             break;
                                         }
                                         else
                                         {
-                                            pathfinding.GetNode(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[k].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
+                                            pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).unit.GetComponent<UnitGridSystem>().implants[k].GetComponent<ImplantSystem>().InflictDamage(actionAbility.damage);
                                         }
                                     }
                                 }
-                                else if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).isNexus && nexus == null)
+                                else if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).isNexus && nexus == null)
                                 {
-                                    if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusOrange != null && pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusBlue == null)
+                                    if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusOrange != null && pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusBlue == null)
                                     {
-                                        pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
-                                    else if (pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusOrange == null && pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusBlue != null)
+                                    else if (pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusOrange == null && pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusBlue != null)
                                     {
-                                        pathfinding.GetNode(targetNode.x + i, targetNode.y + j).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
+                                        pathfinding.GetNodeWithCoords(targetNode.x + i, targetNode.y + j).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionAbility.damage);
                                     }
                                 }
                             }

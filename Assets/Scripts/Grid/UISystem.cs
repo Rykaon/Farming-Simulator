@@ -18,7 +18,7 @@ public class UISystem : MonoBehaviour
     public UnitGridSystem playingUnitSystem;
     public PlayerController_MAD playerController;
     public ActionData overheat;
-    private PathfindingMe pathfinding;
+    private Pathfinding pathfinding;
 
     [SerializeField] public Color darkBlue;
     [SerializeField] public Color lightBlue;
@@ -79,7 +79,7 @@ public class UISystem : MonoBehaviour
         gridSystem = Camera.main.GetComponent<GridSystem>();
         cameraManager = Camera.main.GetComponent<CameraManager>();
         playerController = Camera.main.GetComponent<PlayerController_MAD>();
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
 
         CloseUIMode(moveAbilities);
         CloseUIMode(actionAbilities);
@@ -143,26 +143,26 @@ public class UISystem : MonoBehaviour
     {
         for (int i = 0; i < gridSystem.unitListPlayerOne.Count; ++i)
         {
-            PathNodeMe unitNode = pathfinding.GetNode((int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.z));
-            if (unitNode.isFire)
+            PathNode unitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.z));
+            /*if (unitNode.isFire)
             {
                 for (int j = 0; j < gridSystem.unitListPlayerOne[i].transform.childCount; ++j)
                 {
                     gridSystem.unitListPlayerOne[i].transform.GetChild(j).GetComponent<ImplantSystem>().InflictDamage(gridSystem.unitListPlayerOne[i].GetComponent<UnitMovePathfinding>().FireDoTDamage);
                 }
-            }
+            }*/
         }
 
         for (int i = 0; i < gridSystem.unitListPlayerTwo.Count; ++i)
         {
-            PathNodeMe unitNode = pathfinding.GetNode((int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.z));
-            if (unitNode.isFire)
+            PathNode unitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.z));
+            /*if (unitNode.isFire)
             {
                 for (int j = 0; j < gridSystem.unitListPlayerTwo[i].transform.childCount; ++j)
                 {
                     gridSystem.unitListPlayerTwo[i].transform.GetChild(j).GetComponent<ImplantSystem>().InflictDamage(gridSystem.unitListPlayerTwo[i].GetComponent<UnitMovePathfinding>().FireDoTDamage);
                 }
-            }
+            }*/
         }
 
         switch (previousPlayer)

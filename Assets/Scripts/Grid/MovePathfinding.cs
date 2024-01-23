@@ -67,7 +67,7 @@ public class MovePathfinding : MonoBehaviour, IUnitVelocity
                 {
                     pathIndex = -1;
                     //onReachedTargetPosition();
-                    PathfindingMe.instance.GetNode((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(true, transform.gameObject);
+                    Pathfinding.instance.GetNodeWithCoords((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(true, transform.gameObject);
                     gridSystem.ResetTileOutline();
                 }
             }

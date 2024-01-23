@@ -14,7 +14,7 @@ public class UnitGridSystem : MonoBehaviour
     public Turn turn;                               //OK
 
     public GridSystem gridSystem;                   //OK
-    private PathfindingMe pathfinding;              //OK
+    private Pathfinding pathfinding;              //OK
     public UnitMovePathfinding movePathfinding;     //OK
     public int movePoints;                          //OK
     public int actionPoints;                        //OK
@@ -89,7 +89,7 @@ public class UnitGridSystem : MonoBehaviour
     public void Init()
     {
         gridSystem = Camera.main.GetComponent<GridSystem>();
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         movePathfinding = transform.GetComponent<UnitMovePathfinding>();
         movePoints = 3;
         actionPoints = 3;
@@ -177,9 +177,9 @@ public class UnitGridSystem : MonoBehaviour
             }
         }
 
-        pathfinding.GetNode((int)MathF.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(false, null);
+        pathfinding.GetNodeWithCoords((int)MathF.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(false, null);
         transform.position = targetPos;
-        pathfinding.GetNode((int)MathF.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(true, transform.gameObject);
+        pathfinding.GetNodeWithCoords((int)MathF.Round(transform.position.x), (int)Mathf.Round(transform.position.z)).SetIsContainingUnit(true, transform.gameObject);
 
         for (; ; )
         {
@@ -220,7 +220,7 @@ public class UnitGridSystem : MonoBehaviour
             if (playerController.GetMouseWorldPosition() != new Vector3(-1, -1, -1))
             {
                 pathfinding.GetGrid().GetXY(playerController.GetMouseWorldPosition(), out int x, out int y);
-                if (pathfinding.GetNode(x, y).isWalkable && pathfinding.GetNode(x, y).isValidMovePosition)
+                if (pathfinding.GetNodeWithCoords(x, y).isWalkable && pathfinding.GetNodeWithCoords(x, y).isValidMovePosition)
                 {
                     if (moveData.abilityName != "Téléporteur")
                     {
@@ -251,18 +251,18 @@ public class UnitGridSystem : MonoBehaviour
             {
                 for (int j = unitY - moveData.range; j <= unitY + moveData.range; ++j)
                 {
-                    if (pathfinding.GetNode(i, j) != null)
+                    if (pathfinding.GetNodeWithCoords(i, j) != null)
                     {
-                        if (pathfinding.GetNode(i, j).isWalkable && !pathfinding.GetNode(i, j).isContainingUnit && pathfinding.GetNode(i, j) != pathfinding.GetNode(unitX, unitY))
+                        if (pathfinding.GetNodeWithCoords(i, j).isWalkable && !pathfinding.GetNodeWithCoords(i, j).isContainingUnit && pathfinding.GetNodeWithCoords(i, j) != pathfinding.GetNodeWithCoords(unitX, unitY))
                         {
-                            List<PathNodeMe> pathNodeList = pathfinding.FindAreaPathMove((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                            List<PathNode> pathNodeList = pathfinding.FindAreaPathMove((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                             if (pathNodeList != null)
                             {
                                 movePointsToMove = 0;
 
                                 for (int k = 0; k < pathNodeList.Count; ++k)
                                 {
-                                    if (pathNodeList[k].isOil && moveData.abilityName != "Téléporteur")
+                                    if (/*pathNodeList[k].isOil && */moveData.abilityName != "Téléporteur")
                                     {
                                         movePointsToMove += 2;
                                     }
@@ -274,9 +274,9 @@ public class UnitGridSystem : MonoBehaviour
 
                                 if (movePointsToMove <= moveData.range)
                                 {
-                                    foreach (PathNodeMe pathNode in pathNodeList)
+                                    foreach (PathNode pathNode in pathNodeList)
                                     {
-                                        if (pathNode != pathfinding.GetNode(unitX, unitY))
+                                        if (pathNode != pathfinding.GetNodeWithCoords(unitX, unitY))
                                         {
                                             pathNode.SetIsValidMovePosition(true);
                                             switch (team)
@@ -318,18 +318,18 @@ public class UnitGridSystem : MonoBehaviour
                 {
                     if (i == unitX || j == unitY)
                     {
-                        if (pathfinding.GetNode(i, j) != null)
+                        if (pathfinding.GetNodeWithCoords(i, j) != null)
                         {
-                            if (pathfinding.GetNode(i, j).isWalkable && !pathfinding.GetNode(i, j).isContainingUnit && pathfinding.GetNode(i, j) != pathfinding.GetNode(unitX, unitY))
+                            if (pathfinding.GetNodeWithCoords(i, j).isWalkable && !pathfinding.GetNodeWithCoords(i, j).isContainingUnit && pathfinding.GetNodeWithCoords(i, j) != pathfinding.GetNodeWithCoords(unitX, unitY))
                             {
-                                List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathMove((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                                List<PathNode> pathNodeList = pathfinding.FindLinearPathMove((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                                 if (pathNodeList != null)
                                 {
                                     movePointsToMove = 0;
 
                                     for (int k = 0; k < pathNodeList.Count; ++k)
                                     {
-                                        if (pathNodeList[k].isOil)
+                                        if (/*pathNodeList[k].isOil*/isActiveAndEnabled)
                                         {
                                             movePointsToMove += 2;
                                         }
@@ -341,9 +341,9 @@ public class UnitGridSystem : MonoBehaviour
 
                                     if (movePointsToMove <= moveData.range)
                                     {
-                                        foreach (PathNodeMe pathNode in pathNodeList)
+                                        foreach (PathNode pathNode in pathNodeList)
                                         {
-                                            if (pathNode != pathfinding.GetNode(unitX, unitY))
+                                            if (pathNode != pathfinding.GetNodeWithCoords(unitX, unitY))
                                             {
                                                 pathNode.SetIsValidMovePosition(true);
                                                 switch (team)
@@ -405,14 +405,14 @@ public class UnitGridSystem : MonoBehaviour
                     if (playerController.GetMouseWorldPosition() != new Vector3(-1, -1, -1))
                     {
                         pathfinding.GetGrid().GetXY(playerController.GetMouseWorldPosition(), out int x, out int y);
-                        if (pathfinding.GetNode(x, y).isWalkable && pathfinding.GetNode(x, y).isValidMovePosition)
+                        if (pathfinding.GetNodeWithCoords(x, y).isWalkable && pathfinding.GetNodeWithCoords(x, y).isValidMovePosition)
                         {
-                            if (pathfinding.GetNode(x, y).isContainingUnit)
+                            if (pathfinding.GetNodeWithCoords(x, y).isContainingUnit)
                             {
-                                GameObject unit = pathfinding.GetNode(x, y).unit;
+                                GameObject unit = pathfinding.GetNodeWithCoords(x, y).unit;
                                 if (actionData.isLocal)
                                 {
-                                    uiSystem.SetModeToHitUI(true, true, pathfinding.GetNode(x, y).unit, false, null);
+                                    uiSystem.SetModeToHitUI(true, true, pathfinding.GetNodeWithCoords(x, y).unit, false, null);
                                     gridSystem.ResetTileOutline();
                                     StartCoroutine(ChangeStateWithDelay(State.HitUI));
                                 }
@@ -420,7 +420,7 @@ public class UnitGridSystem : MonoBehaviour
                                 {
                                     for (int i = 0; i < implants.Length; ++i)
                                     {
-                                        if (pathfinding.GetNode(x, y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionData.damage)
+                                        if (pathfinding.GetNodeWithCoords(x, y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= actionData.damage)
                                         {
                                             //pathfinding.GetNode(x, y).unit.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(actionData.damage);
                                             break;
@@ -431,21 +431,21 @@ public class UnitGridSystem : MonoBehaviour
                                         }
                                     }
                                     gridSystem.ResetTileOutline();
-                                    uiSystem.selectedActionAbility.ApplyAbility(pathfinding.GetNode(x, y).unit, -1, null, pathfinding.GetNode(x, y));
+                                    uiSystem.selectedActionAbility.ApplyAbility(pathfinding.GetNodeWithCoords(x, y).unit, -1, null, pathfinding.GetNodeWithCoords(x, y));
                                     remainingActionPoints -= actionData.cost;
                                 }
                                 Debug.Log("ACTION DONE ON " + unit.name);
                             }
                             else
                             {
-                                uiSystem.selectedActionAbility.ApplyAbility(null, -1, null, pathfinding.GetNode(x, y));
+                                uiSystem.selectedActionAbility.ApplyAbility(null, -1, null, pathfinding.GetNodeWithCoords(x, y));
                                 gridSystem.ResetTileOutline();
                                 remainingActionPoints -= actionData.cost;
                                 Debug.Log("ACTION DONE BUT MISSED");
                             }
                             isValidPosition = true;
                         }
-                        else if ((!pathfinding.GetNode(x, y).isWalkable && pathfinding.GetNode(x, y).isNexus) && pathfinding.GetNode(x, y).isValidMovePosition)
+                        /*else if ((!pathfinding.GetNode(x, y).isWalkable && pathfinding.GetNode(x, y).isNexus) && pathfinding.GetNode(x, y).isValidMovePosition)
                         {
                             if (pathfinding.GetNode(x, y).nexusOrange != null && pathfinding.GetNode(x, y).nexusBlue == null)
                             {
@@ -478,7 +478,7 @@ public class UnitGridSystem : MonoBehaviour
                                 remainingActionPoints -= actionData.cost;
                                 isValidPosition = true;
                             }
-                        }
+                        }*/
                     }
                 }
             }
@@ -503,18 +503,18 @@ public class UnitGridSystem : MonoBehaviour
             {
                 for (int j = unitY - actionData.range; j <= unitY + actionData.range; ++j)
                 {
-                    if (pathfinding.GetNode(i, j) != null)
+                    if (pathfinding.GetNodeWithCoords(i, j) != null)
                     {
-                        if (pathfinding.GetNode(i, j).isWalkable && pathfinding.GetNode(i, j) != pathfinding.GetNode(unitX, unitY))
+                        if (pathfinding.GetNodeWithCoords(i, j).isWalkable && pathfinding.GetNodeWithCoords(i, j) != pathfinding.GetNodeWithCoords(unitX, unitY))
                         {
-                            List<PathNodeMe> pathNodeList = pathfinding.FindAreaPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                            List<PathNode> pathNodeList = pathfinding.FindAreaPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                             if (pathNodeList != null)
                             {
                                 if (pathNodeList.Count <= actionData.range)
                                 {
-                                    foreach (PathNodeMe pathNode in pathNodeList)
+                                    foreach (PathNode pathNode in pathNodeList)
                                     {
-                                        if (pathNode != pathfinding.GetNode(unitX, unitY))
+                                        if (pathNode != pathfinding.GetNodeWithCoords(unitX, unitY))
                                         {
                                             pathNode.SetIsValidMovePosition(true);
                                             switch (team)
@@ -538,14 +538,14 @@ public class UnitGridSystem : MonoBehaviour
                                 }
                             }
                         }
-                        else if (!pathfinding.GetNode(i, j).isWalkable /*&& pathfinding.GetNode(i, j).isNexus*/)
+                        else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable /*&& pathfinding.GetNode(i, j).isNexus*/)
                         {
-                            List<PathNodeMe> pathNodeList = pathfinding.FindAreaPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                            List<PathNode> pathNodeList = pathfinding.FindAreaPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                             if (pathNodeList != null)
                             {
                                 if (pathNodeList.Count <= actionData.range)
                                 {
-                                    foreach (PathNodeMe pathNode in pathNodeList)
+                                    foreach (PathNode pathNode in pathNodeList)
                                     {
                                         pathNode.SetIsValidMovePosition(true);
                                         switch (team)
@@ -585,17 +585,17 @@ public class UnitGridSystem : MonoBehaviour
                 {
                     if (i == unitX || j == unitY)
                     {
-                        if (pathfinding.GetNode(i, j) != null)
+                        if (pathfinding.GetNodeWithCoords(i, j) != null)
                         {
-                            if (pathfinding.GetNode(i, j).isWalkable && pathfinding.GetNode(i, j) != pathfinding.GetNode(unitX, unitY))
+                            if (pathfinding.GetNodeWithCoords(i, j).isWalkable && pathfinding.GetNodeWithCoords(i, j) != pathfinding.GetNodeWithCoords(unitX, unitY))
                             {
-                                List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                                List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
 
                                 if (pathNodeList != null)
                                 {
                                     if (pathNodeList.Count <= actionData.range)
                                     {
-                                        foreach (PathNodeMe pathNode in pathNodeList)
+                                        foreach (PathNode pathNode in pathNodeList)
                                         {
                                             pathNode.SetIsValidMovePosition(true);
                                             switch (team)
@@ -618,18 +618,18 @@ public class UnitGridSystem : MonoBehaviour
                                     }
                                 }
                             }
-                            else if (!pathfinding.GetNode(i, j).isWalkable && !pathfinding.GetNode(i, j).isNexus)
+                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable/* && !pathfinding.GetNode(i, j).isNexus*/)
                             {
                                 break;
                             }
-                            else if (!pathfinding.GetNode(i, j).isWalkable && pathfinding.GetNode(i, j).isNexus)
+                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable/* && pathfinding.GetNode(i, j).isNexus*/)
                             {
-                                List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
+                                List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                                 if (pathNodeList != null)
                                 {
                                     if (pathNodeList.Count <= actionData.range)
                                     {
-                                        foreach (PathNodeMe pathNode in pathNodeList)
+                                        foreach (PathNode pathNode in pathNodeList)
                                         {
                                             pathNode.SetIsValidMovePosition(true);
                                         }
@@ -662,23 +662,23 @@ public class UnitGridSystem : MonoBehaviour
 
     public void GetMaxLinearStopRangeActionPath(ActionData actionData)
     {
-        PathNodeMe unitNode = pathfinding.GetNode((int)MathF.Round(transform.position.x), (int)MathF.Round(transform.position.z));
+        PathNode unitNode = pathfinding.GetNodeWithCoords((int)MathF.Round(transform.position.x), (int)MathF.Round(transform.position.z));
         if (actionData.cost <= remainingActionPoints)
         {
             for (int i = 1; i <= actionData.range; ++i)
             {
-                PathNodeMe targetNode = pathfinding.GetNode(unitNode.x, unitNode.y + i);
+                PathNode targetNode = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y + i);
                 if (targetNode != null)
                 {
                     if (targetNode.isWalkable)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
 
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                     switch (team)
@@ -706,18 +706,18 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable && !targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable && targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                 }
@@ -748,18 +748,18 @@ public class UnitGridSystem : MonoBehaviour
 
             for (int i = 1; i <= actionData.range; ++i)
             {
-                PathNodeMe targetNode = pathfinding.GetNode(unitNode.x, unitNode.y - i);
+                PathNode targetNode = pathfinding.GetNodeWithCoords(unitNode.x, unitNode.y - i);
                 if (targetNode != null)
                 {
                     if (targetNode.isWalkable)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
 
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                     switch (team)
@@ -787,18 +787,18 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable && !targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable && targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                 }
@@ -829,18 +829,18 @@ public class UnitGridSystem : MonoBehaviour
 
             for (int i = 1; i <= actionData.range; ++i)
             {
-                PathNodeMe targetNode = pathfinding.GetNode(unitNode.x + i, unitNode.y);
+                PathNode targetNode = pathfinding.GetNodeWithCoords(unitNode.x + i, unitNode.y);
                 if (targetNode != null)
                 {
                     if (targetNode.isWalkable)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
 
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                     switch (team)
@@ -868,18 +868,18 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable && !targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable && targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                 }
@@ -910,18 +910,18 @@ public class UnitGridSystem : MonoBehaviour
 
             for (int i = 1; i <= actionData.range; ++i)
             {
-                PathNodeMe targetNode = pathfinding.GetNode(unitNode.x - i, unitNode.y);
+                PathNode targetNode = pathfinding.GetNodeWithCoords(unitNode.x - i, unitNode.y);
                 if (targetNode != null)
                 {
                     if (targetNode.isWalkable)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
 
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                     switch (team)
@@ -949,18 +949,18 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable && !targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable && targetNode.isNexus)
+                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
                     {
-                        List<PathNodeMe> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
+                        List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
                         {
                             if (pathNodeList.Count <= actionData.range)
                             {
-                                foreach (PathNodeMe pathNode in pathNodeList)
+                                foreach (PathNode pathNode in pathNodeList)
                                 {
                                     pathNode.SetIsValidMovePosition(true);
                                 }
@@ -993,7 +993,7 @@ public class UnitGridSystem : MonoBehaviour
 
     public void SetEnergeticTower()
     {
-        PathNodeMe node = pathfinding.GetNode((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.z));
+        PathNode node = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.z));
         
         if (implants[1].GetComponent<ActionAbility>().actionAbility != null)
         {
@@ -1031,9 +1031,9 @@ public class UnitGridSystem : MonoBehaviour
                 {
                     for (int j = -1; j < 2; ++j)
                     {
-                        if (pathfinding.GetNode(node.x + i, node.y + j) != null)
+                        if (pathfinding.GetNodeWithCoords(node.x + i, node.y + j) != null)
                         {
-                            PathNodeMe otherNode = pathfinding.GetNode(node.x + i, node.y + j);
+                            PathNode otherNode = pathfinding.GetNodeWithCoords(node.x + i, node.y + j);
                             if (otherNode.x == node.x || otherNode.y == node.y)
                             {
                                 if (otherNode.isContainingUnit)

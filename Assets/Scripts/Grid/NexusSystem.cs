@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NexusSystem : MonoBehaviour
 {
-    private PathfindingMe pathfinding;
+    private Pathfinding pathfinding;
     private GridSystem gridSystem;
     public int lifePoints;
 
@@ -21,7 +21,7 @@ public class NexusSystem : MonoBehaviour
 
     void Start()
     {
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         gridSystem = Camera.main.gameObject.GetComponent<GridSystem>();
     }
 

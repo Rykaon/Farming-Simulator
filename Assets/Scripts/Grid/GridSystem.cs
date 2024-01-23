@@ -14,7 +14,7 @@ public class GridSystem : MonoBehaviour
     [SerializeField] GameObject uiObject;
     UISystem uiSystem;
     public GridMap<GameObject> tileGrid;
-    private PathfindingMe pathfinding;
+    private Pathfinding pathfinding;
 
     public GameObject[,] tileObject;
     public GameObject[,] tileSprite;
@@ -151,7 +151,7 @@ public class GridSystem : MonoBehaviour
     public void SetGrid(LevelData levelToLoad)
     {
         tileGrid = new GridMap<GameObject>(levelToLoad.width, levelToLoad.height, levelToLoad.cellSize, Vector3.zero);
-        pathfinding = new PathfindingMe(levelToLoad.width, levelToLoad.height);
+        pathfinding = new Pathfinding(levelToLoad.width, levelToLoad.height);
         tileObject = new GameObject[levelToLoad.width, levelToLoad.height];
 
         for (int i = 0; i < levelToLoad.width; ++i)
@@ -336,12 +336,12 @@ public class GridSystem : MonoBehaviour
                 tileObject[i, j] = Instantiate(tileGrid.gridObject[i, j], new Vector3(i, 0, j), tileGrid.gridRotation[i, j]);
                 if (isNexusOrange)
                 {
-                    pathfinding.GetGrid().GetGridObject(i, j).SetIsNexus(true, UnitGridSystem.Team.Orange, tileObject[i, j]);
+                    //pathfinding.GetGrid().GetGridObject(i, j).SetIsNexus(true, UnitGridSystem.Team.Orange, tileObject[i, j]);
                     isNexusOrange = false;
                 }
                 else if (isNexusBlue)
                 {
-                    pathfinding.GetGrid().GetGridObject(i, j).SetIsNexus(true, UnitGridSystem.Team.Blue, tileObject[i, j]);
+                    //pathfinding.GetGrid().GetGridObject(i, j).SetIsNexus(true, UnitGridSystem.Team.Blue, tileObject[i, j]);
                     isNexusBlue = false;
                 }
             }
@@ -354,7 +354,7 @@ public class GridSystem : MonoBehaviour
         {
             for (int j = 0; j < pathfinding.GetGrid().GetHeight(); ++j)
             {
-                pathfinding.GetNode(i, j).SetIsValidMovePosition(false);
+                pathfinding.GetNodeWithCoords(i, j).SetIsValidMovePosition(false);
                 for (int k = 0; k < tileObject[i, j].transform.childCount; ++k)
                 {
                     //tileObject[i, j].transform.GetChild(k).GetComponent<Outline>().OutlineColor = playerController.transparentWhite;
@@ -365,7 +365,7 @@ public class GridSystem : MonoBehaviour
 
         if (playingUnit != null)
         {
-            PathNodeMe playingUnitNode = pathfinding.GetNode((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
+            PathNode playingUnitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
             for (int k = 0; k < tileObject[playingUnitNode.x, playingUnitNode.y].transform.childCount; ++k)
             {
                 tileObject[playingUnitNode.x, playingUnitNode.y].transform.GetChild(k).GetComponent<Outline>().OutlineColor = playerController.opaqueWhite;
@@ -457,13 +457,13 @@ public class GridSystem : MonoBehaviour
                     {
                         for (int j = 0; j < tileGrid.GetHeight(); ++j)
                         {
-                            if (pathfinding.GetNode(i, j).isWalkable)
+                            if (pathfinding.GetNodeWithCoords(i, j).isWalkable)
                             {
-                                if (!pathfinding.GetNode(i, j).isNexus)
+                                if (/*!pathfinding.GetNode(i, j).isNexus*/isActiveAndEnabled)
                                 {
-                                    if (!pathfinding.GetNode(i, j).isContainingUnit)
+                                    if (!pathfinding.GetNodeWithCoords(i, j).isContainingUnit)
                                     {
-                                        pathfinding.GetNode(i, j).SetIsValidMovePosition(true);
+                                        pathfinding.GetNodeWithCoords(i, j).SetIsValidMovePosition(true);
                                         for (int k = 0; k < tileObject[i, j].transform.childCount; ++k)
                                         {
                                             tileObject[i, j].transform.GetChild(k).GetComponent<Outline>().OutlineColor = playerController.lightOrange;
@@ -480,11 +480,11 @@ public class GridSystem : MonoBehaviour
                     {
                         for (int j = 0; j < tileGrid.GetHeight(); ++j)
                         {
-                            if (pathfinding.GetNode(i, j).isWalkable)
+                            if (pathfinding.GetNodeWithCoords(i, j).isWalkable)
                             {
-                                if (!pathfinding.GetNode(i, j).isContainingUnit)
+                                if (!pathfinding.GetNodeWithCoords(i, j).isContainingUnit)
                                 {
-                                    pathfinding.GetNode(i, j).SetIsValidMovePosition(true);
+                                    pathfinding.GetNodeWithCoords(i, j).SetIsValidMovePosition(true);
                                     for (int k = 0; k < tileObject[i, j].transform.childCount; ++k)
                                     {
                                         tileObject[i, j].transform.GetChild(k).GetComponent<Outline>().OutlineColor = playerController.lightBlue;
@@ -509,7 +509,7 @@ public class GridSystem : MonoBehaviour
                         {
                             case Team.Orange:
                                 newUnit = Instantiate(playerOneList[x], new Vector3(0, 1.40f, 0), Quaternion.identity);
-                                pathfinding.GetNode((int)playerController.GetMouseWorldPosition().x, (int)playerController.GetMouseWorldPosition().z).SetIsContainingUnit(true, newUnit);
+                                pathfinding.GetNodeWithCoords((int)playerController.GetMouseWorldPosition().x, (int)playerController.GetMouseWorldPosition().z).SetIsContainingUnit(true, newUnit);
                                 newUnit.transform.position = new Vector3((int)playerController.GetMouseWorldPosition().x, newUnit.transform.position.y, (int)playerController.GetMouseWorldPosition().z);
                                 InitialiazeUnit(newUnit);
                                 unitListPlayerOne.Add(newUnit);
@@ -517,7 +517,7 @@ public class GridSystem : MonoBehaviour
 
                             case Team.Blue:
                                 newUnit = Instantiate(playerTwoList[x], new Vector3(0, 1.40f, 0), Quaternion.identity);
-                                pathfinding.GetNode((int)playerController.GetMouseWorldPosition().x, (int)playerController.GetMouseWorldPosition().z).SetIsContainingUnit(true, newUnit);
+                                pathfinding.GetNodeWithCoords((int)playerController.GetMouseWorldPosition().x, (int)playerController.GetMouseWorldPosition().z).SetIsContainingUnit(true, newUnit);
                                 newUnit.transform.position = new Vector3((int)playerController.GetMouseWorldPosition().x, newUnit.transform.position.y, (int)playerController.GetMouseWorldPosition().z);
                                 InitialiazeUnit(newUnit);
                                 unitListPlayerTwo.Add(newUnit);

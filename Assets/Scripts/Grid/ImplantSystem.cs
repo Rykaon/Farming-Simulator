@@ -6,7 +6,7 @@ using UnityEngine;
 public class ImplantSystem : MonoBehaviour
 {
     GridSystem gridSystem;
-    private PathfindingMe pathfinding;
+    private Pathfinding pathfinding;
     public int lifePoints;
 
     public GameObject floatingText;
@@ -18,7 +18,7 @@ public class ImplantSystem : MonoBehaviour
 
     void Start()
     {
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         lifePoints = 100;
     }
 
@@ -139,7 +139,7 @@ public class ImplantSystem : MonoBehaviour
                             break;
                     }
 
-                    pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z)).SetIsContainingUnit(false, null);
+                    pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z)).SetIsContainingUnit(false, null);
                     Destroy(transform.parent.gameObject);
                     Debug.Log(transform.parent.gameObject.name + " is DESTROOOOOY !");
                 }
@@ -169,7 +169,7 @@ public class ImplantSystem : MonoBehaviour
                 break;
             }
 
-            PathNodeMe node = pathfinding.GetGrid().GetGridObject((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z));
+            PathNode node = pathfinding.GetGrid().GetGridObject((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z));
 
             for (int x = -1; x < 2; ++x)
             {
@@ -187,7 +187,7 @@ public class ImplantSystem : MonoBehaviour
                         break;
                     }
 
-                    PathNodeMe otherNode = null;
+                    PathNode otherNode = null;
                     int newY = 0;
                     if (y == -1)
                     {
@@ -327,24 +327,24 @@ public class ImplantSystem : MonoBehaviour
         }
 
         lifePoints = newImplant.GetComponent<ImplantSystem>().lifePoints;
-        pathfinding.GetNode((int)Mathf.Round(newImplant.transform.position.x), (int)Mathf.Round(newImplant.transform.position.z)).SetIsContainingImplant(false, null);
+        pathfinding.GetNodeWithCoords((int)Mathf.Round(newImplant.transform.position.x), (int)Mathf.Round(newImplant.transform.position.z)).SetIsContainingImplant(false, null);
         Destroy(newImplant);
     }
 
     public Vector3 GetNodeToInstance()
     {
-        List<PathNodeMe> units = new List<PathNodeMe>();
+        List<PathNode> units = new List<PathNode>();
         Vector3 position = new Vector3(-1, -1, -1);
 
         for (int i = 0; i <= pathfinding.GetGrid().GetWidth(); ++i)
         {
             for (int j = 0; j <= pathfinding.GetGrid().GetHeight(); ++j)
             {
-                PathNodeMe thisNode = null;
+                PathNode thisNode = null;
 
-                if (pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) + j) != null)
+                if (pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) + j) != null)
                 {
-                    thisNode = pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) + j);
+                    thisNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) + j);
                     if (thisNode.isContainingUnit)
                     {
                         if (thisNode.unit != transform.parent.gameObject)
@@ -354,9 +354,9 @@ public class ImplantSystem : MonoBehaviour
                     }
                 }
 
-                if (pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) + j) != null)
+                if (pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) + j) != null)
                 {
-                    thisNode = pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) + j);
+                    thisNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) + j);
                     if (thisNode.isContainingUnit)
                     {
                         if (thisNode.unit != transform.parent.gameObject)
@@ -366,9 +366,9 @@ public class ImplantSystem : MonoBehaviour
                     }
                 }
 
-                if (pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) - j) != null)
+                if (pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) - j) != null)
                 {
-                    thisNode = pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) - j);
+                    thisNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) + i, (int)Mathf.Round(transform.parent.position.x) - j);
                     if (thisNode.isContainingUnit)
                     {
                         if (thisNode.unit != transform.parent.gameObject)
@@ -378,9 +378,9 @@ public class ImplantSystem : MonoBehaviour
                     }
                 }
 
-                if (pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) - j) != null)
+                if (pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) - j) != null)
                 {
-                    thisNode = pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) - j);
+                    thisNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.parent.position.x) - i, (int)Mathf.Round(transform.parent.position.x) - j);
                     if (thisNode.isContainingUnit)
                     {
                         if (thisNode.unit != transform.parent.gameObject)
@@ -398,7 +398,7 @@ public class ImplantSystem : MonoBehaviour
             for (int x = 0; x < units.Count; ++x)
             {
                 Debug.Log(units[x].unit);
-                List<PathNodeMe> pathNode = null;
+                List<PathNode> pathNode = null;
                 pathNode = pathfinding.FindAreaPathMove((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z), units[x].x, units[x].y);
 
                 if (pathNode != null)
@@ -419,16 +419,16 @@ public class ImplantSystem : MonoBehaviour
         return position;
     }
 
-    public List<PathNodeMe> AddNodeToList(PathNodeMe thisNode, List<PathNodeMe> units)
+    public List<PathNode> AddNodeToList(PathNode thisNode, List<PathNode> units)
     {
-        List<PathNodeMe> newUnits = null;
+        List<PathNode> newUnits = null;
 
         if (thisNode.unit != transform.parent.gameObject)
         {
             Debug.Log(thisNode.unit);
             if (units == null || units.Count == 0)
             {
-                newUnits = new List<PathNodeMe>();
+                newUnits = new List<PathNode>();
                 newUnits.Add(thisNode);
                 Debug.Log(units);
             }
@@ -441,7 +441,7 @@ public class ImplantSystem : MonoBehaviour
                 for (int x = 0; x <= units.Count-1; ++x)
                 {
                     Debug.Log(x);
-                    PathNodeMe node = units[x];
+                    PathNode node = units[x];
                     if (node != thisNode)
                     {
                         float thisNodeDistance = Vector3.Distance(new Vector3(thisNode.x, 0, thisNode.y), new Vector3((int)Mathf.Round(transform.parent.position.x), 0, (int)Mathf.Round(transform.parent.position.z)));

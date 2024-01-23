@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     private GridSystem gridSystem;
-    private PathfindingMe pathfinding;
+    private Pathfinding pathfinding;
 
     private Vector3 orangeStartPosition;
     private Vector3 orangeStartRotation;
@@ -30,7 +30,7 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         gridSystem = transform.GetComponent<GridSystem>();
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
 
         orangeStartPosition = new Vector3(1f, 5f, 2.5f);
         orangeStartRotation = new Vector3(30f, 45f, 0f);

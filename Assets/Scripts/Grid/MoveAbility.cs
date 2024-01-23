@@ -7,13 +7,13 @@ public class MoveAbility : MonoBehaviour
 {
     GameObject unit;
     UnitGridSystem unitGridSystem;
-    PathfindingMe pathfinding;
+    Pathfinding pathfinding;
     public MoveData moveAbility;
     private int index;
 
     void Start()
     {
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         if (transform.parent != null)
         {
             InitAbility();

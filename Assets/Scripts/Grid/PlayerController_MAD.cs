@@ -12,7 +12,7 @@ public class PlayerController_MAD : MonoBehaviour
     CameraManager cameraManager;
     public PlayerControls playerControls;
     GridSystem gridSystem;
-    PathfindingMe pathfinding;
+    Pathfinding pathfinding;
     public GameObject playingUnit;
     public UnitGridSystem playingUnitSystem;
     [SerializeField] GameObject uiObject;
@@ -53,7 +53,7 @@ public class PlayerController_MAD : MonoBehaviour
 
     public bool isStickPress = false;
 
-    public PathNodeMe targetPathNode;
+    public PathNode targetPathNode;
 
     public Gamepad gamepad;
 
@@ -311,10 +311,10 @@ public class PlayerController_MAD : MonoBehaviour
         if(GetMouseWorldPosition() != new Vector3(-1f, -1f, -1f))
         {
             pathfinding.GetGrid().GetXY(GetMouseWorldPosition(), out int x, out int y);
-            if (pathfinding.GetNode(x, y) != null)
+            if (pathfinding.GetNodeWithCoords(x, y) != null)
             {
                 UnhoverSprite(selectedTile);
-                if (pathfinding.GetNode(x, y).unit != playingUnit || (!gridSystem.spawnOne || !gridSystem.spawnTwo))
+                if (pathfinding.GetNodeWithCoords(x, y).unit != playingUnit || (!gridSystem.spawnOne || !gridSystem.spawnTwo))
                 {
                     selectedTile = gridSystem.tileObject[x, y];
                     selectedTileColor = selectedTile.transform.GetChild(0).GetComponent<Outline>().OutlineColor;
@@ -396,7 +396,7 @@ public class PlayerController_MAD : MonoBehaviour
                 break;
         }
 
-        if (worldPosition.x >= 0 && worldPosition.x < PathfindingMe.instance.GetGrid().GetWidth() && worldPosition.z >= 0 && worldPosition.z < PathfindingMe.instance.GetGrid().GetHeight())
+        if (worldPosition.x >= 0 && worldPosition.x < Pathfinding.instance.GetGrid().GetWidth() && worldPosition.z >= 0 && worldPosition.z < Pathfinding.instance.GetGrid().GetHeight())
         {
             return worldPosition;
         }
@@ -425,7 +425,7 @@ public class PlayerController_MAD : MonoBehaviour
 
     void Start()
     {
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
         selectedTile = gridSystem.tileObject[0, 0];
     }
 
@@ -451,8 +451,8 @@ public class PlayerController_MAD : MonoBehaviour
                 {
                     if (GetMouseWorldPosition() != new Vector3(-1f, -1f, -1f))
                     {
-                        PathNodeMe pathNode = pathfinding.GetNode((int)GetMouseWorldPosition().x, (int)GetMouseWorldPosition().z);
-                        if (pathNode != pathfinding.GetNode((int)playingUnit.transform.position.x, (int)playingUnit.transform.position.z) && (pathNode.isContainingUnit || pathNode.isContainingImplant))
+                        PathNode pathNode = pathfinding.GetNodeWithCoords((int)GetMouseWorldPosition().x, (int)GetMouseWorldPosition().z);
+                        /*if (pathNode != pathfinding.GetNode((int)playingUnit.transform.position.x, (int)playingUnit.transform.position.z) && (pathNode.isContainingUnit || pathNode.isContainingImplant))
                         {
                             uiSystem.SetModeToHitUI(true, pathNode.isContainingUnit, pathNode.unit, pathNode.isContainingImplant, pathNode.implant);
                             playingUnitSystem.ChangeState(UnitGridSystem.State.OtherInfo);
@@ -469,15 +469,15 @@ public class PlayerController_MAD : MonoBehaviour
                                 uiSystem.DisplayNexusUI(true, pathNode.nexusBlue);
                             }
                             playingUnitSystem.ChangeState(UnitGridSystem.State.NexusInfo);
-                        }
+                        }*/
                     }
                     //Debug.Log("OTHER INFO");
                 }
 
                 if (/*playerControls.Player.SelfInfo.triggered*/isStickPress)
                 {
-                    PathNodeMe pathNode = pathfinding.GetNode((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
-                    uiSystem.SetModeToHitUI(true, pathNode.isContainingUnit, pathNode.unit, pathNode.isContainingImplant, pathNode.implant);
+                    PathNode pathNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
+                    //uiSystem.SetModeToHitUI(true, pathNode.isContainingUnit, pathNode.unit, pathNode.isContainingImplant, pathNode.implant);
                     playingUnitSystem.ChangeState(UnitGridSystem.State.SelfInfo);
                     targetPathNode = pathNode;
                     //Debug.Log("SELF INFO");
@@ -639,10 +639,10 @@ public class PlayerController_MAD : MonoBehaviour
 
                 if (/*playerControls.Player.Cancel.triggered*/isStickPress)
                 {
-                    PathNodeMe pathNode = pathfinding.GetNode((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
+                    PathNode pathNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(playingUnit.transform.position.x), (int)Mathf.Round(playingUnit.transform.position.z));
                     uiSystem.SetModeToHitUI(false, false, null, false, null);
                     playingUnitSystem.ChangeState(UnitGridSystem.State.SelfInfo);
-                    uiSystem.SetModeToHitUI(true, pathNode.isContainingUnit, pathNode.unit, pathNode.isContainingImplant, pathNode.implant);
+                    //uiSystem.SetModeToHitUI(true, pathNode.isContainingUnit, pathNode.unit, pathNode.isContainingImplant, pathNode.implant);
                     uiSystem.selectedImplantUI.GetComponent<Image>().color = uiSystem.lightColor;
                     uiSystem.selectedImplantUI = uiSystem.implants[uiSystem.implants.Length - 2];
                     uiSystem.selectedImplantUI.GetComponent<Image>().color = uiSystem.darkColor;
@@ -777,7 +777,7 @@ public class PlayerController_MAD : MonoBehaviour
                     playingUnitSystem.remainingActionPoints -= uiSystem.selectedActionData.cost;
                     Debug.Log(uiSystem.selectedActionAbility.actionAbility.abilityName);
                     //uiSystem.selectedImplant.GetComponent<ImplantSystem>().InflictDamage(uiSystem.selectedActionData.damage);
-                    uiSystem.selectedActionAbility.ApplyAbility(uiSystem.selectedImplant.transform.parent.gameObject, uiSystem.GetIndexOfObjectInArray(uiSystem.selectedImplant, uiSystem.selectedImplant.transform.parent.GetComponent<UnitGridSystem>().implants), null, pathfinding.GetNode((int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.x), (int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.z)));
+                    uiSystem.selectedActionAbility.ApplyAbility(uiSystem.selectedImplant.transform.parent.gameObject, uiSystem.GetIndexOfObjectInArray(uiSystem.selectedImplant, uiSystem.selectedImplant.transform.parent.GetComponent<UnitGridSystem>().implants), null, pathfinding.GetNodeWithCoords((int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.x), (int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.z)));
                     uiSystem.SetModeToHitUI(false, false, null, false, null);
                     StartCoroutine(playingUnitSystem.ChangeStateWithDelay(UnitGridSystem.State.WorldMode));
                 }

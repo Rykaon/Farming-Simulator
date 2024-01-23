@@ -7,7 +7,7 @@ using Assets.Scripts;
 public class UnitMovePathfinding : MonoBehaviour, IUnitMove
 {
     private GridSystem gridSystem;
-    PathfindingMe pathfinding;
+    Pathfinding pathfinding;
     private MoveData moveData;
     private Vector3 startPos;
     private List<Vector3> pathVectorList;
@@ -22,7 +22,7 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
     private void Start()
     {
         gridSystem = Camera.main.GetComponent<GridSystem>();
-        pathfinding = PathfindingMe.instance;
+        pathfinding = Pathfinding.instance;
     }
 
     public void SetVelocity(Vector3 targetPos, MoveData moveAbility, Action onReachedTargetPosition)
@@ -40,12 +40,12 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
         }
         else
         {
-            pathfinding.GetNode((int)Mathf.Round(startPos.x), (int)Mathf.Round(startPos.z)).SetIsContainingUnit(false, null);
-            pathfinding.GetNode((int)Mathf.Round(targetPos.x), (int)Mathf.Round(targetPos.z)).SetIsContainingUnit(true, transform.gameObject);
+            pathfinding.GetNodeWithCoords((int)Mathf.Round(startPos.x), (int)Mathf.Round(startPos.z)).SetIsContainingUnit(false, null);
+            pathfinding.GetNodeWithCoords((int)Mathf.Round(targetPos.x), (int)Mathf.Round(targetPos.z)).SetIsContainingUnit(true, transform.gameObject);
             foreach (Vector3 pathVector in pathVectorList)
             {
-                PathNodeMe targetNode = pathfinding.GetNode((int)Mathf.Round(pathVector.x), (int)Mathf.Round(pathVector.z));
-                PathNodeMe startNode = pathfinding.GetNode((int)Mathf.Round(startPos.x), (int)Mathf.Round(startPos.z));
+                PathNode targetNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(pathVector.x), (int)Mathf.Round(pathVector.z));
+                PathNode startNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(startPos.x), (int)Mathf.Round(startPos.z));
 
                 if (targetNode != startNode)
                 {
