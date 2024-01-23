@@ -1,0 +1,1 @@
+Si l’<i>unité</i> est touchée par une capacité <i>physique</i> ou <i>Pression Hydraulique</i>, inflige des dégâts à l’attaquant.

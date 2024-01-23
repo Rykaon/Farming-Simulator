@@ -1,0 +1,1 @@
+Attire l'<i>unité</i> ciblé au contact de l'<i>unité</i> active.

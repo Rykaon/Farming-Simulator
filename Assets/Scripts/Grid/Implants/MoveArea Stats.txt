@@ -1,0 +1,4 @@
+<b>Activable</b>
+<b>Portée de zone : </b><i>5 cases</i>
+<b>Coût d’utilisation : </b><i>3 PA</i>
+<b>Achat : </b><i>0 gold</i>

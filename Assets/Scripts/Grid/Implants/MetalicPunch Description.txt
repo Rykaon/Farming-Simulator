@@ -1,0 +1,1 @@
+Inflige des dégâts légers à un <i>implant</i> ciblé.

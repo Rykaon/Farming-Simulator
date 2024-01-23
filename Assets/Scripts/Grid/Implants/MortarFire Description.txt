@@ -1,0 +1,1 @@
+Inflige des dégâts sur toutes les <i>cases</i> adjacentes à la <i>case</i> ciblée. Consomme tous les <i>PA</i> de l’<i>unité</i>.

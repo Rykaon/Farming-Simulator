@@ -1,0 +1,4 @@
+<b>Passif</b>
+<b>Dégâts globaux : </b><i>20</i>
+<b>Équipé : </b><i>+2 PA</i>
+<b>Achat : </b><i>100 g</i>

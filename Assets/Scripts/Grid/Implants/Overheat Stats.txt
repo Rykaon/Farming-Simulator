@@ -1,0 +1,5 @@
+<b>Activable</b>
+<b>Dégâts locaux : </b><i>40</i>
+<b>Coût d’utilisation : </b><i>1 PA</i> 
+<b>Équipé : </b><i>+1 PA</i>
+<b>Achat : </b><i>100 gold</i>

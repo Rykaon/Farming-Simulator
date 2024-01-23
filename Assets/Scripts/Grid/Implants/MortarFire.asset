@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0846d520dcf9900488ef5a5f2e90dadd, type: 3}
+  m_Name: MortarFire
+  m_EditorClassIdentifier: 
+  actionPoints: 0
+  range: 8
+  cost: 7
+  damage: 40
+  gold: 100
+  isLocal: 0
+  isAbility: 1
+  isWorld: 1
+  isPhysical: 0
+  type: 0
+  sprite: {fileID: 0}
+  abilityName: Tir de Mortiers
+  stats: {fileID: 4900000, guid: c412c1e42c52e614c8ee41bb8c2a8804, type: 3}
+  description: {fileID: 4900000, guid: 94a419379cd5c7f4d95b5ef5d6ddacda, type: 3}
+  spriteLeft: {fileID: 0}
+  spriteRight: {fileID: 21300000, guid: 6150ab9c07032114ba9eb6d3b97f9293, type: 3}
