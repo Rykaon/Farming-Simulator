@@ -215,7 +215,7 @@ public class ImplantSystem : MonoBehaviour
 
                     if (otherNode.unit != transform.parent.gameObject)
                     {
-                        if (!otherNode.isContainingImplant && !otherNode.isContainingUnit)
+                        /*if (!otherNode.isContainingImplant && !otherNode.isContainingUnit)
                         {
                             GameObject clone = Instantiate(transform.gameObject, new Vector3(otherNode.x, 0.6f, otherNode.y), Quaternion.identity);
                             clone.transform.localScale = new Vector3(1, 1, 1);
@@ -238,7 +238,7 @@ public class ImplantSystem : MonoBehaviour
                         else
                         {
                             Debug.Log("NO PLACE FOUND TO INSTANCE IMPLANT");
-                        }
+                        }*/
                     }
                 }
             }
@@ -247,46 +247,11 @@ public class ImplantSystem : MonoBehaviour
         
 
         Vector3 position = new Vector3(-1, -1, -1);
-
-        if (!pathfinding.GetGrid().GetGridObject((int)transform.position.x, (int)transform.position.z).isContainingImplant)
-        {
-            /*if (GetNodeToInstance() == new Vector3(-1, -1, -1))
-            {
-                if (!pathfinding.GetNode((int)Mathf.Round(transform.parent.position.x), (int)Mathf.Round(transform.parent.position.z)).isContainingImplant)
-                {
-                    position = new Vector3((int)Mathf.Round(transform.parent.position.x), 0.6f,(int)Mathf.Round(transform.parent.position.z));
-                }
-                else
-                {
-                    Debug.Log("NO PLACE FOUND TO INSTANCE IMPLANT");
-                }
-            }
-            else
-            {
-                position = GetNodeToInstance();
-            }
-
-            if (position != new Vector3(-1, -1, -1))
-            {
-                GameObject clone = Instantiate(transform.gameObject, position, Quaternion.identity);
-                clone.transform.localScale = new Vector3(1, 1, 1);
-                clone.transform.rotation = Quaternion.Euler(90, 0, 0);
-                clone.GetComponent<SpriteRenderer>().sortingOrder = 7;
-                clone.GetComponent<ImplantSystem>().lifePoints = 70;
-                pathfinding.GetGrid().GetGridObject((int)Mathf.Round(position.x), (int)Mathf.Round(position.z)).SetIsContainingImplant(true, clone);
-            }*/
-
-            
-        }
-        else
-        {
-
-        }
     }
 
     public void ReplaceImplant(GameObject newImplant)
     {
-        if (transform.TryGetComponent<MoveAbility>(out MoveAbility moveAbility))
+        /*if (transform.TryGetComponent<MoveAbility>(out MoveAbility moveAbility))
         {
             if (newImplant.TryGetComponent<MoveAbility>(out MoveAbility newMoveAbility))
             {
@@ -328,7 +293,7 @@ public class ImplantSystem : MonoBehaviour
 
         lifePoints = newImplant.GetComponent<ImplantSystem>().lifePoints;
         pathfinding.GetNodeWithCoords((int)Mathf.Round(newImplant.transform.position.x), (int)Mathf.Round(newImplant.transform.position.z)).SetIsContainingImplant(false, null);
-        Destroy(newImplant);
+        Destroy(newImplant);*/
     }
 
     public Vector3 GetNodeToInstance()
@@ -406,11 +371,11 @@ public class ImplantSystem : MonoBehaviour
                     for (int y = 0; y < pathNode.Count; ++y)
                     {
                         Debug.Log(pathNode[y]);
-                        if (!pathNode[pathNode.Count - 1 - y].isContainingImplant)
+                        /*if (!pathNode[pathNode.Count - 1 - y].isContainingImplant)
                         {
                             position = new Vector3(pathNode[pathNode.Count - 1 - y].x, 0.6f, pathNode[pathNode.Count - 1 - y].y);
                             return position;
-                        }
+                        }*/
                     }
                 }
             }

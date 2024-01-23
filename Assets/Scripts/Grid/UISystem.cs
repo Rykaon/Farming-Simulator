@@ -17,7 +17,6 @@ public class UISystem : MonoBehaviour
     public GameObject targetUnit;
     public UnitGridSystem playingUnitSystem;
     public PlayerController_MAD playerController;
-    public ActionData overheat;
     private Pathfinding pathfinding;
 
     [SerializeField] public Color darkBlue;
@@ -33,10 +32,6 @@ public class UISystem : MonoBehaviour
     public GameObject[] actionAbilities;
 
     public GameObject selectedAbility;
-    public MoveData selectedMoveData;
-    public ActionData selectedActionData;
-    public MoveAbility selectedMoveAbility;
-    public ActionAbility selectedActionAbility;
 
     public GameObject information;
     public GameObject[] implants;
@@ -141,28 +136,16 @@ public class UISystem : MonoBehaviour
 
     public void ChangePlayer(GridSystem.Team previousPlayer)
     {
-        for (int i = 0; i < gridSystem.unitListPlayerOne.Count; ++i)
+        /*for (int i = 0; i < gridSystem.unitListPlayerOne.Count; ++i)
         {
             PathNode unitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerOne[i].transform.position.z));
-            /*if (unitNode.isFire)
-            {
-                for (int j = 0; j < gridSystem.unitListPlayerOne[i].transform.childCount; ++j)
-                {
-                    gridSystem.unitListPlayerOne[i].transform.GetChild(j).GetComponent<ImplantSystem>().InflictDamage(gridSystem.unitListPlayerOne[i].GetComponent<UnitMovePathfinding>().FireDoTDamage);
-                }
-            }*/
+            
         }
 
         for (int i = 0; i < gridSystem.unitListPlayerTwo.Count; ++i)
         {
             PathNode unitNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.x), (int)Mathf.Round(gridSystem.unitListPlayerTwo[i].transform.position.z));
-            /*if (unitNode.isFire)
-            {
-                for (int j = 0; j < gridSystem.unitListPlayerTwo[i].transform.childCount; ++j)
-                {
-                    gridSystem.unitListPlayerTwo[i].transform.GetChild(j).GetComponent<ImplantSystem>().InflictDamage(gridSystem.unitListPlayerTwo[i].GetComponent<UnitMovePathfinding>().FireDoTDamage);
-                }
-            }*/
+            
         }
 
         switch (previousPlayer)
@@ -283,7 +266,7 @@ public class UISystem : MonoBehaviour
 
         playingUnitSystem.turn = UnitGridSystem.Turn.Playing;
         playingUnitSystem.ChangeState(UnitGridSystem.State.WorldMode);
-        gridSystem.ResetTileOutline();
+        gridSystem.ResetTileOutline();*/
     }
 
     private void DisplayUI()
@@ -297,7 +280,7 @@ public class UISystem : MonoBehaviour
         nexusUI.SetActive(status);
         if (status)
         {
-            switch (nexus.GetComponent<NexusSystem>().team)
+            /*switch (nexus.GetComponent<NexusSystem>().team)
             {
                 case NexusSystem.Team.Blue:
                     nexusUI.GetComponent<Image>().color = lightBlue;
@@ -314,11 +297,11 @@ public class UISystem : MonoBehaviour
                     nexusUI.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.black;
                     nexusUI.transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = nexus.GetComponent<NexusSystem>().lifePoints.ToString();
                     break;
-            }
+            }*/
         }
     }
 
-    public void OpenUIMoveMode(GameObject[] abilities, List<MoveData> abilitiesList)
+    /*public void OpenUIMoveMode(GameObject[] abilities, List<MoveData> abilitiesList)
     {
         for (int i = 0; i < abilitiesList.Count; ++i)
         {
@@ -353,7 +336,7 @@ public class UISystem : MonoBehaviour
             abilities[i].transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
             abilities[i].transform.GetChild(0).gameObject.SetActive(false);
         }
-    }
+    }*/
 
     public void DisplayUIHitMode(bool status, bool isContainingUnit, GameObject unit, bool isContainingImplant, GameObject otherImplant)
     {
@@ -538,7 +521,7 @@ public class UISystem : MonoBehaviour
         }
     }
 
-    public void SetModeToMoveUI(List<MoveData> abilitiesList, GameObject previousSelectedAbility)
+    /*public void SetModeToMoveUI(List<MoveData> abilitiesList, GameObject previousSelectedAbility)
     {
         CloseUIMode(actionAbilities);
         OpenUIMoveMode(moveAbilities, abilitiesList);
@@ -562,9 +545,9 @@ public class UISystem : MonoBehaviour
             selectedAbility.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
         }
         SetSelectedMoveAbility();
-    }
+    }*/
 
-    public void SetModeToActionUI(List<ActionData> abilitiesList, GameObject previousSelectedAbility)
+    /*public void SetModeToActionUI(List<ActionData> abilitiesList, GameObject previousSelectedAbility)
     {
         CloseUIMode(moveAbilities);
         OpenUIActionMode(actionAbilities, abilitiesList);
@@ -595,7 +578,7 @@ public class UISystem : MonoBehaviour
             selectedAbility.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
         }
         SetSelectedActionAbility();
-    }
+    }*/
 
     public void SetModeToHitUI(bool status, bool isContainingUnit, GameObject unit, bool isContainingImplant, GameObject otherImplant)
     {
@@ -603,7 +586,7 @@ public class UISystem : MonoBehaviour
         DisplayUIHitMode(status, isContainingUnit, targetUnit, isContainingImplant, otherImplant);
     }
 
-    public void ChangeSelectedMoveAbility(GameObject[] array, List<MoveData> abilitiesList, float buttonValue)
+    /*public void ChangeSelectedMoveAbility(GameObject[] array, List<MoveData> abilitiesList, float buttonValue)
     {
         int maxIndex = abilitiesList.Count;
         ChangeSelectedAbility(array, maxIndex, buttonValue);
@@ -617,7 +600,7 @@ public class UISystem : MonoBehaviour
         ChangeSelectedAbility(array, maxIndex, buttonValue);
         SetSelectedActionAbility();
         playingUnitSystem.HoverActionAbility(selectedActionData);
-    }
+    }*/
 
     public void ChangeSelectedAbility(GameObject[] array, int maxIndex, float buttonValue)
     {
@@ -908,8 +891,8 @@ public class UISystem : MonoBehaviour
                     selectedAbility.transform.GetChild(0).gameObject.SetActive(true);
                     selectedAbility.transform.GetChild(0).gameObject.GetComponent<Image>().color = darkColor;
                     selectedAbility.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
-                    SetSelectedMoveAbility();
-                    playingUnitSystem.HoverMoveAbility(selectedMoveData);
+                    //SetSelectedMoveAbility();
+                    //playingUnitSystem.HoverMoveAbility(selectedMoveData);
                 }
             }
         }
@@ -935,8 +918,8 @@ public class UISystem : MonoBehaviour
                     selectedAbility.transform.GetChild(0).gameObject.SetActive(true);
                     selectedAbility.transform.GetChild(0).gameObject.GetComponent<Image>().color = darkColor;
                     selectedAbility.transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>().color = Color.black;
-                    SetSelectedActionAbility();
-                    playingUnitSystem.HoverActionAbility(selectedActionData);
+                    //SetSelectedActionAbility();
+                    //playingUnitSystem.HoverActionAbility(selectedActionData);
                 }
             }
         }
@@ -1017,7 +1000,7 @@ public class UISystem : MonoBehaviour
         }
     }
 
-    public void SetSelectedMoveAbility()
+    /*public void SetSelectedMoveAbility()
     {
         if (selectedAbility.transform.IsChildOf(movePoints.transform))
         {
@@ -1041,14 +1024,14 @@ public class UISystem : MonoBehaviour
         {
             Debug.Log("SELECTED_ABILITY IS NOT ACTION_ABILITY");
         }
-    }
+    }*/
 
     public void SetSelectedImplant()
     {
         int implantIndexArray = GetIndexOfObjectInArray(selectedImplantUI, implants);
         int implantIndexList = GetIndexOfObjectInList(selectedImplantUI, uiImplants);
         string implantText = "Liste des capacités de l'implant : \n\n";
-        if (otherImplant != null)
+        /*if (otherImplant != null)
         {
             if (playingUnitSystem.state == UnitGridSystem.State.Repair)
             {
@@ -1221,7 +1204,7 @@ public class UISystem : MonoBehaviour
                     selectedImplantInfoText.GetComponent<TextMeshProUGUI>().color = Color.black;
                 }
             }
-        }
+        }*/
     }
 
     public int GetIndexOfObjectInArray(GameObject gameObject, GameObject[] array)

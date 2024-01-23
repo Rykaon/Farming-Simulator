@@ -21,11 +21,6 @@ public class UnitGridSystem : MonoBehaviour
     public int remainingMovePoints;                 //OK
     public int remainingActionPoints;               //OK
 
-    public List<MoveData> moveDataList;             //OK
-    public List<ActionData> actionDataList;         //OK
-    public List<MoveAbility> moveAbilityList;       //OK
-    public List<ActionAbility> actionAbilityList;   //OK
-
     public GameObject[] implants;                   //OK
 
     public GameObject ui;                           //OK
@@ -39,7 +34,6 @@ public class UnitGridSystem : MonoBehaviour
     public GameObject energeticParticlePrefab;
     public List<GameObject> energeticLinkedUnits;
     public List<GameObject> energeticParticles;
-    public ActionData energeticTower;
 
     public int movePointsToMove = 0;
 
@@ -197,10 +191,10 @@ public class UnitGridSystem : MonoBehaviour
         gridSystem.ResetTileOutline();
     }
 
-    public void HoverMoveAbility(MoveData moveData)
+    public void HoverMoveAbility()
     {
         gridSystem.ResetTileOutline();
-        switch (moveData.type)
+        /*switch (moveData.type)
         {
             case MoveData.Type.Area:
                 GetMaxAreaRangeMovePath(moveData);
@@ -209,13 +203,13 @@ public class UnitGridSystem : MonoBehaviour
             case MoveData.Type.Linear:
                 GetMaxLinearRangeMovePath(moveData);
                 break;
-        }
+        }*/
     }
 
-    public bool DoMoveAbility(MoveData moveData)
+    public bool DoMoveAbility(/*MoveData moveData*/)
     {
         bool isValidPosition = false;
-        if (moveData.cost <= remainingMovePoints)
+        /*if (moveData.cost <= remainingMovePoints)
         {
             if (playerController.GetMouseWorldPosition() != new Vector3(-1, -1, -1))
             {
@@ -237,15 +231,15 @@ public class UnitGridSystem : MonoBehaviour
                     isValidPosition = true;
                 }
             }
-        }
+        }*/
         return isValidPosition;
     }
 
-    public void GetMaxAreaRangeMovePath(MoveData moveData)
+    public void GetMaxAreaRangeMovePath(/*MoveData moveData*/)
     {
         pathfinding.GetGrid().GetXY(GetUnitPosition(), out int unitX, out int unitY);
 
-        if (moveData.cost <= remainingMovePoints)
+        /*if (moveData.cost <= remainingMovePoints)
         {
             for (int i = unitX - moveData.range; i <= unitX + moveData.range; ++i)
             {
@@ -262,7 +256,7 @@ public class UnitGridSystem : MonoBehaviour
 
                                 for (int k = 0; k < pathNodeList.Count; ++k)
                                 {
-                                    if (/*pathNodeList[k].isOil && */moveData.abilityName != "Téléporteur")
+                                    if (moveData.abilityName != "Téléporteur")
                                     {
                                         movePointsToMove += 2;
                                     }
@@ -303,14 +297,14 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
-    public void GetMaxLinearRangeMovePath(MoveData moveData)
+    public void GetMaxLinearRangeMovePath(/*MoveData moveData*/)
     {
         pathfinding.GetGrid().GetXY(GetUnitPosition(), out int unitX, out int unitY);
 
-        if (moveData.cost <= remainingMovePoints)
+        /*if (moveData.cost <= remainingMovePoints)
         {
             for (int i = unitX - moveData.range; i <= unitX + moveData.range; ++i)
             {
@@ -329,7 +323,7 @@ public class UnitGridSystem : MonoBehaviour
 
                                     for (int k = 0; k < pathNodeList.Count; ++k)
                                     {
-                                        if (/*pathNodeList[k].isOil*/isActiveAndEnabled)
+                                        if (isActiveAndEnabled)
                                         {
                                             movePointsToMove += 2;
                                         }
@@ -371,13 +365,13 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
-    public void HoverActionAbility(ActionData actionData)
+    public void HoverActionAbility(/*ActionData actionData*/)
     {
         gridSystem.ResetTileOutline();
-        switch (actionData.type)
+        /*switch (actionData.type)
         {
             case ActionData.Type.Area:
                 GetMaxAreaRangeActionPath(actionData);
@@ -390,13 +384,13 @@ public class UnitGridSystem : MonoBehaviour
             case ActionData.Type.LinearPath:
                 GetMaxLinearStopRangeActionPath(actionData);
                 break;
-        }
+        }*/
     }
 
-    public bool DoActionAbility(ActionData actionData)
+    public bool DoActionAbility(/*ActionData actionData*/)
     {
         bool isValidPosition = false;
-        if (!uiSystem.selectedActionAbility.GetComponent<ActionAbility>().hasBeenUsed)
+        /*if (!uiSystem.selectedActionAbility.GetComponent<ActionAbility>().hasBeenUsed)
         {
             if (actionData.isWorld)
             {
@@ -445,40 +439,7 @@ public class UnitGridSystem : MonoBehaviour
                             }
                             isValidPosition = true;
                         }
-                        /*else if ((!pathfinding.GetNode(x, y).isWalkable && pathfinding.GetNode(x, y).isNexus) && pathfinding.GetNode(x, y).isValidMovePosition)
-                        {
-                            if (pathfinding.GetNode(x, y).nexusOrange != null && pathfinding.GetNode(x, y).nexusBlue == null)
-                            {
-                                uiSystem.selectedActionAbility.ApplyAbility(null, -1, pathfinding.GetNode(x, y).nexusOrange, pathfinding.GetNode(x, y));
-                            }
-                            else if (pathfinding.GetNode(x, y).nexusOrange == null && pathfinding.GetNode(x, y).nexusBlue != null)
-                            {
-                                uiSystem.selectedActionAbility.ApplyAbility(null, -1, pathfinding.GetNode(x, y).nexusOrange, pathfinding.GetNode(x, y));
-                            }
-                            gridSystem.ResetTileOutline();
-                            remainingActionPoints -= actionData.cost;
-                            if (pathfinding.GetNode(x, y).nexusOrange != null && pathfinding.GetNode(x, y).nexusBlue == null)
-                            {
-                                //pathfinding.GetNode(x, y).nexusOrange.GetComponent<NexusSystem>().InflictDamage(actionData.damage);
-                                Debug.Log("ACTION DONE ON NEXUS ORANGE");
-                            }
-                            else if (pathfinding.GetNode(x, y).nexusBlue != null && pathfinding.GetNode(x, y).nexusOrange == null)
-                            {
-                                //pathfinding.GetNode(x, y).nexusBlue.GetComponent<NexusSystem>().InflictDamage(actionData.damage);
-                                Debug.Log("ACTION DONE ON NEXUS BLUE");
-                            }
-                            isValidPosition = true;
-                        }
-                        else if ((!pathfinding.GetNode(x, y).isWalkable && !pathfinding.GetNode(x, y).isNexus) && pathfinding.GetNode(x, y).isValidMovePosition)
-                        {
-                            if (actionData.cost < remainingActionPoints)
-                            {
-                                uiSystem.selectedActionAbility.ApplyAbility(null, -1, null, pathfinding.GetNode(x, y));
-                                gridSystem.ResetTileOutline();
-                                remainingActionPoints -= actionData.cost;
-                                isValidPosition = true;
-                            }
-                        }*/
+                        
                     }
                 }
             }
@@ -489,15 +450,15 @@ public class UnitGridSystem : MonoBehaviour
                 remainingActionPoints -= actionData.cost;
                 isValidPosition = true;
             }
-        }
+        }*/
         return isValidPosition;
     }
 
-    public void GetMaxAreaRangeActionPath(ActionData actionData)
+    public void GetMaxAreaRangeActionPath(/*ActionData actionData*/)
     {
         pathfinding.GetGrid().GetXY(GetUnitPosition(), out int unitX, out int unitY);
 
-        if (actionData.cost <= remainingActionPoints)
+        /*if (actionData.cost <= remainingActionPoints)
         {
             for (int i = unitX - actionData.range; i <= unitX + actionData.range; ++i)
             {
@@ -538,7 +499,7 @@ public class UnitGridSystem : MonoBehaviour
                                 }
                             }
                         }
-                        else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable /*&& pathfinding.GetNode(i, j).isNexus*/)
+                        else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable)
                         {
                             List<PathNode> pathNodeList = pathfinding.FindAreaPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                             if (pathNodeList != null)
@@ -571,13 +532,13 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
-    public void GetMaxLinearRangeActionPath(ActionData actionData)
+    public void GetMaxLinearRangeActionPath(/*ActionData actionData*/)
     {
         pathfinding.GetGrid().GetXY(GetUnitPosition(), out int unitX, out int unitY);
-        if (actionData.cost <= remainingActionPoints)
+        /*if (actionData.cost <= remainingActionPoints)
         {
             for (int i = unitX - actionData.range; i <= unitX + actionData.range; ++i)
             {
@@ -618,11 +579,11 @@ public class UnitGridSystem : MonoBehaviour
                                     }
                                 }
                             }
-                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable/* && !pathfinding.GetNode(i, j).isNexus*/)
+                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable)
                             {
                                 break;
                             }
-                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable/* && pathfinding.GetNode(i, j).isNexus*/)
+                            else if (!pathfinding.GetNodeWithCoords(i, j).isWalkable)
                             {
                                 List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, i, j);
                                 if (pathNodeList != null)
@@ -657,13 +618,13 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
-    public void GetMaxLinearStopRangeActionPath(ActionData actionData)
+    public void GetMaxLinearStopRangeActionPath(/*ActionData actionData*/)
     {
         PathNode unitNode = pathfinding.GetNodeWithCoords((int)MathF.Round(transform.position.x), (int)MathF.Round(transform.position.z));
-        if (actionData.cost <= remainingActionPoints)
+        /*if (actionData.cost <= remainingActionPoints)
         {
             for (int i = 1; i <= actionData.range; ++i)
             {
@@ -706,11 +667,11 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
@@ -787,11 +748,11 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
@@ -868,11 +829,11 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
@@ -949,11 +910,11 @@ public class UnitGridSystem : MonoBehaviour
                             break;
                         }
                     }
-                    else if (!targetNode.isWalkable/* && !targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         break;
                     }
-                    else if (!targetNode.isWalkable/* && targetNode.isNexus*/)
+                    else if (!targetNode.isWalkable)
                     {
                         List<PathNode> pathNodeList = pathfinding.FindLinearPathAction((int)GetUnitPosition().x, (int)GetUnitPosition().z, targetNode.x, targetNode.y);
                         if (pathNodeList != null)
@@ -988,14 +949,14 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
     public void SetEnergeticTower()
     {
         PathNode node = pathfinding.GetNodeWithCoords((int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.z));
         
-        if (implants[1].GetComponent<ActionAbility>().actionAbility != null)
+        /*if (implants[1].GetComponent<ActionAbility>().actionAbility != null)
         {
             if (implants[1].GetComponent<ActionAbility>().actionAbility.abilityName == "Tour Énergétique")
             {
@@ -1086,7 +1047,7 @@ public class UnitGridSystem : MonoBehaviour
                     }
                 }
             }
-        }
+        }*/
     }
 
     private Vector3 GetUnitPosition()
@@ -1097,7 +1058,7 @@ public class UnitGridSystem : MonoBehaviour
 
     public void GetListOfAbilities()
     {
-        moveDataList = new List<MoveData>();
+        /*moveDataList = new List<MoveData>();
         for (int i = 0; i < transform.childCount; ++i)
         {
             if (transform.GetChild(i).TryGetComponent<MoveAbility>(out MoveAbility ability))
@@ -1122,6 +1083,6 @@ public class UnitGridSystem : MonoBehaviour
                     actionAbilityList.Add(ability);
                 }
             }
-        }
+        }*/
     }
 }

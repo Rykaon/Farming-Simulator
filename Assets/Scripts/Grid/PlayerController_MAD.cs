@@ -504,7 +504,7 @@ public class PlayerController_MAD : MonoBehaviour
                     //Debug.Log("SWITCH UNIT = " + playerControls.Player.SwitchUnit.ReadValue<float>());
                 }
 
-                if (/*playerControls.Player.MoveMode.triggered*/isStickPress)
+                /*if (playerControls.Player.MoveMode.triggered//isStickPress)
                 {
                     playingUnitSystem.ChangeState(UnitGridSystem.State.MoveUI);
                     uiSystem.SetModeToMoveUI(playingUnitSystem.moveDataList, null);
@@ -513,14 +513,14 @@ public class PlayerController_MAD : MonoBehaviour
                     //Debug.Log("ENTER IN MOVE UI STATE");
                 }
 
-                if (/*playerControls.Player.ActionMode.triggered*/isStickPress)
+                if (playerControls.Player.ActionMode.triggered//isStickPress)
                 {
                     playingUnitSystem.ChangeState(UnitGridSystem.State.ActionUI);
                     uiSystem.SetModeToActionUI(playingUnitSystem.actionDataList, null);
                     uiSystem.SetSelectedActionAbility();
                     playingUnitSystem.HoverActionAbility(uiSystem.selectedActionData);
                     //Debug.Log("ENTER IN ACTION UI STATE");
-                }
+                }*/
             }
 
             if (playingUnitSystem.state == UnitGridSystem.State.PopUp)
@@ -661,7 +661,7 @@ public class PlayerController_MAD : MonoBehaviour
             {             
                 if (/*playerControls.Player.Validate.triggered*/isStickPress)
                 {
-                    uiSystem.SetSelectedMoveAbility();
+                    //uiSystem.SetSelectedMoveAbility();
                     uiSystem.CloseUIMode(uiSystem.moveAbilities);
                     StartCoroutine(playingUnitSystem.ChangeStateWithDelay(UnitGridSystem.State.MoveWorld));
                 }
@@ -683,7 +683,7 @@ public class PlayerController_MAD : MonoBehaviour
             {
                 HoverSprite();
 
-                if (/*playerControls.Player.Validate.triggered*/isStickPress)
+                /*if (playerControls.Player.Validate.triggered//isStickPress)
                 {
                     if (playingUnitSystem.DoMoveAbility(uiSystem.selectedMoveData))
                     {
@@ -697,18 +697,18 @@ public class PlayerController_MAD : MonoBehaviour
                     }
                 }
 
-                if (/*playerControls.Player.Cancel.triggered*/isStickPress)
+                if (playerControls.Player.Cancel.triggered//isStickPress)
                 {
                     uiSystem.SetModeToMoveUI(playingUnitSystem.moveDataList, uiSystem.selectedAbility);
                     playingUnitSystem.ChangeState(UnitGridSystem.State.MoveUI);
-                }
+                }*/
             }
 
             if (playingUnitSystem.state == UnitGridSystem.State.ActionUI)
             {
                 if (/*playerControls.Player.Validate.triggered*/isStickPress)
                 {
-                    uiSystem.SetSelectedActionAbility();
+                    //uiSystem.SetSelectedActionAbility();
                     uiSystem.CloseUIMode(uiSystem.actionAbilities);
                     StartCoroutine(playingUnitSystem.ChangeStateWithDelay(UnitGridSystem.State.ActionWorld));
                 }
@@ -730,9 +730,9 @@ public class PlayerController_MAD : MonoBehaviour
             {
                 HoverSprite();
                 
-                if (uiSystem.selectedActionData.isWorld)
+                /*if (uiSystem.selectedActionData.isWorld)
                 {
-                    if (/*playerControls.Player.Validate.triggered*/isStickPress)
+                    if (playerControls.Player.Validate.triggered//isStickPress)
                     {
                         if (playingUnitSystem.DoActionAbility(uiSystem.selectedActionData))
                         {
@@ -759,14 +759,14 @@ public class PlayerController_MAD : MonoBehaviour
                         gridSystem.ResetTileOutline();
                         playingUnitSystem.ChangeState(UnitGridSystem.State.WorldMode);
                     }
-                }
+                }*/
                 
 
-                if (/*playerControls.Player.Cancel.triggered*/isStickPress)
+                /*if (playerControls.Player.Cancel.triggered//isStickPress)
                 {
                     uiSystem.SetModeToActionUI(playingUnitSystem.actionDataList, uiSystem.selectedAbility);
                     playingUnitSystem.ChangeState(UnitGridSystem.State.ActionUI);
-                }
+                }*/
             }
 
             if (playingUnitSystem.state == UnitGridSystem.State.HitUI)
@@ -774,10 +774,10 @@ public class PlayerController_MAD : MonoBehaviour
                 if (/*playerControls.Player.Validate.triggered*/isStickPress)
                 {
                     uiSystem.SetSelectedImplant();
-                    playingUnitSystem.remainingActionPoints -= uiSystem.selectedActionData.cost;
-                    Debug.Log(uiSystem.selectedActionAbility.actionAbility.abilityName);
+                    //playingUnitSystem.remainingActionPoints -= uiSystem.selectedActionData.cost;
+                    //Debug.Log(uiSystem.selectedActionAbility.actionAbility.abilityName);
                     //uiSystem.selectedImplant.GetComponent<ImplantSystem>().InflictDamage(uiSystem.selectedActionData.damage);
-                    uiSystem.selectedActionAbility.ApplyAbility(uiSystem.selectedImplant.transform.parent.gameObject, uiSystem.GetIndexOfObjectInArray(uiSystem.selectedImplant, uiSystem.selectedImplant.transform.parent.GetComponent<UnitGridSystem>().implants), null, pathfinding.GetNodeWithCoords((int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.x), (int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.z)));
+                    //uiSystem.selectedActionAbility.ApplyAbility(uiSystem.selectedImplant.transform.parent.gameObject, uiSystem.GetIndexOfObjectInArray(uiSystem.selectedImplant, uiSystem.selectedImplant.transform.parent.GetComponent<UnitGridSystem>().implants), null, pathfinding.GetNodeWithCoords((int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.x), (int)Mathf.Round(uiSystem.selectedImplant.transform.parent.position.z)));
                     uiSystem.SetModeToHitUI(false, false, null, false, null);
                     StartCoroutine(playingUnitSystem.ChangeStateWithDelay(UnitGridSystem.State.WorldMode));
                 }
@@ -786,7 +786,7 @@ public class PlayerController_MAD : MonoBehaviour
                 {
                     uiSystem.CloseUIMode(uiSystem.actionAbilities);
                     uiSystem.SetModeToHitUI(false, false, null, false, null);
-                    uiSystem.SetSelectedActionAbility();
+                    //uiSystem.SetSelectedActionAbility();
                     StartCoroutine(playingUnitSystem.ChangeStateWithDelay(UnitGridSystem.State.ActionWorld));
                 }
 

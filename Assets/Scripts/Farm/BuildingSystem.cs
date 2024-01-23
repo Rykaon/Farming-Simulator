@@ -77,43 +77,6 @@ public class BuildingSystem : MonoBehaviour
         }
     }
 
-    public Vector3 GetPlayerPosition()
-    {
-        RaycastHit hit;
-        if (Physics.Raycast(playerController.currentPos, -Vector3.up, out hit, 1f))
-        {
-            if (hit.collider.gameObject.layer == 6)
-            {
-                return hit.point;
-            }
-            return Vector3.zero;
-        }
-        else
-        {
-            return Vector3.zero;
-        }
-    }
-
-    public GameObject GetGroundTile()
-    {
-        if (fence.GetTile(playerController.forwardPos, groundTilemap) != null)
-        {
-            return fence.GetTile(playerController.forwardPos, groundTilemap);
-        }
-
-        return null;
-    }
-
-    public GameObject GetObjectTile()
-    {
-        if (fence.GetTile(playerController.forwardPos, objectTilemap) != null)
-        {
-            return fence.GetTile(playerController.forwardPos, objectTilemap);
-        }
-
-        return null;
-    }
-
     public Vector3 SnapCoordinateToGrid(Vector3 position)
     {
         Vector3Int cellPos = gridLayout.WorldToCell(position);
@@ -141,9 +104,9 @@ public class BuildingSystem : MonoBehaviour
 
         GameObject obj;
 
-        if (playerController.currentGroundTile != null)
+        if (playerController.currentTile != null)
         {
-            obj = tile.Instantiate(playerController.currentGroundTile.transform.position, Quaternion.identity, tilemap);
+            obj = tile.Instantiate(playerController.currentTile.transform.position, Quaternion.identity, tilemap);
         }
         else
         {
@@ -172,14 +135,6 @@ public class BuildingSystem : MonoBehaviour
                 return false;
             }
         }*/
-
-        if (GetObjectTile() != null)
-        {
-            if (GetObjectTile().GetComponent<BuildObject>().isPlaced)
-            {
-                return false;
-            }
-        }
 
         return true;
     }

@@ -87,22 +87,12 @@ public class Pathfinding
         return false;
     }
 
-    public List<Vector3> FindPathMove(Vector3 startPosition, Vector3 endPosition, MoveData ability)
+    public List<Vector3> FindPathMove(Vector3 startPosition, Vector3 endPosition)
     {
         grid.GetXY(startPosition, out int startX, out int startY);
         grid.GetXY(endPosition, out int endX, out int endY);
 
         List<PathNode> path = new List<PathNode>();
-        switch (ability.type)
-        {
-            case MoveData.Type.Area:
-                path = FindAreaPathMove(startX, startY, endX, endY);
-                break;
-
-            case MoveData.Type.Linear:
-                path = FindLinearPathMove(startX, startY, endX, endY);
-                break;
-        }
 
         if (path != null)
         {
@@ -117,13 +107,13 @@ public class Pathfinding
         return null;
     }
 
-    public List<Vector3> FindPathAction(Vector3 startPosition, Vector3 endPosition, ActionData ability)
+    public List<Vector3> FindPathAction(Vector3 startPosition, Vector3 endPosition)
     {
         grid.GetXY(startPosition, out int startX, out int startY);
         grid.GetXY(endPosition, out int endX, out int endY);
 
         List<PathNode> path = new List<PathNode>();
-        switch (ability.type)
+        /*switch (ability.type)
         {
             case ActionData.Type.Area:
                 path = FindAreaPathAction(startX, startY, endX, endY);
@@ -137,7 +127,7 @@ public class Pathfinding
                 // OUI, C'EST BIEN LINEAR_PATH_MOVE ET PAS LINEAR_PATH_ACTION CAR C'EST LE SEUL CAS OU ON VEUT UN CHEMIN ET PAS UNE RANGE
                 path = FindLinearPathMove(startX, startY, endX, endY);
                 break;
-        }
+        }*/
 
         if (path != null)
         {

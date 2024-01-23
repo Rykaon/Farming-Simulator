@@ -22,7 +22,7 @@ public class UnitMove : MonoBehaviour, IUnitMove
         this.velocityVector = velocityVector;
     }*/
 
-    public void SetVelocity(Vector3 velocityVector, MoveData moveData, Action onReachedTargetPosition)
+    public void SetVelocity(Vector3 velocityVector, Action onReachedTargetPosition)
     {
         this.onReachedTargetPosition = onReachedTargetPosition;
         this.velocityVector = velocityVector;

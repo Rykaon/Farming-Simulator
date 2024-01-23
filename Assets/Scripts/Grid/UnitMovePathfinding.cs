@@ -8,7 +8,6 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
 {
     private GridSystem gridSystem;
     Pathfinding pathfinding;
-    private MoveData moveData;
     private Vector3 startPos;
     private List<Vector3> pathVectorList;
     private int pathIndex = -1;
@@ -25,11 +24,10 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
         pathfinding = Pathfinding.instance;
     }
 
-    public void SetVelocity(Vector3 targetPos, MoveData moveAbility, Action onReachedTargetPosition)
+    public void SetVelocity(Vector3 targetPos, Action onReachedTargetPosition)
     {
-        moveData = moveAbility;
         startPos = new Vector3((int)Mathf.Round(transform.position.x), 1f, (int)Mathf.Round(transform.position.z));
-        pathVectorList = pathfinding.FindPathMove(startPos, targetPos, moveData);
+        pathVectorList = pathfinding.FindPathMove(startPos, targetPos);
         //Debug.Log(targetPos);
         
 
@@ -49,29 +47,9 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
 
                 if (targetNode != startNode)
                 {
-                    if (moveData.abilityName == "Vidange")
-                    {
-                        GameObject newOil = Instantiate(oil, new Vector3(targetNode.x, 0, targetNode.y), Quaternion.identity);
-                        //newOil.transform.SetParent(gridSystem.tileGrid.GetGridObject(targetNode.x, targetNode.y).transform);
-                        newOil.transform.GetChild(0).gameObject.SetActive(false);
-                        targetNode.SetIsOil(newOil);
-                    }
+                    
 
-                    if (targetNode.isFire)
-                    {
-                        for (int i = 0; i < transform.childCount; ++i)
-                        {
-                            if (transform.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().lifePoints <= FireDoTDamage)
-                            {
-                                transform.GetComponent<UnitGridSystem>().implants[3].GetComponent<ImplantSystem>().InflictDamage(FireDoTDamage);
-                                break;
-                            }
-                            else
-                            {
-                                transform.GetComponent<UnitGridSystem>().implants[i].GetComponent<ImplantSystem>().InflictDamage(FireDoTDamage);
-                            }
-                        }
-                    }
+                    
                 }
 
                 if (transform.GetComponent<UnitGridSystem>().hasSpiderWebToBeRemove)
@@ -95,7 +73,7 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
         {
             Vector3 nextPathPosition = pathVectorList[pathIndex];
             Vector3 moveVelocity = new Vector3((nextPathPosition.x - transform.position.x), nextPathPosition.y, (nextPathPosition.z - transform.position.z)).normalized;
-            GetComponent<IUnitMove>().SetVelocity(moveVelocity, moveData, onReachedTargetPosition);
+            GetComponent<IUnitMove>().SetVelocity(moveVelocity, onReachedTargetPosition);
             Vector3 unitHeight = new Vector3(transform.position.x, 1, transform.position.z);
             //Debug.Log(pathIndex);
             float reachedPathPositionDistance = 1f;
@@ -112,7 +90,7 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
         }
         else
         {
-            GetComponent<IUnitMove>().SetVelocity(Vector3.zero, moveData, onReachedTargetPosition);
+            GetComponent<IUnitMove>().SetVelocity(Vector3.zero, onReachedTargetPosition);
         }
 
         if (Camera.main.transform.childCount > 0 && isInitialized)

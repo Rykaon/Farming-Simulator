@@ -39,20 +39,14 @@ public class GridSystem : MonoBehaviour
     public List<Vector3> playerOneUnitScales;
     public List<List<Vector3>> playerOneImplantPositions;
     public List<List<Vector3>> playerOneImplantScales;
-    public List<List<ActionData>> playerOneActions;
-    public List<List<MoveData>> playerOneMoves;
 
     public List<Vector3> playerTwoUnitScales;
     public List<List<Vector3>> playerTwoImplantPositions;
     public List<List<Vector3>> playerTwoImplantScales;
-    public List<List<ActionData>> playerTwoActions;
-    public List<List<MoveData>> playerTwoMoves;
 
     public GameObject spiderWeb;
     public GameObject oil;
     public GameObject energeticParticles;
-    public ActionData energeticTower;
-    public MoveData basicLinearMove;
 
     public List<GameObject> playerOneList;
     public List<GameObject> playerTwoList;

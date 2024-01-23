@@ -16,9 +16,9 @@ public class BuildObjectDrag : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController_Farm.instance.currentGroundTile != null)
+        if (PlayerController_Farm.instance.currentTile != null)
         {
-            transform.position = buildingSystem.SnapCoordinateToGrid(playerController.currentGroundTile.transform.position);
+            transform.position = buildingSystem.SnapCoordinateToGrid(playerController.currentTile.transform.position);
         }
         else
         {
