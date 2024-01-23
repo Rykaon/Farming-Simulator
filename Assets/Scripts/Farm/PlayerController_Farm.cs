@@ -209,18 +209,21 @@ public class PlayerController_Farm : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
-
-        if (!playerControls.Gamepad.LBRB.IsPressed())
+        if (!DialogueManager.GetInstance().dialogueIsPlaying)
         {
-            LBRBisPressed = false;
-        }
+            Move();
 
-        if (controlState == ControlState.World)
-        {
-            if (canUseTool && playerControls.Gamepad.X.IsPressed())
+            if (!playerControls.Gamepad.LBRB.IsPressed())
             {
-                StartCoroutine(ExecuteAction());
+                LBRBisPressed = false;
+            }
+
+            if (controlState == ControlState.World)
+            {
+                if (canUseTool && playerControls.Gamepad.X.IsPressed())
+                {
+                    StartCoroutine(ExecuteAction());
+                }
             }
         }
     }
