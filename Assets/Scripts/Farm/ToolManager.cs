@@ -5,7 +5,7 @@ using UnityEngine;
 public class ToolManager : MonoBehaviour
 {
     public static ToolManager instance;
-    [SerializeField] PlayerController playerController;
+    [SerializeField] PlayerController_Farm playerController;
     [SerializeField] BuildingSystem buildingSystem;
 
     public enum Tools

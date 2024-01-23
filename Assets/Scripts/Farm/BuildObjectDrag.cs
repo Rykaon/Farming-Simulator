@@ -5,18 +5,18 @@ using UnityEngine.Tilemaps;
 
 public class BuildObjectDrag : MonoBehaviour
 {
-    private PlayerController playerController;
+    private PlayerController_Farm playerController;
     private BuildingSystem buildingSystem;
 
     private void Awake()
     {
-        playerController = PlayerController.instance;
+        playerController = PlayerController_Farm.instance;
         buildingSystem = BuildingSystem.instance;
     }
 
     private void Update()
     {
-        if (PlayerController.instance.currentGroundTile != null)
+        if (PlayerController_Farm.instance.currentGroundTile != null)
         {
             transform.position = buildingSystem.SnapCoordinateToGrid(playerController.currentGroundTile.transform.position);
         }

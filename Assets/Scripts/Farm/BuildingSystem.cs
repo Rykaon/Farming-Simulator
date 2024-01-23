@@ -8,7 +8,7 @@ public class BuildingSystem : MonoBehaviour
 {
     public static BuildingSystem instance;
 
-    [SerializeField] PlayerController playerController;
+    [SerializeField] PlayerController_Farm playerController;
     [SerializeField] ToolManager toolManager;
 
     public GridLayout gridLayout;

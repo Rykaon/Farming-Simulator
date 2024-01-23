@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_Farm : MonoBehaviour
 {
-    public static PlayerController instance;
+    public static PlayerController_Farm instance;
     public PlayerControls playerControls { get; private set; }
 
     public enum ControlState

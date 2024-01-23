@@ -6,7 +6,7 @@ using DelaunatorSharp;
 
 public class BuildObject : MonoBehaviour
 {
-    private PlayerController playerController;
+    private PlayerController_Farm playerController;
     private BuildingSystem buildingSystem;
     public bool isPlaced {  get; private set; }
     public Vector3Int size { get; private set; }
@@ -24,7 +24,7 @@ public class BuildObject : MonoBehaviour
 
     private void Awake()
     {
-        playerController = PlayerController.instance;
+        playerController = PlayerController_Farm.instance;
         buildingSystem = BuildingSystem.instance;
 
         GetColliderVertexPositionLocal();
