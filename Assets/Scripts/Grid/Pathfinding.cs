@@ -52,9 +52,8 @@ public class Pathfinding
 
     public PathNode GetNodeWithPlayerWorldPos(Vector3 vector)
     {
-        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) && (Mathf.Round(vector.z) > 0 && Mathf.Round(vector.z) < grid.GetHeight()))
+        if ((Mathf.Round(vector.x) >= 0 && Mathf.Round(vector.x) <= grid.GetWidth() - 1) && (Mathf.Round(vector.z) >= 0 && Mathf.Round(vector.z) <= grid.GetHeight() - 1))
         {
-            Debug.Log("yes");
             if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z)).isVirtual)
             {
                 return grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z));
@@ -65,7 +64,7 @@ public class Pathfinding
 
     public TileManager GetTileWithPlayerWorldPos(Vector3 vector)
     {
-        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) && (Mathf.Round(vector.z) > 0 && Mathf.Round(vector.z) < grid.GetHeight()))
+        if ((Mathf.Round(vector.x) >= 0 && Mathf.Round(vector.x) <= grid.GetWidth() - 1) && (Mathf.Round(vector.z) >= 0 && Mathf.Round(vector.z) <= grid.GetHeight() - 1))
         {
             if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z)).isVirtual)
             {
@@ -77,9 +76,9 @@ public class Pathfinding
 
     public bool IsVectorInGridRange(Vector3 position)
     {
-        if (position.x > 0 && position.x < grid.GetWidth())
+        if (position.x >= 0 && position.x <= grid.GetWidth())
         {
-            if (position.z > 0 && position.z < grid.GetHeight())
+            if (position.z >= 0 && position.z <= grid.GetHeight())
             {
                 return true;
             }

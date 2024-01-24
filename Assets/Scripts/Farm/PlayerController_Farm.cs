@@ -62,7 +62,7 @@ public class PlayerController_Farm : MonoBehaviour
         {
             for (int j = 0; j < 15; ++j)
             {
-                GameObject tile = Instantiate(groundTilePrefab, new Vector3(i + 0.5f, 0, j + 0.5f), Quaternion.identity);
+                GameObject tile = Instantiate(groundTilePrefab, new Vector3(i, 0, j), Quaternion.identity);
                 pathfinding.GetNodeWithCoords(i, j).isVirtual = false;
                 pathfinding.GetNodeWithCoords(i, j).SetTile(tile);
                 pathfinding.GetNodeWithCoords(i, j).SetTileManager(tile.GetComponent<TileManager>());
