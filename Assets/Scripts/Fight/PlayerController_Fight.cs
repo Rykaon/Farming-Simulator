@@ -32,6 +32,7 @@ public class PlayerController_Fight : MonoBehaviour
     Pathfinding pathfinding;
     public ControlState controlState;
     public ActionState actionState;
+    [SerializeField] GameObject groundTilePrefab;
 
     [Header("Properties")]
     [SerializeField] float moveSpeed;
@@ -55,6 +56,15 @@ public class PlayerController_Fight : MonoBehaviour
         instance = this;
         playerControls = new PlayerControls();
         pathfinding = new Pathfinding(9, 15);
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 15; ++j)
+            {
+                GameObject tile = Instantiate(groundTilePrefab, new Vector3(i + 0.5f, 0, j + 0.5f), Quaternion.identity);
+                pathfinding.GetNodeWithCoords(i, j).SetTile(tile);
+                pathfinding.GetNodeWithCoords(i, j).SetTileManager(tile.GetComponent<TileManager>());
+            }
+        }
     }
 
     private void OnEnable()
@@ -115,8 +125,26 @@ public class PlayerController_Fight : MonoBehaviour
 
         if (canMove)
         {
-            currentTile = pathfinding.GetNodeWithPlayerWorldPos(transform.position).tile;
-            currentTileManager = pathfinding.GetTileWithPlayerWorldPos(transform.position);
+            if (currentTile != null)
+            {
+                currentTile.transform.GetChild(0).GetComponent<Outline>().enabled = false;
+            }
+
+            if (pathfinding.GetNodeWithPlayerWorldPos(transform.position) != null)
+            {
+                currentTile = pathfinding.GetNodeWithPlayerWorldPos(transform.position).tile;
+                currentTileManager = pathfinding.GetTileWithPlayerWorldPos(transform.position);
+            }
+            else
+            {
+                currentTile = null;
+                currentTileManager = null;
+            }
+
+            if (currentTile != null)
+            {
+                currentTile.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+            }
         }
     }
 

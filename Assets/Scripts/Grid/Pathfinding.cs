@@ -38,7 +38,7 @@ public class Pathfinding
         {
             return null;
         }
-        return grid.GetGridObject(x, y);
+        return grid.GetGridObject(x, y); // et salut a tous les amis c mederawks appelez moi au 06 34 56 72 91 des bisous
     }
 
     public PathNode GetNodeWithVector3(Vector3 vector)
@@ -47,16 +47,17 @@ public class Pathfinding
         {
             return null;
         }
-        return grid.GetGridObject((int)vector.x, (int)vector.y);
+        return grid.GetGridObject((int)vector.x, (int)vector.z);
     }
 
     public PathNode GetNodeWithPlayerWorldPos(Vector3 vector)
     {
-        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) || Mathf.Round(vector.z) > 0 || Mathf.Round(vector.z) < grid.GetHeight())
+        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) && (Mathf.Round(vector.z) > 0 && Mathf.Round(vector.z) < grid.GetHeight()))
         {
-            if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.y)).isVirtual)
+            Debug.Log("yes");
+            if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z)).isVirtual)
             {
-                return grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.y));
+                return grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z));
             }
         }
         return null;
@@ -64,11 +65,11 @@ public class Pathfinding
 
     public TileManager GetTileWithPlayerWorldPos(Vector3 vector)
     {
-        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) || Mathf.Round(vector.z) > 0 || Mathf.Round(vector.z) < grid.GetHeight())
+        if ((Mathf.Round(vector.x) > 0 && Mathf.Round(vector.x) < grid.GetWidth()) && (Mathf.Round(vector.z) > 0 && Mathf.Round(vector.z) < grid.GetHeight()))
         {
-            if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.y)).isVirtual)
+            if (!grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z)).isVirtual)
             {
-                return grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.y)).tileManager;
+                return grid.GetGridObject((int)Mathf.Round(vector.x), (int)Mathf.Round(vector.z)).tileManager;
             }
         }
         return null;

@@ -26,6 +26,12 @@ public class PathNode
         this.grid = grid;
         this.x = x;
         this.y = y;
+
+        isVirtual = false;
+        isSeeded = false;
+        isWalkable = true;
+        isValidMovePosition = false;
+        isContainingUnit = false;
     }
 
     public void CalculateFCost()
