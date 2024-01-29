@@ -60,10 +60,10 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame())
+        /*if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame())
         {
             ContinueStory();
-        }
+        }*/
     }
 
     public void EnterDialogueMode(TextAsset inkJSON)

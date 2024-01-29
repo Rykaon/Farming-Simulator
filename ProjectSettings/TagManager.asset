@@ -8,6 +8,9 @@ TagManager:
   - Door
   - Corner
   - Connector
+  - Tile
+  - Unit
+  - Plant
   layers:
   - Default
   - TransparentFX
@@ -19,9 +22,9 @@ TagManager:
   - Object
   - 
   - 
-  - 
-  - 
-  - 
+  - Tile
+  - Plant
+  - Unit
   - 
   - 
   - 

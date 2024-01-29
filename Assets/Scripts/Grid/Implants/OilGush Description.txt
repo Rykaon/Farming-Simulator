@@ -1,1 +1,0 @@
-L'<i>unité</i> se déplace et recouvre les <i>cases</i> d'huiles. Les <i>cases</n> recouvertes d'huiles demande plus de <i>PM</i> et peuvent être enflammée par <i>Lance-Flamme</i>.

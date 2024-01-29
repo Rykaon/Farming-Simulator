@@ -5,248 +5,122 @@ using UnityEngine;
 public class PlayerController_Fight : MonoBehaviour
 {
     public static PlayerController_Fight instance;
-    public PlayerControls playerControls { get; private set; }
-
-    public enum ControlState
-    {
-        Farm,
-        FarmUI,
-        Fight,
-        FightUI,
-        World,
-        WorldUI
-    }
-
-    public enum ActionState
-    {
-        Sun,
-        Water,
-        Seed,
-        Object,
-        Collect,
-    }
 
     [Header("Component References")]
-    [SerializeField] Animator animator;
-    [SerializeField] Rigidbody rigidBody;
-    Pathfinding pathfinding;
-    public ControlState controlState;
-    public ActionState actionState;
-    [SerializeField] GameObject groundTilePrefab;
+    [SerializeField] private PlayerManager PC_Manager;
 
-    [Header("Properties")]
-    [SerializeField] float moveSpeed;
-    [SerializeField] float collisionDetectionDistance;
+    private PlayerControls playerControls;
+    private Pathfinding pathfinding;
 
-    private Vector3 movement;
-    public GameObject currentTile;
-    public TileManager currentTileManager;
+    public RadialMenu rm;
 
-    private const string isWalking = "isWalking";
-    private const string isRunning = "isRunning";
-
-    public bool canMove = true;
+    public bool isActive = true;
     public bool canUseTool = true;
-    public bool inField = false;
 
     public bool LBRBisPressed = false;
 
     private void Awake()
     {
         instance = this;
-        playerControls = new PlayerControls();
-        pathfinding = new Pathfinding(9, 15);
-        for (int i = 0; i < 9; i++)
+    }
+    private void Start()
+    {
+        playerControls = PC_Manager.playerControls;
+        pathfinding = PC_Manager.pathfinding;
+        playerControls.Gamepad.Enable();
+        playerControls.UI.Disable();
+    }
+
+    public List<GameObject> GetValidTarget(bool isMove, bool isAction, int range, PathNode startNode)
+    {
+        List<GameObject> objectList = new List<GameObject>();
+        List<PathNode> pathList = new List<PathNode>();
+        
+        for (int i = startNode.x - range; i < startNode.x + range; ++i)
         {
-            for (int j = 0; j < 15; ++j)
+            for (int j = startNode.y - range; j < startNode.y + range; ++j)
             {
-                GameObject tile = Instantiate(groundTilePrefab, new Vector3(i + 0.5f, 0, j + 0.5f), Quaternion.identity);
-                pathfinding.GetNodeWithCoords(i, j).SetTile(tile);
-                pathfinding.GetNodeWithCoords(i, j).SetTileManager(tile.GetComponent<TileManager>());
+                if (pathfinding.IsCoordsInGridRange(i, j))
+                {
+                    PathNode node = pathfinding.GetNodeWithCoords(i, j);
+
+                    if (node != null)
+                    {
+                        if (!node.isVirtual)
+                        {
+                            if (isMove && !isAction)
+                            {
+                                if (!node.isContainingUnit)
+                                {
+                                    pathList = pathfinding.FindAreaPathMove(startNode.x, startNode.y, i, j);
+
+                                    if (pathList != null)
+                                    {
+                                        if (pathList.Count <= range)
+                                        {
+                                            objectList.Add(node.tile);
+                                        }
+                                    }
+                                }
+                            }
+                            else if (!isMove && isAction)
+                            {
+                                if (i == startNode.x || j == startNode.y)
+                                {
+                                    if (node.isContainingUnit)
+                                    {
+                                        if (node.unit != null)
+                                        {
+                                            if (node.unit.tag == "Unit")
+                                            {
+                                                Debug.Log("yo");
+                                                pathList = pathfinding.FindLinearPathAction(startNode.x, startNode.y, i, j);
+                                                
+                                                if (pathList != null)
+                                                {
+                                                    if (pathList.Count <= range)
+                                                    {
+                                                        objectList.Add(node.unit);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-    }
 
-    private void OnEnable()
-    {
-        playerControls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        playerControls.Disable();
-    }
-
-    private void Move()
-    {
-        movement = Vector3.zero;
-        if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x != 0f)
+        if (objectList.Count > 0)
         {
-            movement += new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, 0f);
-        }
-
-        if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y != 0f)
-        {
-            movement += new Vector3(0f, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
-        }
-
-        if (movement.magnitude > 0.1f && movement.magnitude < 0.5f)
-        {
-            animator.SetBool(isWalking, true);
-            animator.SetBool(isRunning, false);
-        }
-        else if (movement.magnitude > 0.5f)
-        {
-            animator.SetBool(isWalking, false);
-            animator.SetBool(isRunning, true);
+            return objectList;
         }
         else
         {
-            animator.SetBool(isWalking, false);
-            animator.SetBool(isRunning, false);
-        }
-
-        if (canMove)
-        {
-            if (movement != Vector3.zero)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
-            }
-
-            if (!RaycastCollision())
-            {
-                rigidBody.velocity = movement * moveSpeed * Time.deltaTime;
-            }
-            else
-            {
-                rigidBody.velocity = Vector3.zero;
-            }
-        }
-
-        if (canMove)
-        {
-            if (currentTile != null)
-            {
-                currentTile.transform.GetChild(0).GetComponent<Outline>().enabled = false;
-            }
-
-            if (pathfinding.GetNodeWithPlayerWorldPos(transform.position) != null)
-            {
-                currentTile = pathfinding.GetNodeWithPlayerWorldPos(transform.position).tile;
-                currentTileManager = pathfinding.GetTileWithPlayerWorldPos(transform.position);
-            }
-            else
-            {
-                currentTile = null;
-                currentTileManager = null;
-            }
-
-            if (currentTile != null)
-            {
-                currentTile.transform.GetChild(0).GetComponent<Outline>().enabled = true;
-            }
+            return null;
         }
     }
 
-    private bool RaycastCollision()
+    private void Update()
     {
-        bool isCollisionDetected = false;
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, collisionDetectionDistance))
+        if (isActive)
         {
-            Debug.DrawRay(transform.position, transform.forward * collisionDetectionDistance, Color.red);
-            if (hit.collider.tag == "Level")
+            if (playerControls.Gamepad.Y.IsPressed())
             {
-                isCollisionDetected = true;
+                rm.gameObject.SetActive(true);
             }
-        }
 
-        return isCollisionDetected;
-    }
-
-    IEnumerator ExecuteAction()
-    {
-        canMove = false;
-        canUseTool = false;
-
-        switch (actionState)
-        {
-            case ActionState.Sun: // DIG (faire d'une tuile sauvage de la terre prête à être semée
-                if (currentTileManager != null)
-                {
-                    if (currentTileManager.tileState == TileManager.TileState.Grass)
-                    {
-                        animator.Play("Digging");
-                        currentTileManager.ChangeTileState(TileManager.TileState.Dirt);
-                    }
-                }
-                break;
-
-            case ActionState.Water: //Arroser une case, la faisant passée à l'état mouillée si elle ne l'était pas. Lance une coroutine avant que la terre redevienne sèche. Si terre déjà mouiller, reset de la couroutine
-                if (currentTileManager != null)
-                {
-                    if (currentTileManager.tileState == TileManager.TileState.Dirt)
-                    {
-                        if (currentTileManager.dirtToGrass != null)
-                        {
-                            StopCoroutine(currentTileManager.dirtToGrass);
-                        }
-                        currentTileManager.ChangeTileState(TileManager.TileState.WetDirt);
-                    }
-                    else if (currentTileManager.tileState == TileManager.TileState.WetDirt)
-                    {
-                        if (currentTileManager.wetToDirt != null)
-                        {
-                            StopCoroutine(currentTileManager.wetToDirt);
-                        }
-                        currentTileManager.ChangeTileState(TileManager.TileState.WetDirt);
-                    }
-                }
-                break;
-
-            case ActionState.Seed: //Planter une plante 
-                if (currentTileManager != null)
-                {
-                    if (currentTileManager.seedType == TileManager.SeedType.None)
-                    {
-                        if (currentTileManager.tileState == TileManager.TileState.Dirt)
-                        {
-                            if (currentTileManager.dirtToGrass != null)
-                            {
-                                StopCoroutine(currentTileManager.dirtToGrass);
-                            }
-
-                            currentTileManager.ChangeSeedType(TileManager.SeedType.Seeded);
-                        }
-                    }
-                }
-                break;
-
-            case ActionState.Object:
-
-                break;
-        }
-
-        canMove = true;
-        canUseTool = true;
-        return null;
-    }
-
-    private void FixedUpdate()
-    {
-        Move();
-
-        if (!playerControls.Gamepad.LBRB.IsPressed())
-        {
-            LBRBisPressed = false;
-        }
-
-        if (controlState == ControlState.World)
-        {
-            if (canUseTool && playerControls.Gamepad.X.IsPressed())
+            if (playerControls.Gamepad.X.IsPressed())
             {
-                StartCoroutine(ExecuteAction());
+                PC_Manager.moveRange = PC_Manager.maxMoveRange;
+                PC_Manager.actionRange = PC_Manager.maxActionRange;
+                PC_Manager.currentActionsPoints = PC_Manager.maxActionPoints;
+                PC_Manager.currentDistanceMoved = 0;
+                PC_Manager.isBoosted = false;
+                PC_Manager.boostFactor = 0;
             }
         }
     }

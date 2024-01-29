@@ -1,5 +1,0 @@
-<b>Activable</b>
-<b>Portée linéaire : </b><i>5 cases</i>
-<b>Coût d’utilisation : </b><i>4 PA</i>
-<b>Équipé : </b><i>+1 PM</i>
-<b>Achat : </b><i>100 gold</i>

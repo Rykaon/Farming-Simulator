@@ -5,25 +5,22 @@ using UnityEngine.Tilemaps;
 
 public class BuildObjectDrag : MonoBehaviour
 {
-    private PlayerController_Farm playerController;
-    private BuildingSystem buildingSystem;
+    private PlayerManager playerManager;
 
     private void Awake()
     {
-        playerController = PlayerController_Farm.instance;
-        buildingSystem = BuildingSystem.instance;
+        playerManager = PlayerManager.instance;
     }
 
     private void Update()
     {
-        if (PlayerController_Farm.instance.currentTile != null)
+        if (PlayerController_Farm.instance.GetCurrentNode() != null)
         {
-            transform.position = buildingSystem.SnapCoordinateToGrid(playerController.currentTile.transform.position);
+            transform.position = playerManager.PC_farm.SnapCoordinateToGrid(PlayerController_Farm.instance.GetCurrentNode().tile.transform.position);
         }
         else
         {
-            transform.position = buildingSystem.SnapCoordinateToGrid(Vector3.zero);
+            transform.position = playerManager.PC_farm.SnapCoordinateToGrid(playerManager.transform.position);
         }
-        
     }
 }

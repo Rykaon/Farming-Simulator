@@ -87,6 +87,19 @@ public class Pathfinding
         return false;
     }
 
+    public bool IsCoordsInGridRange(int x, int y)
+    {
+        if (x >= 0 && x <= grid.GetWidth())
+        {
+            if (y >= 0 && y <= grid.GetHeight())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public List<Vector3> FindPathMove(Vector3 startPosition, Vector3 endPosition)
     {
         grid.GetXY(startPosition, out int startX, out int startY);
@@ -410,11 +423,6 @@ public class Pathfinding
         openList = new List<PathNode>() { firstNode };
         closedList = new List<PathNode>();
 
-        /*if ((!endNode.isWalkable && !endNode.isNexus) || endNode == startNode || (!firstNode.isWalkable && !firstNode.isNexus))
-        {
-            return null;
-        }*/
-
         for (int i = 0; i < grid.GetWidth(); ++i)
         {
             for (int j = 0; j < grid.GetHeight(); ++j)
@@ -446,7 +454,7 @@ public class Pathfinding
                     continue;
                 }
 
-                if (!neighbourNode.isWalkable/* && !neighbourNode.isNexus*/)
+                if (!neighbourNode.isWalkable || neighbourNode.isContainingUnit)
                 {
                     closedList.Add(neighbourNode);
                     return CalculatePath(startNode, currentNode);

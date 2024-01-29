@@ -1,1 +1,0 @@
-L'<i>unité</i> se déplace librement dans une zone autour d'elle. Ignore les ralentissements et dégâts des <i>cases</i> d'huile et <i>cases</i> enflammées.

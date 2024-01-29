@@ -1,1 +1,0 @@
-Inflige des dégâts légers à un <i>implant</i> ciblé à toutes les <i>unités</i> dans la zone d'attaque.

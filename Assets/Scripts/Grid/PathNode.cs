@@ -12,6 +12,7 @@ public class PathNode
 
     public bool isVirtual;
     public bool isSeeded;
+    public bool isPlant;
     public bool isWalkable;
     public bool isValidMovePosition;
     public bool isContainingUnit;
@@ -29,6 +30,7 @@ public class PathNode
 
         isVirtual = false;
         isSeeded = false;
+        isPlant = false;
         isWalkable = true;
         isValidMovePosition = false;
         isContainingUnit = false;

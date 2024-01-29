@@ -552,7 +552,6 @@ public class GridSystem : MonoBehaviour
         unit.GetComponent<UnitGridSystem>().gridSystem = this;
         //unit.GetComponent<UnitGridSystem>().playerController = playerController;
         unit.GetComponent<UnitGridSystem>().GetListOfAbilities();
-        unit.GetComponent<UnitMovePathfinding>().isInitialized = true;
     }
 
     public void SetEnergeticTower(UnitGridSystem.Team team)

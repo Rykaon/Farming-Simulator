@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871ec942d719e0e44a89ab5f7e6c62ed, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  width: 9
+  height: 15
+  content: 'J,P2,F,F,F,F,F,F,F,P1,F,F,F,F,F
+
+    F,F,F,F,F,F,F,P1,U,F,F,F,F,F,F
+
+    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+
+    F,F,F,F,F,F,F,F,F,F,U,F,F,F,F
+
+    F,F,F,F,F,F,F,F,F,P3,F,F,F,F,F
+
+    U,F,F,F,F,F,F,UP3,F,F,F,F,F,P3,F
+
+    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+
+    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+
+    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F'

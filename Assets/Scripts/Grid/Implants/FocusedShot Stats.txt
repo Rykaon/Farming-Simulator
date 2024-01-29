@@ -1,5 +1,0 @@
-<b>Activable</b>
-<b>Dégâts locaux : </b><i>20</i>
-<b>Portée linéaire : </b><i>5 cases</i>
-<b>Coût d’utilisation : </b><i>2 PA</i>
-<b>Achat : </b><i>0 gold</i>

@@ -25,10 +25,10 @@ public class DialogueTrigger : MonoBehaviour
         if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             visualCue.SetActive(true);
-            if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame()) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
+            /*if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame()) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
             {
                 DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
-            }
+            }*/
         }
         else
         {

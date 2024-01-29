@@ -1,1 +1,0 @@
-L'<i>unité</i> se déplace librement dans une direction orthogonale autour d'elle.
