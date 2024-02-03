@@ -29,11 +29,12 @@ public class BuildObject : MonoBehaviour
     {
         if (transform.tag == "Plant")
         {
-            gameObject.GetComponent<PlantManager>().CalculateTargetNode();
+            transform.gameObject.GetComponent<PlantManager>().CalculateTargetNode();
             PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
             if (node != null)
             {
-                node.tileManager.plant = gameObject;
+                Debug.Log(node.tileManager);
+                node.tileManager.plant = transform.gameObject;
             }
         }
         else if (transform.tag == "Object")

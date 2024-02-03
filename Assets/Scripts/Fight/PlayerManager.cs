@@ -312,9 +312,20 @@ public class PlayerManager : MonoBehaviour
         while (elapsedTime < pressTime)
         {
             elapsedTime += Time.deltaTime;
-            if (!action.IsPressed())
+            if (!action.IsPressed() && elapsedTime < 0.5f)
             {
                 isPress = false;
+
+                switch (controlState)
+                {
+                    case ControlState.Farm:
+                        
+                        break;
+
+                    case ControlState.Fight:
+                        EndTurn();
+                        break;
+                }
             }
             yield return new WaitForEndOfFrame();
         }
@@ -334,7 +345,17 @@ public class PlayerManager : MonoBehaviour
                     break;
 
                 case ControlState.Fight:
-                    EndTurn();
+                    controlState = ControlState.Farm;
+                    PC_farm.isActive = false;
+                    PC_fight.isActive = true;
+                    foreach (GameObject unit in unitList)
+                    {
+                        unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
+                        unit.GetComponent<UnitManager>().unitNode.unit = null;
+                        unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
+                        unitList.Remove(unit);
+                        Destroy(unit);
+                    }
                     break;
             }
         }

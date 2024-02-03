@@ -18984,16 +18984,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55d09bd62a5a7bb48b1dd416bba77c72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  selectedTool: 5
-  shovelObject: {fileID: 7790832962048557875}
-  waterObject: {fileID: 576874524}
-  seedObject: {fileID: 0}
-  animalObject: {fileID: 0}
-  fenceObject: {fileID: 1860469231230670444}
-  fenceCornerObject: {fileID: 7112324382534012430}
-  fenceDoorObject: {fileID: 5019850132933774249}
-  selectedToolObject: {fileID: 0}
 --- !u!114 &5866666020996823293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19008,7 +18998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PC_Manager: {fileID: 5866666020996823296}
   rm: {fileID: 1641891199}
-  isActive: 1
+  isActive: 0
   canUseTool: 1
   LBRBisPressed: 0
 --- !u!114 &5866666020996823294

@@ -163,13 +163,13 @@ public class TileManager : MonoBehaviour
         {
             case GrowState.High:
                 node.tileManager.plant.transform.DOScale(wetToDirtDelay, wetToDirtDelay);
-                
+
                 while (elapsedTime < wetToDirtDelay)
                 {
                     elapsedTime += Time.deltaTime;
                     yield return new WaitForEndOfFrame();
                 }
-                
+
                 node.plant = plant;
                 PlayerManager.instance.plantList.Add(node.plant);
                 break;
