@@ -35,6 +35,8 @@ public class PlayerController_Farm : MonoBehaviour
 
     public bool LBRBisPressed = false;
 
+    public bool hasMovementBeenReset;
+
     private void Awake()
     {
         instance = this;
@@ -55,34 +57,33 @@ public class PlayerController_Farm : MonoBehaviour
     private void Move()
     {
         movement = Vector3.zero;
-        if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x != 0f)
-        {
-            movement += new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, 0f);
-        }
-
-        if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y != 0f)
-        {
-            movement += new Vector3(0f, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
-        }
-
-        if (movement.magnitude > 0.1f && movement.magnitude < 0.5f)
-        {
-            PC_Manager.animator.SetBool(isWalking, true);
-            PC_Manager.animator.SetBool(isRunning, false);
-        }
-        else if (movement.magnitude > 0.5f)
-        {
-            PC_Manager.animator.SetBool(isWalking, false);
-            PC_Manager.animator.SetBool(isRunning, true);
-        }
-        else
-        {
-            PC_Manager.animator.SetBool(isWalking, false);
-            PC_Manager.animator.SetBool(isRunning, false);
-        }
 
         if (isActive)
         {
+            PathNode node = GetCurrentNode();
+            GameObject target = null;
+
+            if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>() != Vector2.zero)
+            {
+                movement += new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
+            }
+
+            if (movement.magnitude > 0.1f && movement.magnitude < 0.5f)
+            {
+                PC_Manager.animator.SetBool(isWalking, true);
+                PC_Manager.animator.SetBool(isRunning, false);
+            }
+            else if (movement.magnitude > 0.5f)
+            {
+                PC_Manager.animator.SetBool(isWalking, false);
+                PC_Manager.animator.SetBool(isRunning, true);
+            }
+            else
+            {
+                PC_Manager.animator.SetBool(isWalking, false);
+                PC_Manager.animator.SetBool(isRunning, false);
+            }
+
             if (movement != Vector3.zero)
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
@@ -97,53 +98,57 @@ public class PlayerController_Farm : MonoBehaviour
                 PC_Manager.rigidBody.velocity = Vector3.zero;
             }
 
-            if (isPlacing)
+            if (node != null)
             {
-                PathNode node = GetCurrentNode();
-                GameObject target = null;
-                
-                if (node != null)
+                if (!node.isVirtual)
                 {
-                    if (!node.isSeeded)
+                    if (isPlacing)
+                    {
+                        if (!node.isSeeded)
+                        {
+                            target = node.tile;
+                        }
+                    }
+                    else
                     {
                         target = node.tile;
                     }
                 }
-
-                if (previousTarget != null)
-                {
-                    previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
-                }
-                if (target != null)
-                {
-                    target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
-                }
-                previousTarget = target;
             }
-            else
+
+            if (previousTarget != null)
             {
-                PathNode node = GetCurrentNode();
-                GameObject target = null;
-
-                if (node != null)
-                {
-                    if (!node.isVirtual)
-                    {
-                        target = node.tile;
-                    }
-                }
-
-                if (previousTarget != null)
+                previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
+            }
+            if (target != null)
+            {
+                target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+            }
+            previousTarget = target;
+        }
+        else
+        {
+            if (previousTarget != null)
+            {
+                if (PC_Manager.virtualMouseManager.isActive)
                 {
                     previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
                 }
-                if (target != null)
+                else
                 {
-                    target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+                    previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = true;
                 }
-                previousTarget = target;
             }
         }
+    }
+
+    private void ResetMovement()
+    {
+        movement = Vector3.zero;
+        PC_Manager.animator.SetBool(isWalking, false);
+        PC_Manager.animator.SetBool(isRunning, false);
+        PC_Manager.rigidBody.velocity = Vector3.zero;
+        hasMovementBeenReset = true;
     }
 
     private bool RaycastCollision()
@@ -180,8 +185,10 @@ public class PlayerController_Farm : MonoBehaviour
             case PlayerManager.ActionState.Collect:
                 if (node != null)
                 {
+                    Debug.Log("node != null");
                     if (node.isPlant)
                     {
+                        Debug.Log("node.isPlant");
                         if (node.tileManager.growState == TileManager.GrowState.High)
                         {
                             node.tileManager.ChangeSeedType(TileManager.SeedType.None);
@@ -206,11 +213,6 @@ public class PlayerController_Farm : MonoBehaviour
                         }
 
                         node.tileManager.ChangeTileState(TileManager.TileState.WetDirt);
-
-                        if (node.tileManager.growState == TileManager.GrowState.Low)
-                        {
-                            node.tileManager.ChangeGrowState();
-                        }
                     }
                 }
                 break;
@@ -231,11 +233,6 @@ public class PlayerController_Farm : MonoBehaviour
                         }
 
                         node.tileManager.ChangeTileState(TileManager.TileState.SunDirt);
-
-                        if (node.tileManager.growState == TileManager.GrowState.Low)
-                        {
-                            node.tileManager.ChangeGrowState();
-                        }
                     }
                 }
                 break;
@@ -308,9 +305,11 @@ public class PlayerController_Farm : MonoBehaviour
 
     private void Update()
     {
+        Move();
+
         if (isActive)
         {
-            Move();
+            hasMovementBeenReset = false;
 
             if (isPlacing)
             {
@@ -371,6 +370,13 @@ public class PlayerController_Farm : MonoBehaviour
                     isPlaying = true;
                     StartCoroutine(ExecuteAction());
                 }
+            }
+        }
+        else
+        {
+            if (!hasMovementBeenReset)
+            {
+                ResetMovement();
             }
         }
     }

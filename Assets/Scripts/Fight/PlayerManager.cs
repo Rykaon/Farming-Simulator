@@ -17,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Component References")]
     [SerializeField] public PlayerController_Fight PC_fight;
     [SerializeField] public PlayerController_Farm PC_farm;
+    [SerializeField] public VirtualMouseManager virtualMouseManager;
     [SerializeField] public Animator animator;
     [SerializeField] public Rigidbody rigidBody;
     [SerializeField] public UnitMovePathfinding movePathfinding;
@@ -140,24 +141,11 @@ public class PlayerManager : MonoBehaviour
                 node.SetTileManager(tile.GetComponent<TileManager>());
                 tilesList.Add(tile);
                 node.isVirtual = false;
+                node.isContainingUnit = false;
+                node.unit = null;
+                node.isWalkable = true;
 
-                if (levelObjects[i][j][0] == 'F' || levelObjects[i][j][0] == 'J')
-                {
-                    if (levelObjects[i][j][0] == 'J')
-                    {
-                        node.isContainingUnit = true;
-                        node.unit = gameObject;
-                        node.isWalkable = false;
-                        playerNode = node;
-                    }
-                    else
-                    {
-                        node.isContainingUnit = false;
-                        node.unit = null;
-                        node.isWalkable = true;
-                    }
-                }
-                else if (levelObjects[i][j][0] == 'U')
+                if (levelObjects[i][j][0] == 'U')
                 {
                     /*GameObject unit = Instantiate(unitPrefab, new Vector3(i, 1, j), Quaternion.identity);
                     node.isContainingUnit = true;
@@ -228,15 +216,20 @@ public class PlayerManager : MonoBehaviour
         playerControls.Gamepad.Disable();
         playerControls.UI.Disable();
 
+        ResetStats();
+
+        Debug.Log("Player Turn Ended");
+        StartCoroutine(PlantsTurn());
+    }
+
+    public void ResetStats()
+    {
         moveRange = maxMoveRange;
         actionRange = maxActionRange;
         currentActionsPoints = maxActionPoints;
         currentDistanceMoved = 0;
         isBoosted = false;
         boostFactor = 0;
-
-        Debug.Log("Player Turn Ended");
-        StartCoroutine(PlantsTurn());
     }
 
     public IEnumerator PlantsTurn()
@@ -279,11 +272,23 @@ public class PlayerManager : MonoBehaviour
 
             if (CheckLooseCondition())
             {
-                break;
+                foreach (GameObject unit in unitList)
+                {
+                    unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
+                    unit.GetComponent<UnitManager>().unitNode.unit = null;
+                    unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
+                    Destroy(unit);
+                }
+                unitList.Clear();
+
+                controlState = ControlState.Farm;
+                PC_farm.isActive = true;
+                PC_fight.isActive = false;
+                yield break;
             }
         }
 
-        PlayerController_Fight.instance.isActive = true;
+        PC_fight.isActive = true;
         playerControls.Gamepad.Enable();
         playerControls.UI.Disable();
 
@@ -299,9 +304,12 @@ public class PlayerManager : MonoBehaviour
 
     private bool CheckLooseCondition()
     {
-        bool hasWin = false;
+        if (plantList.Count == 0)
+        {
+            return true;
+        }
 
-        return hasWin;
+        return false;
     }
 
     private IEnumerator InputLongPress(InputAction action)
@@ -323,7 +331,11 @@ public class PlayerManager : MonoBehaviour
                         break;
 
                     case ControlState.Fight:
-                        EndTurn();
+
+                        if (PC_fight.isActive)
+                        {
+                            EndTurn();
+                        }
                         break;
                 }
             }
@@ -331,31 +343,58 @@ public class PlayerManager : MonoBehaviour
         }
 
         if (isPress)
-        {
-            isPress = false;
-            
+        {   
             switch (controlState)
             {
                 case ControlState.Farm:
+                    Debug.Log("yo");
+                    if (PC_farm.GetCurrentNode() != null)
+                    {
+                        if (!PC_farm.GetCurrentNode().isVirtual)
+                        {
+                            playerNode = PC_farm.GetCurrentNode();
+                        }
+                        else
+                        {
+                            playerNode = pathfinding.GetNodeWithCoords(0, 0);
+                        }
+                    }
+                    else
+                    {
+                        playerNode = pathfinding.GetNodeWithCoords(0, 0);
+                    }
+
+                    playerNode.isContainingUnit = true;
+                    playerNode.unit = gameObject;
+                    playerNode.isWalkable = false;
+
+                    ResetStats();
+
                     SetUnits(level);
+
+                    turn = Turn.Player;
                     controlState = ControlState.Fight;
                     PC_farm.isActive = false;
                     PC_fight.isActive = true;
-                    turn = Turn.Player;
+
+                    Debug.Log(new Vector3(playerNode.x, transform.position.y, playerNode.y));
+                    rigidBody.velocity = Vector3.zero;
+                    transform.position = new Vector3(playerNode.x, transform.position.y, playerNode.y);
                     break;
 
                 case ControlState.Fight:
-                    controlState = ControlState.Farm;
-                    PC_farm.isActive = false;
-                    PC_fight.isActive = true;
                     foreach (GameObject unit in unitList)
                     {
                         unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
                         unit.GetComponent<UnitManager>().unitNode.unit = null;
                         unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
-                        unitList.Remove(unit);
                         Destroy(unit);
                     }
+                    unitList.Clear();
+
+                    controlState = ControlState.Farm;
+                    PC_farm.isActive = true;
+                    PC_fight.isActive = false;
                     break;
             }
         }
@@ -363,6 +402,14 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (isPress)
+        {
+            if (!playerControls.Gamepad.B.IsPressed())
+            {
+                isPress = false;
+            }
+        }
+        
         switch (controlState)
         {
             case ControlState.Farm:
@@ -375,7 +422,7 @@ public class PlayerManager : MonoBehaviour
                 break;
 
             case ControlState.Fight:
-                if (turn == Turn.Player && currentDistanceMoved == maxActionPoints * maxMoveRange/* || playerControls.Gamepad.Y appuyé*/)
+                if (turn == Turn.Player && currentDistanceMoved == maxActionPoints * maxMoveRange)
                 {
                     EndTurn();
                 }

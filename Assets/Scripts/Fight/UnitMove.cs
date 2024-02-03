@@ -8,7 +8,7 @@ public class UnitMove : MonoBehaviour, IUnitMove
 {
     [SerializeField] private float moveSpeed;
 
-    private Vector3 velocityVector;
+    private Vector3 velocityVector = Vector2.zero;
 
     public void SetVelocity(Vector3 velocityVector)
     {
@@ -29,5 +29,26 @@ public class UnitMove : MonoBehaviour, IUnitMove
     private void FixedUpdate()
     {
         transform.position += velocityVector * moveSpeed * Time.deltaTime;
+        
+        if (velocityVector != Vector3.zero )
+        {
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(velocityVector.normalized), 0.15f);
+            
+            if (transform.tag == "Player")
+            {
+                PlayerManager.instance.animator.SetBool("isWalking", false);
+                PlayerManager.instance.animator.SetBool("isRunning", true);
+            }
+            Debug.Log(velocityVector);
+        }
+        else
+        {
+            if (transform.tag == "Player")
+            {
+                PlayerManager.instance.animator.SetBool("isWalking", false);
+                PlayerManager.instance.animator.SetBool("isRunning", false);
+            }
+        }
+
     }
 }

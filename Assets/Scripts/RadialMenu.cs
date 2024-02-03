@@ -69,10 +69,14 @@ public class RadialMenu : MonoBehaviour {
         rt = GetComponent<RectTransform>();
 
         if (rt == null)
+        {
             Debug.LogError("Radial Menu: Rect Transform for radial menu " + gameObject.name + " could not be found. Please ensure this is an object parented to a canvas.");
+        }
 
         if (useSelectionFollower && selectionFollowerContainer == null)
+        {
             Debug.LogError("Radial Menu: Selection follower container is unassigned on " + gameObject.name + ", which has the selection follower enabled.");
+        }
 
         elementCount = elements.Count;
 
@@ -139,7 +143,7 @@ public class RadialMenu : MonoBehaviour {
         if (useGamepad)
         {
             EventSystem.current.SetSelectedGameObject(gameObject, null); //We'll make this the active object when we start it. Comment this line to set it manually from another script.
-            if (useSelectionFollower && selectionFollowerContainer != null)
+            /*if (useSelectionFollower && selectionFollowerContainer != null)
             {
                 for (int i = 0; i < elements.Count; i++)
                 {
@@ -149,7 +153,7 @@ public class RadialMenu : MonoBehaviour {
                         break;
                     }
                 }
-            }
+            }*/
         }
     }
 
@@ -157,21 +161,27 @@ public class RadialMenu : MonoBehaviour {
     {
         if (isActive)
         {
-            //If your gamepad uses different horizontal and vertical joystick inputs, change them here!
             bool joystickMoved = playerControls.UI.Navigate.ReadValue<Vector2>() != Vector2.zero;
 
             float rawAngle;
 
             if (!useGamepad)
+            {
                 rawAngle = Mathf.Atan2(Input.mousePosition.y - rt.position.y, Input.mousePosition.x - rt.position.x) * Mathf.Rad2Deg;
+            }
             else
+            {
                 rawAngle = Mathf.Atan2(playerControls.UI.Navigate.ReadValue<Vector2>().y, playerControls.UI.Navigate.ReadValue<Vector2>().x) * Mathf.Rad2Deg;
+            }
 
-            //If no gamepad, update the angle always. Otherwise, only update it if we've moved the joystick.
             if (!useGamepad)
+            {
                 currentAngle = normalizeAngle(-rawAngle + 90 - globalOffset + (angleOffset / 2f));
+            }
             else if (joystickMoved)
+            {
                 currentAngle = normalizeAngle(-rawAngle + 90 - globalOffset + (angleOffset / 2f));
+            }
 
             //Handles lazy selection. Checks the current angle, matches it to the index of an element, and then highlights that element.
             if (angleOffset != 0 && useLazySelection)
@@ -195,18 +205,6 @@ public class RadialMenu : MonoBehaviour {
                                     ExecuteEvents.Execute(elements[index].button.gameObject, pointer, ExecuteEvents.submitHandler);
                                     elements[index].action.ExecuteAction(null);
                                 }
-                                else if (playerControls.UI.B.IsPressed())
-                                {
-                                    if (isSubRM)
-                                    {
-                                        transform.gameObject.SetActive(false);
-                                        elements[index].parentRM.upRM.EnableDisable(true);
-                                    }
-                                    else
-                                    {
-                                        transform.gameObject.SetActive(false);
-                                    }
-                                }
                                 break;
 
                             case PlayerManager.ControlState.Fight:
@@ -215,17 +213,31 @@ public class RadialMenu : MonoBehaviour {
                                     ExecuteEvents.Execute(elements[index].button.gameObject, pointer, ExecuteEvents.submitHandler);
                                     elements[index].action.SelectActionTarget();
                                 }
-                                else if (playerControls.UI.B.IsPressed())
-                                {
-                                    //elements[index].action.UndoAction();
-                                }
                                 break;
+                        }
+                    }
+                    else
+                    {
+                        if (previousActiveIndex != index)
+                        {
+                            if (elements[previousActiveIndex].active)
+                            {
+                                elements[previousActiveIndex].unHighlightThisElement(pointer);
+                            }
                         }
                     }
 
                     if (playerControls.UI.B.IsPressed())
                     {
-                        this.gameObject.SetActive(false);
+                        if (isSubRM)
+                        {
+                            transform.gameObject.SetActive(false);
+                            elements[index].parentRM.upRM.EnableDisable(true);
+                        }
+                        else
+                        {
+                            transform.gameObject.SetActive(false);
+                        }
                     }
                 }
             }
@@ -234,7 +246,23 @@ public class RadialMenu : MonoBehaviour {
             if (useSelectionFollower && selectionFollowerContainer != null)
             {
                 if (!useGamepad || joystickMoved)
+                {
+                    
+                }
+
+                if (rawAngle != 0)
+                {
                     selectionFollowerContainer.rotation = Quaternion.Euler(0, 0, rawAngle + 270);
+                }
+                else
+                {
+                    selectionFollowerContainer.rotation = Quaternion.Euler(0, 0, 90 + 270);
+                    elements[previousActiveIndex].unHighlightThisElement(pointer);
+                    elements[index].unHighlightThisElement(pointer);
+                    previousActiveIndex = 0;
+                    index = 0;
+                }
+                
             }
         } 
     }
@@ -245,10 +273,14 @@ public class RadialMenu : MonoBehaviour {
     {
         if (elements[i].selected == false)
         {
-            elements[i].highlightThisElement(pointer); //Select this one
+            
+        }
 
-            if (previousActiveIndex != i) 
-                elements[previousActiveIndex].unHighlightThisElement(pointer); //Deselect the last one.
+        elements[i].highlightThisElement(pointer); //Select this one
+
+        if (previousActiveIndex != i)
+        {
+            elements[previousActiveIndex].unHighlightThisElement(pointer); //Deselect the last one.
         }
 
         previousActiveIndex = i;

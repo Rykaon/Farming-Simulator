@@ -46,7 +46,7 @@ public class RadialMenuElement : MonoBehaviour {
     [HideInInspector]
     public float angleOffset;
 
-    [HideInInspector]
+    //[HideInInspector]
     public bool selected = false;
 
     [HideInInspector]

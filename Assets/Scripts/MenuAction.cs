@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class MenuAction : MonoBehaviour
+public abstract class MenuAction
 {
     private RadialMenuElement rme;
     private PlayerController_Fight playerController;
@@ -391,7 +391,7 @@ public abstract class MenuAction : MonoBehaviour
 
         public override void ExecuteAction(GameObject target)
         {
-            playerManager.actionState = PlayerManager.ActionState.Object;
+            playerManager.actionState = PlayerManager.ActionState.Collect;
 
             rme.parentRM.gameObject.SetActive(false);
         }

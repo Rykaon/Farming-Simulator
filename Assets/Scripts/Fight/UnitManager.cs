@@ -91,6 +91,7 @@ public class UnitManager : MonoBehaviour
         targetNode.isSeeded = false;
         targetNode.isPlant = false;
         targetNode.plant = null;
+        targetNode.tileManager.ChangeTileState(TileManager.TileState.Dirt);
 
         for (int i = 0; i < PlayerManager.instance.plantList.Count; i++)
         {
@@ -249,7 +250,7 @@ public class UnitManager : MonoBehaviour
             targetNode = null;
         }
 
-        Debug.Log("Loose Condition");
+        isActive = false;
     }
 
     private List<GameObject> ShuffleList(List<GameObject> list)

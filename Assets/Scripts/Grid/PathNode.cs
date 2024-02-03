@@ -71,6 +71,7 @@ public class PathNode
     public void SetTileManager(TileManager tileManager)
     {
         this.tileManager = tileManager;
+        this.tileManager.tileNode = this;
     }
 
     public override string ToString()

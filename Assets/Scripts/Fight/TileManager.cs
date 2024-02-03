@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEditor.Experimental.GraphView;
 
 public class TileManager : MonoBehaviour
 {
@@ -72,7 +73,7 @@ public class TileManager : MonoBehaviour
                 meshRenderer.material = wetDirtMat;
                 wetToDirt = StartCoroutine(WetToDirt());
 
-                if (seedType == SeedType.Seeded)
+                if (seedType == SeedType.Seeded && growState == GrowState.Low)
                 {
                     StartCoroutine(ChangeGrowState());
                 }
@@ -82,7 +83,7 @@ public class TileManager : MonoBehaviour
                 meshRenderer.material = sunDirtMat;
                 sunToDirt = StartCoroutine(SunToDirt());
 
-                if (seedType == SeedType.Seeded)
+                if (seedType == SeedType.Seeded && growState == GrowState.Low)
                 {
                     StartCoroutine(ChangeGrowState());
                 }
@@ -109,7 +110,7 @@ public class TileManager : MonoBehaviour
 
     public IEnumerator WetToDirt()
     {
-        yield return new WaitForSecondsRealtime(wetToDirtDelay);
+        yield return new WaitForSecondsRealtime(wetToDirtDelay * 3);
 
         ChangeTileState(TileState.Dirt);
 
@@ -118,7 +119,7 @@ public class TileManager : MonoBehaviour
 
     public IEnumerator SunToDirt()
     {
-        yield return new WaitForSecondsRealtime(wetToDirtDelay);
+        yield return new WaitForSecondsRealtime(wetToDirtDelay * 3);
 
         ChangeTileState(TileState.Dirt);
 
@@ -127,55 +128,61 @@ public class TileManager : MonoBehaviour
 
     public void ChangeSeedType(SeedType seedType)
     {
-        PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
+        this.seedType = seedType;
 
         switch (seedType)
         {
             case SeedType.None:
-                dirtToGrass = StartCoroutine(DirtToGrass());
-                node.tileManager.transform.DOScale(0f, wetToDirtDelay).SetEase(Ease.OutSine);
-                PlayerManager.instance.plantList.Remove(plant);
-                Destroy(node.plant);
-                node.isSeeded = false;
-                node.isPlant = false;
-                node.plant = null;
+                Debug.Log(plant);
+                StartCoroutine(DestroyPlant());
                 break;
 
             case SeedType.Seeded:
-                node.isSeeded = true;
-                node.isPlant = false;
-                Debug.Log(node.tileManager.plant);
-                node.tileManager.plant.transform.localScale = Vector3.zero;
-                node.tileManager.plant.transform.DOScale(0.5f, wetToDirtDelay).SetEase(Ease.OutSine);
-                growState = GrowState.Low;
+                tileNode.isSeeded = true;
+                tileNode.isPlant = false;
+                plant.transform.localScale = Vector3.zero;
+                plant.transform.DOScale(0.5f, wetToDirtDelay).SetEase(Ease.OutSine);
                 break;
         }
 
-        this.seedType = seedType;
+        ChangeTileState(TileState.Dirt);
+        growState = GrowState.Low;
+    }
+
+    public IEnumerator DestroyPlant()
+    {
+        float elapsedTime = 0f;
+        PlayerManager.instance.plantList.Remove(plant);
+        tileNode.isSeeded = false;
+        tileNode.isPlant = false;
+        tileNode.plant = null;
+        plant.transform.DOScale(0f, wetToDirtDelay).SetEase(Ease.OutSine);
+        GameObject plantToDestroy = plant;
+        plant = null;
+
+        while (elapsedTime < wetToDirtDelay)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+
+        Destroy(plantToDestroy);
     }
 
     public IEnumerator ChangeGrowState()
     {
         float elapsedTime = 0f;
-        PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-
-        switch (growState)
-        {
-            case GrowState.High:
-                node.tileManager.plant.transform.DOScale(wetToDirtDelay, wetToDirtDelay);
-
-                while (elapsedTime < wetToDirtDelay)
-                {
-                    elapsedTime += Time.deltaTime;
-                    yield return new WaitForEndOfFrame();
-                }
-
-                node.plant = plant;
-                PlayerManager.instance.plantList.Add(node.plant);
-                break;
-        }
-
         growState = GrowState.High;
-        yield return null;
+        tileNode.isPlant = true;
+        tileNode.plant = plant;
+        PlayerManager.instance.plantList.Add(plant);
+
+        plant.transform.DOScale(wetToDirtDelay, wetToDirtDelay);
+
+        while (elapsedTime < wetToDirtDelay)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

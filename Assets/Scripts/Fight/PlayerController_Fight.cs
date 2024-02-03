@@ -115,12 +115,7 @@ public class PlayerController_Fight : MonoBehaviour
 
             if (playerControls.Gamepad.X.IsPressed())
             {
-                PC_Manager.moveRange = PC_Manager.maxMoveRange;
-                PC_Manager.actionRange = PC_Manager.maxActionRange;
-                PC_Manager.currentActionsPoints = PC_Manager.maxActionPoints;
-                PC_Manager.currentDistanceMoved = 0;
-                PC_Manager.isBoosted = false;
-                PC_Manager.boostFactor = 0;
+                PC_Manager.ResetStats();
             }
         }
     }
