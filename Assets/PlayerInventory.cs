@@ -12,10 +12,15 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private int nbStartArgent;
 
     public bool isShopOpen = false;
-    public int nbArgent { get; private set; }
-    public int nbPlanteRouge { get; private set; }
-    public int nbPlanteBleu { get; private set; }
-    public int nbPlanteJaune { get; private set; }
+
+    public PlantItem plantAttack;
+    public PlantItem plantMove;
+    public PlantItem plantBoost;
+
+    public int nbArgent;
+    public int nbAttack;
+    public int nbMove;
+    public int nbBoost;
     //Dans le PlayerControllerFarm il faudra vérifier que le nbPlante>0 pour pouvoir planter la plante correspondante
 
     private PlayerControls playerControls;
@@ -25,9 +30,9 @@ public class PlayerInventory : MonoBehaviour
         playerControls = PC_Manager.playerControls;
 
         nbArgent = nbStartArgent;
-        nbPlanteRouge = nbStartPlant;
-        nbPlanteBleu = nbStartPlant;
-        nbPlanteJaune = nbStartPlant;
+        nbAttack = nbStartPlant;
+        nbMove = nbStartPlant;
+        nbBoost = nbStartPlant;
     }
 
     public void BuyPlant(string plantName)
@@ -37,13 +42,13 @@ public class PlayerInventory : MonoBehaviour
         switch (plantName)
         {
             case "Rouge":
-                nbPlanteRouge++;
+                nbAttack++;
                 break;
             case "Bleu":
-                nbPlanteBleu++;
+                nbMove++;
                 break;
             case "Jaune":
-                nbPlanteJaune++;
+                nbBoost++;
                 break;
             default:
                 Debug.LogWarning("La plante acheté n'est pas valide !");
@@ -58,13 +63,13 @@ public class PlayerInventory : MonoBehaviour
         switch (plantName)
         {
             case "Rouge":
-                nbPlanteRouge--;
+                nbAttack--;
                 break;
             case "Bleu":
-                nbPlanteBleu--;
+                nbMove--;
                 break;
             case "Jaune":
-                nbPlanteJaune--;
+                nbBoost--;
                 break;
             default:
                 Debug.LogWarning("La plante acheté n'est pas valide !");

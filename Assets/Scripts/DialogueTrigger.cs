@@ -13,6 +13,7 @@ public class DialogueTrigger : MonoBehaviour
     private bool playerInRange;
 
     [SerializeField] private PlayerManager PC_Manager;
+    [SerializeField] private DialogueManager dialogueManager;
     private PlayerControls playerControls;
 
     private void Awake()
@@ -28,12 +29,12 @@ public class DialogueTrigger : MonoBehaviour
 
     private void Update()
     {
-        if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
+        if (playerInRange && !DialogueManager.instance.isActive)
         {
             visualCue.SetActive(true);
-            if (playerControls.Gamepad.Select.WasPressedThisFrame()) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
+            if (playerControls.Gamepad.Select.WasPressedThisFrame() && PC_Manager.controlState == PlayerManager.ControlState.Farm) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
             {
-                DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
+                DialogueManager.instance.EnterDialogueMode(inkJSON);
             }
         }
         else

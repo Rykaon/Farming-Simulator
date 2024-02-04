@@ -175,7 +175,18 @@ public class PlayerController_Farm : MonoBehaviour
         switch (PC_Manager.actionState)
         {
             case PlayerManager.ActionState.Plant:
-                InitializeWithObject(PC_Manager.plant);
+                if (PC_Manager.plant == PC_Manager.playerInventory.plantAttack.prefab && PC_Manager.playerInventory.nbAttack>0)
+                {
+                    InitializeWithObject(PC_Manager.plant);
+                }
+                else if (PC_Manager.plant == PC_Manager.playerInventory.plantMove.prefab && PC_Manager.playerInventory.nbMove > 0)
+                {
+                    InitializeWithObject(PC_Manager.plant);
+                }
+                else if (PC_Manager.plant == PC_Manager.playerInventory.plantBoost.prefab && PC_Manager.playerInventory.nbBoost > 0)
+                {
+                    InitializeWithObject(PC_Manager.plant);
+                }
                 break;
 
             case PlayerManager.ActionState.Object:
@@ -290,6 +301,19 @@ public class PlayerController_Farm : MonoBehaviour
         {
             if (!node.isSeeded)
             {
+                if (PC_Manager.plant == PC_Manager.playerInventory.plantAttack.prefab && PC_Manager.playerInventory.nbAttack > 0)
+                {
+                    PC_Manager.playerInventory.nbAttack--;
+                }
+                else if (PC_Manager.plant == PC_Manager.playerInventory.plantMove.prefab && PC_Manager.playerInventory.nbMove > 0)
+                {
+                    PC_Manager.playerInventory.nbMove--;
+                }
+                else if (PC_Manager.plant == PC_Manager.playerInventory.plantBoost.prefab && PC_Manager.playerInventory.nbBoost > 0)
+                {
+                    PC_Manager.playerInventory.nbBoost--;
+                }
+
                 return true;
             }
             else
@@ -324,6 +348,7 @@ public class PlayerController_Farm : MonoBehaviour
                 {
                     if (CanBePlaced())
                     {
+                        
                         buildObject.Place();
                         node.tileManager.ChangeSeedType(TileManager.SeedType.Seeded);
                         buildObject = null;

@@ -28,9 +28,9 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private PlayerManager PC_Manager;
     [SerializeField] private PlayerInventory playerInventory;
 
-    public bool dialogueIsPlaying { get; private set; }
+    public bool isActive = false;
 
-    private static DialogueManager instance;
+    public static DialogueManager instance;
 
     private DialogueVariables dialogueVariables;
 
@@ -55,7 +55,7 @@ public class DialogueManager : MonoBehaviour
 
     private void Start()
     {
-        dialogueIsPlaying = false;
+        isActive = false;
         dialoguePanel.SetActive(false);
 
         playerControls = PC_Manager.playerControls;
@@ -72,36 +72,34 @@ public class DialogueManager : MonoBehaviour
 
     private void Update()
     {
-        if (!dialogueIsPlaying)
+        if (isActive)
         {
-            return;
-        }
+            if (playerControls.UI.A.WasPressedThisFrame())
+            {
+                ContinueStory();
+            }
 
-        if (playerControls.Gamepad.A.WasPressedThisFrame())
-        {
-            ContinueStory();
-        }
-
-        if(dialogueIsPlaying && playerControls.Gamepad.B.WasPressedThisFrame())
-        {
-            StartCoroutine(ExitDialogueMode());
+            if (playerControls.UI.B.WasPressedThisFrame())
+            {
+                StartCoroutine(ExitDialogueMode());
+            }
         }
     }
 
     public void EnterDialogueMode(TextAsset inkJSON)
     {
-        
+        EnableDisable(true);
 
         currentStory = new Story(inkJSON.text);
-        dialogueIsPlaying = true;
+        isActive = true;
         dialoguePanel.SetActive(true);
 
         dialogueVariables.StartListening(currentStory);
 
         currentStory.variablesState["PlayerArgent"] = playerInventory.nbArgent;
-        currentStory.variablesState["NbPlanteRouge"] = playerInventory.nbPlanteRouge;
-        currentStory.variablesState["NbPlanteBleu"] = playerInventory.nbPlanteBleu;
-        currentStory.variablesState["NbPlanteJaune"] = playerInventory.nbPlanteJaune;
+        currentStory.variablesState["NbPlanteRouge"] = playerInventory.nbAttack;
+        currentStory.variablesState["NbPlanteBleu"] = playerInventory.nbMove;
+        currentStory.variablesState["NbPlanteJaune"] = playerInventory.nbBoost;
 
         currentStory.BindExternalFunction("PlantBuy", (string PlantToBuy) =>
         {
@@ -123,9 +121,10 @@ public class DialogueManager : MonoBehaviour
         currentStory.UnbindExternalFunction("PlantBuy");
         currentStory.UnbindExternalFunction("PlantSell");
 
-        dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
+
+        EnableDisable(false);
     }
 
     private void ContinueStory()
@@ -180,5 +179,24 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
+    }
+
+    public void EnableDisable(bool enabled)
+    {
+        if (enabled)
+        {
+            playerControls.Gamepad.Disable();
+            playerControls.UI.Enable();
+            isActive = true;
+            PlayerController_Fight.instance.isActive = false;
+            PlayerController_Farm.instance.isActive = false;
+        }
+        else
+        {
+            playerControls.Gamepad.Enable();
+            playerControls.UI.Disable();
+            isActive = false;
+            PlayerController_Farm.instance.isActive = true;
+        }
     }
 }
