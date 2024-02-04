@@ -4,9 +4,16 @@ using TMPro;
 using UnityEngine;
 using Ink.Runtime;
 using UnityEngine.EventSystems;
+using Ink.Parsed;
+using Story = Ink.Runtime.Story;
+using Choice = Ink.Runtime.Choice;
+using Ink.UnityIntegration;
 
 public class DialogueManager : MonoBehaviour
 {
+    [Header("Globals Ink File")]
+    [SerializeField] private InkFile globalsInkFile;
+
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private TextMeshProUGUI dialogueText;
@@ -17,11 +24,17 @@ public class DialogueManager : MonoBehaviour
 
     private Story currentStory;
 
-    public PlayerController_Farm playerControllerFarm;
+    [SerializeField] private PlayerController_Farm playerControllerFarm;
+    [SerializeField] private PlayerManager PC_Manager;
+    [SerializeField] private PlayerInventory playerInventory;
 
     public bool dialogueIsPlaying { get; private set; }
 
     private static DialogueManager instance;
+
+    private DialogueVariables dialogueVariables;
+
+    private PlayerControls playerControls;
 
     private void Awake()
     {
@@ -31,6 +44,8 @@ public class DialogueManager : MonoBehaviour
         }
 
         instance = this;
+
+        dialogueVariables= new DialogueVariables(globalsInkFile.filePath);
     }
 
     public static DialogueManager GetInstance()
@@ -42,6 +57,8 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
+
+        playerControls = PC_Manager.playerControls;
 
         choicesText = new TextMeshProUGUI[choices.Length];
         int index = 0;
@@ -60,17 +77,40 @@ public class DialogueManager : MonoBehaviour
             return;
         }
 
-        /*if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame())
+        if (playerControls.Gamepad.A.WasPressedThisFrame())
         {
             ContinueStory();
-        }*/
+        }
+
+        if(dialogueIsPlaying && playerControls.Gamepad.B.WasPressedThisFrame())
+        {
+            StartCoroutine(ExitDialogueMode());
+        }
     }
 
     public void EnterDialogueMode(TextAsset inkJSON)
     {
+        
+
         currentStory = new Story(inkJSON.text);
         dialogueIsPlaying = true;
         dialoguePanel.SetActive(true);
+
+        dialogueVariables.StartListening(currentStory);
+
+        currentStory.variablesState["PlayerArgent"] = playerInventory.nbArgent;
+        currentStory.variablesState["NbPlanteRouge"] = playerInventory.nbPlanteRouge;
+        currentStory.variablesState["NbPlanteBleu"] = playerInventory.nbPlanteBleu;
+        currentStory.variablesState["NbPlanteJaune"] = playerInventory.nbPlanteJaune;
+
+        currentStory.BindExternalFunction("PlantBuy", (string PlantToBuy) =>
+        {
+            playerInventory.BuyPlant(PlantToBuy);
+        });
+        currentStory.BindExternalFunction("PlantSell", (string PlantToSell) =>
+        {
+            playerInventory.SellPlant(PlantToSell);
+        });
 
         ContinueStory();
     }
@@ -78,6 +118,10 @@ public class DialogueManager : MonoBehaviour
     private IEnumerator ExitDialogueMode()
     {
         yield return new WaitForSeconds(0.2f);
+        dialogueVariables.StopListening(currentStory);
+
+        currentStory.UnbindExternalFunction("PlantBuy");
+        currentStory.UnbindExternalFunction("PlantSell");
 
         dialogueIsPlaying = false;
         dialoguePanel.SetActive(false);
@@ -102,12 +146,14 @@ public class DialogueManager : MonoBehaviour
     {
         List<Choice> currentChoices = currentStory.currentChoices;
 
+        // defensive check to make sure our UI can support the number of choices coming in
         if(currentChoices.Count > choices.Length)
         {
             Debug.LogError("More choices were given than the UI can support. Number of choices given :" + currentChoices.Count);
         }
 
         int index = 0;
+        // enable and initialize the choices up to the amount of choices for this line of dialogue
         foreach (Choice choice in currentChoices)
         {
             choices[index].gameObject.SetActive(true);
@@ -115,6 +161,7 @@ public class DialogueManager : MonoBehaviour
             index++;
         }
 
+        // go through the remaining choices the UI supports and make sure they're hidden
         for (int i = index; i < choices.Length; i++)
         {
             choices[i].gameObject.SetActive(false);

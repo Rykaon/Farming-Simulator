@@ -10,9 +10,10 @@ public class DialogueTrigger : MonoBehaviour
     [Header("Ink JSON")]
     [SerializeField] private TextAsset inkJSON;
 
-    public PlayerController_Farm playerControllerFarm;
-
     private bool playerInRange;
+
+    [SerializeField] private PlayerManager PC_Manager;
+    private PlayerControls playerControls;
 
     private void Awake()
     {
@@ -20,15 +21,20 @@ public class DialogueTrigger : MonoBehaviour
         visualCue.SetActive(false);
     }
 
+    private void Start()
+    {
+        playerControls = PC_Manager.playerControls;
+    }
+
     private void Update()
     {
         if (playerInRange && !DialogueManager.GetInstance().dialogueIsPlaying)
         {
             visualCue.SetActive(true);
-            /*if (playerControllerFarm.playerControls.Gamepad.A.WasPressedThisFrame()) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
+            if (playerControls.Gamepad.Select.WasPressedThisFrame()) // playerControllerFarm.playerControls.Gamepad.A.IsPressed()
             {
                 DialogueManager.GetInstance().EnterDialogueMode(inkJSON);
-            }*/
+            }
         }
         else
         {
