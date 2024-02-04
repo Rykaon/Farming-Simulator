@@ -21,7 +21,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] public Animator animator;
     [SerializeField] public Rigidbody rigidBody;
     [SerializeField] public UnitMovePathfinding movePathfinding;
-    [SerializeField] public PlayerInventory playerInventory;
+    [SerializeField] public PlayerInventory inventory;
+    [SerializeField] public DialogueManager dialogueManager;
 
     public enum ControlState
     {

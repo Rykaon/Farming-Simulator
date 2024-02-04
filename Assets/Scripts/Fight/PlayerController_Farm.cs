@@ -175,17 +175,13 @@ public class PlayerController_Farm : MonoBehaviour
         switch (PC_Manager.actionState)
         {
             case PlayerManager.ActionState.Plant:
-                if (PC_Manager.plant == PC_Manager.playerInventory.plantAttack.prefab && PC_Manager.playerInventory.nbAttack>0)
+                if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
                 {
-                    InitializeWithObject(PC_Manager.plant);
-                }
-                else if (PC_Manager.plant == PC_Manager.playerInventory.plantMove.prefab && PC_Manager.playerInventory.nbMove > 0)
-                {
-                    InitializeWithObject(PC_Manager.plant);
-                }
-                else if (PC_Manager.plant == PC_Manager.playerInventory.plantBoost.prefab && PC_Manager.playerInventory.nbBoost > 0)
-                {
-                    InitializeWithObject(PC_Manager.plant);
+                    int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
+                    if (PC_Manager.inventory.itemNbrList[index] > 0)
+                    {
+                        InitializeWithObject(PC_Manager.plant);
+                    }
                 }
                 break;
 
@@ -301,19 +297,14 @@ public class PlayerController_Farm : MonoBehaviour
         {
             if (!node.isSeeded)
             {
-                if (PC_Manager.plant == PC_Manager.playerInventory.plantAttack.prefab && PC_Manager.playerInventory.nbAttack > 0)
+                if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
                 {
-                    PC_Manager.playerInventory.nbAttack--;
+                    int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
+                    if (PC_Manager.inventory.itemNbrList[index] > 0)
+                    {
+                        PC_Manager.inventory.itemNbrList[index]--;
+                    }
                 }
-                else if (PC_Manager.plant == PC_Manager.playerInventory.plantMove.prefab && PC_Manager.playerInventory.nbMove > 0)
-                {
-                    PC_Manager.playerInventory.nbMove--;
-                }
-                else if (PC_Manager.plant == PC_Manager.playerInventory.plantBoost.prefab && PC_Manager.playerInventory.nbBoost > 0)
-                {
-                    PC_Manager.playerInventory.nbBoost--;
-                }
-
                 return true;
             }
             else

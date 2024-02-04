@@ -13,7 +13,6 @@ public class DialogueTrigger : MonoBehaviour
     private bool playerInRange;
 
     [SerializeField] private PlayerManager PC_Manager;
-    [SerializeField] private DialogueManager dialogueManager;
     private PlayerControls playerControls;
 
     private void Awake()
