@@ -20,6 +20,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
+    private Animator layoutAnimator;
 
     [Header("Choices UI")]
     [SerializeField] private GameObject[] choices;
@@ -66,6 +67,8 @@ public class DialogueManager : MonoBehaviour
         isActive = false;
         dialoguePanel.SetActive(false);
 
+        layoutAnimator = dialoguePanel.GetComponent<Animator>();
+
         playerControls = PC_Manager.playerControls;
 
         choicesText = new TextMeshProUGUI[choices.Length];
@@ -110,6 +113,11 @@ public class DialogueManager : MonoBehaviour
         {
             inventory.SellBuyPlant(PlantToBuy, PlantPrice, SellOrBuy);
         });
+
+        // Reset portrait, layout and speaker
+        displayNameText.text = "???";
+        portraitAnimator.Play("default");
+        layoutAnimator.Play("right");
 
         ContinueStory();
     }
@@ -180,10 +188,9 @@ public class DialogueManager : MonoBehaviour
                     break;
                 case PORTRAIT_TAG:
                     portraitAnimator.Play(tagValue);
-                    Debug.Log("Portrait=" + tagValue);
                     break;
                 case LAYOUT_TAG:
-                    Debug.Log("layout=" + tagValue);
+                    layoutAnimator.Play(tagValue);
                     break;
                 default:
                     Debug.LogWarning("Tag came but is not valid :" + tag);
