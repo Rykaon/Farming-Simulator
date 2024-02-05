@@ -38,7 +38,7 @@ public class Pathfinding
         {
             return null;
         }
-        return grid.GetGridObject(x, y); // et salut a tous les amis c mederawks appelez moi au 06 34 56 72 91 des bisous
+        return grid.GetGridObject(x, y);
     }
 
     public PathNode GetNodeWithVector3(Vector3 vector)

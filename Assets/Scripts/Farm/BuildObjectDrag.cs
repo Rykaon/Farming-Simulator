@@ -16,7 +16,14 @@ public class BuildObjectDrag : MonoBehaviour
     {
         if (playerManager.PC_farm.GetCurrentNode() != null)
         {
-            transform.position = playerManager.PC_farm.SnapCoordinateToGrid(playerManager.PC_farm.GetCurrentNode().tile.transform.position);
+            if (!playerManager.PC_farm.GetCurrentNode().isVirtual)
+            {
+                transform.position = playerManager.PC_farm.SnapCoordinateToGrid(playerManager.PC_farm.GetCurrentNode().tile.transform.position);
+            }
+            else
+            {
+                transform.position = playerManager.PC_farm.SnapCoordinateToGrid(playerManager.transform.position);
+            }
         }
         else
         {

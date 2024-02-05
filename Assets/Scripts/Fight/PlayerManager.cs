@@ -137,15 +137,26 @@ public class PlayerManager : MonoBehaviour
         {
             for (int j = 0; j < 15; ++j)
             {
-                GameObject tile = Instantiate(groundTilePrefab, new Vector3(i, 0, j), Quaternion.identity);
-                PathNode node = pathfinding.GetNodeWithCoords(i, j);
-                node.SetTile(tile);
-                node.SetTileManager(tile.GetComponent<TileManager>());
-                tilesList.Add(tile);
-                node.isVirtual = false;
-                node.isContainingUnit = false;
-                node.unit = null;
-                node.isWalkable = true;
+                if (levelObjects[i][j][0] == 'E')
+                {
+                    PathNode node = pathfinding.GetNodeWithCoords(i, j);
+                    node.isVirtual = true;
+                    node.isContainingUnit = false;
+                    node.unit = null;
+                    node.isWalkable = false;
+                }
+                else
+                {
+                    GameObject tile = Instantiate(groundTilePrefab, new Vector3(i, 0, j), Quaternion.identity);
+                    PathNode node = pathfinding.GetNodeWithCoords(i, j);
+                    node.SetTile(tile);
+                    node.SetTileManager(tile.GetComponent<TileManager>());
+                    tilesList.Add(tile);
+                    node.isVirtual = false;
+                    node.isContainingUnit = false;
+                    node.unit = null;
+                    node.isWalkable = true;
+                }
 
                 if (levelObjects[i][j][0] == 'U')
                 {

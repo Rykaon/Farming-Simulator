@@ -33,8 +33,11 @@ public class BuildObject : MonoBehaviour
             PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
             if (node != null)
             {
-                Debug.Log(node.tileManager);
-                node.tileManager.plant = transform.gameObject;
+                if (!node.isVirtual)
+                {
+                    Debug.Log(node.tileManager);
+                    node.tileManager.plant = transform.gameObject;
+                }
             }
         }
         else if (transform.tag == "Object")

@@ -192,13 +192,14 @@ public class PlayerController_Farm : MonoBehaviour
             case PlayerManager.ActionState.Collect:
                 if (node != null)
                 {
-                    Debug.Log("node != null");
-                    if (node.isPlant)
+                    if (!node.isVirtual)
                     {
-                        Debug.Log("node.isPlant");
-                        if (node.tileManager.growState == TileManager.GrowState.High)
+                        if (node.isPlant)
                         {
-                            node.tileManager.ChangeSeedType(TileManager.SeedType.None);
+                            if (node.tileManager.growState == TileManager.GrowState.High)
+                            {
+                                node.tileManager.ChangeSeedType(TileManager.SeedType.None);
+                            }
                         }
                     }
                 }
@@ -207,19 +208,22 @@ public class PlayerController_Farm : MonoBehaviour
             case PlayerManager.ActionState.Water:
                 if (node != null)
                 {
-                    if (node.tileManager.seedType == TileManager.SeedType.Seeded)
+                    if (!node.isVirtual)
                     {
-                        if (node.tileManager.wetToDirt != null)
+                        if (node.tileManager.seedType == TileManager.SeedType.Seeded)
                         {
-                            StopCoroutine(node.tileManager.wetToDirt);
-                        }
+                            if (node.tileManager.wetToDirt != null)
+                            {
+                                StopCoroutine(node.tileManager.wetToDirt);
+                            }
 
-                        if (node.tileManager.sunToDirt != null)
-                        {
-                            StopCoroutine(node.tileManager.sunToDirt);
-                        }
+                            if (node.tileManager.sunToDirt != null)
+                            {
+                                StopCoroutine(node.tileManager.sunToDirt);
+                            }
 
-                        node.tileManager.ChangeTileState(TileManager.TileState.WetDirt);
+                            node.tileManager.ChangeTileState(TileManager.TileState.WetDirt);
+                        }
                     }
                 }
                 break;
@@ -227,19 +231,22 @@ public class PlayerController_Farm : MonoBehaviour
             case PlayerManager.ActionState.Sun:
                 if (node != null)
                 {
-                    if (node.tileManager.seedType == TileManager.SeedType.Seeded)
+                    if (!node.isVirtual)
                     {
-                        if (node.tileManager.wetToDirt != null)
+                        if (node.tileManager.seedType == TileManager.SeedType.Seeded)
                         {
-                            StopCoroutine(node.tileManager.wetToDirt);
-                        }
+                            if (node.tileManager.wetToDirt != null)
+                            {
+                                StopCoroutine(node.tileManager.wetToDirt);
+                            }
 
-                        if (node.tileManager.sunToDirt != null)
-                        {
-                            StopCoroutine(node.tileManager.sunToDirt);
-                        }
+                            if (node.tileManager.sunToDirt != null)
+                            {
+                                StopCoroutine(node.tileManager.sunToDirt);
+                            }
 
-                        node.tileManager.ChangeTileState(TileManager.TileState.SunDirt);
+                            node.tileManager.ChangeTileState(TileManager.TileState.SunDirt);
+                        }
                     }
                 }
                 break;
@@ -260,7 +267,7 @@ public class PlayerController_Farm : MonoBehaviour
     {
         if (buildObject != null)
         {
-            if (GetCurrentNode() != null)
+            /*if (GetCurrentNode() != null)
             {
                 position = new Vector3(position.x, 0, position.z);
 
@@ -270,7 +277,11 @@ public class PlayerController_Farm : MonoBehaviour
             {
                 position = new Vector3(transform.position.x, 0, transform.position.z);
                 buildObject.transform.localScale = Vector3.zero;
-            }
+            }*/
+
+            position = new Vector3(position.x, 0, position.z);
+
+            buildObject.transform.localScale = Vector3.one;
         }
 
         return position;
@@ -295,17 +306,24 @@ public class PlayerController_Farm : MonoBehaviour
 
         if (node != null)
         {
-            if (!node.isSeeded)
+            if (!node.isVirtual)
             {
-                if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
+                if (!node.isSeeded)
                 {
-                    int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
-                    if (PC_Manager.inventory.itemNbrList[index] > 0)
+                    if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
                     {
-                        PC_Manager.inventory.itemNbrList[index]--;
+                        int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
+                        if (PC_Manager.inventory.itemNbrList[index] > 0)
+                        {
+                            PC_Manager.inventory.itemNbrList[index]--;
+                        }
                     }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    return false;
+                }
             }
             else
             {

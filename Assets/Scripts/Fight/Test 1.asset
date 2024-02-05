@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 9
   height: 15
-  content: 'J,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+  content: 'F,F,F,F,F,F,E,E,E,E,E,E,E,E,E
 
-    F,F,F,F,U,F,F,F,F,F,F,F,F,F,F
+    F,F,F,F,F,F,F,F,F,F,E,E,E,E,E
 
-    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+    E,F,F,F,F,F,F,F,F,F,F,F,F,F,F
 
-    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+    E,F,F,F,F,F,F,F,U,F,F,F,F,F,F
 
-    F,F,F,F,F,F,F,F,F,F,F,U,F,F,F
+    E,E,F,F,F,F,F,F,F,F,F,F,F,F,F
 
-    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+    E,F,F,F,F,F,F,F,F,F,F,F,F,U,F
 
-    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F
+    E,F,F,F,F,F,U,F,F,F,F,F,F,F,F
 
-    F,F,F,F,F,U,F,F,F,F,F,F,F,F,F
+    F,F,F,F,F,F,F,F,F,F,E,E,E,E,E
 
-    F,F,F,F,F,F,F,F,F,F,F,F,F,F,F'
+    F,F,F,F,F,F,E,E,E,E,E,E,E,E,E'
