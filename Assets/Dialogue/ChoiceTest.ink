@@ -4,7 +4,7 @@ EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
 { PlayerArgent>15  : ->main | ->pauvre}
 
 === main ===
-Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ?
+Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
 -> magasin
 
 === magasin ===
@@ -17,7 +17,7 @@ Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ?
         -> END
 
 === buyPlant ===
-Laquelle voulez-vous acheter ? ({PlayerArgent}$)
+Laquelle voulez-vous acheter ? ({PlayerArgent}$) #speaker:Le Gros Rat #portrait:GrosRat #layout:right
             + [Une Rouge ! (15$)]
                 -> setUp (NamePlant1, PricePlant1, false, NbPlant1)
             + [Une Bleu ! (15$)]
@@ -27,7 +27,7 @@ Laquelle voulez-vous acheter ? ({PlayerArgent}$)
                 
 
 === sellPlant ===
-Laquelle voulez-vous vendre ?
+Laquelle voulez-vous vendre ? #speaker:Le Gros Rat #portrait:GrosRat #layout:left
             + [Une Rouge ! ({NbPlant1})]
                 -> setUp (NamePlant1, PricePlant1, true, NbPlant1)
             + [Une Bleu ! ({NbPlant2})]
@@ -42,23 +42,23 @@ Laquelle voulez-vous vendre ?
             ~ PlayerArgent = PlayerArgent-Price
             ~ nbExemplaire++
             ~ PlantSellBuy(Name, Price, false)
-            Merci pour l'achat !
+            Merci pour l'achat ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
             - else :
-            T'as pas assez d'argent mon pote !
+            T'as pas assez d'argent mon pote ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
        }
        - else :
        {nbExemplaire > 0 :
             ~ PlayerArgent = PlayerArgent+Price
             ~ nbExemplaire--
             ~ PlantSellBuy(Name, Price, true)
-            C'est un plaisir de faire affaire avec vous ! ({Price})
+            C'est un plaisir de faire affaire avec vous ! ({Price}) #speaker:Le Gros Rat #portrait:GrosRat #layout:left
             - else :
-            Mais ... t'as aucune {Name} !
+            Mais ... t'as aucune {Name} ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
         }
     }
     ->magasin
 
 
 === pauvre ===
-Je sais que t'es fauché, casse toi !
+Je sais que t'es fauché, casse toi ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
 ->magasin
