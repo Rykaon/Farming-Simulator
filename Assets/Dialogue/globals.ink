@@ -1,7 +1,7 @@
 VAR PlayerArgent = 20
-VAR NbPlanteRouge = 1
-VAR NbPlanteBleu = 1
-VAR NbPlanteJaune = 1
+VAR NbPlanteRouge = 3
+VAR NbPlanteBleu = 3
+VAR NbPlanteJaune = 3
 
 VAR PricePlant1 = 15
 VAR PricePlant2 = 15

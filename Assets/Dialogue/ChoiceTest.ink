@@ -21,68 +21,45 @@ Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ?
 === buyPlant ===
 Laquelle voulez-vous acheter ? ({PlayerArgent}$)
             + [Une Rouge ! (15$)]
-                {PlayerArgent > 15 :
-                    ~ PlayerArgent = PlayerArgent-15
-                    ~ NbPlanteRouge++
-                    ~ PlantSellBuy(PlantName, PlantPrice, false)
-                    Merci pour l'achat !
-                    - else :
-                    T'as pas assez d'argent mon pote !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, false, NbPlanteRouge)
             + [Une Bleu ! (15$)]
-                {PlayerArgent > 15 :
-                    ~ PlayerArgent = PlayerArgent-15
-                    ~ NbPlanteBleu++
-                    ~ PlantSellBuy(PlantName, PlantPrice, false)
-                    Merci pour l'achat !
-                    - else :
-                    T'as pas assez d'argent mon pote !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, false, NbPlanteBleu)
             + [Une Jaune ! (15$)]
-                {PlayerArgent > 15 :
-                    ~ PlayerArgent = PlayerArgent-15
-                    ~ NbPlanteJaune++
-                    ~ PlantSellBuy(PlantName, PlantPrice, false)
-                    Merci pour l'achat !
-                    - else :
-                    T'as pas assez d'argent mon pote !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, false, NbPlanteJaune)
+                
 
 === sellPlant ===
 Laquelle voulez-vous vendre ?
             + [Une Rouge ! ({NbPlanteRouge})]
-                {NbPlanteRouge > 0 :
-                    ~ PlayerArgent = PlayerArgent+10
-                    ~ NbPlanteRouge--
-                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
-                    C'est un plaisir de faire affaire avec vous ! (+10$)
-                    - else :
-                    Mais ... t'as aucune Rouge !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, true, NbPlanteRouge)
             + [Une Bleu ! ({NbPlanteBleu})]
-                {NbPlanteBleu > 0 :
-                    ~ PlayerArgent = PlayerArgent+10
-                    ~ NbPlanteBleu--
-                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
-                    C'est un plaisir de faire affaire avec vous ! (+10$)
-                    - else :
-                    Mais ... t'as aucune Bleu !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, true, NbPlanteBleu)
             + [Une Jaune ! ({NbPlanteJaune})]
-                {NbPlanteJaune > 0 :
-                    ~ PlayerArgent = PlayerArgent
-                    ~ NbPlanteJaune--
-                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
-                    C'est un plaisir de faire affaire avec vous ! (+10$)
-                    - else :
-                    Mais ... t'as aucune Jaune !
-                }
-                ->magasin
+                -> setUp (PlantName, PlantPrice, true, NbPlanteJaune)
+
+
+=== setUp (Name, Price, SellOrBuy, nbExemplaire) ===
+    {SellOrBuy == false :
+        {PlayerArgent > Price :
+            ~ PlayerArgent = PlayerArgent-Price
+            ~ nbExemplaire++
+            ~ PlantSellBuy(Name, Price, false)
+            Merci pour l'achat !
+            - else :
+            T'as pas assez d'argent mon pote !
+       }
+       - else :
+       {nbExemplaire > 0 :
+            ~ PlayerArgent = PlayerArgent+Price
+            ~ nbExemplaire--
+            ~ PlantSellBuy(Name, Price, true)
+            C'est un plaisir de faire affaire avec vous ! ({Price})
+            - else :
+            Mais ... t'as aucune {Name} !
+        }
+    }
+    ->magasin
+
 
 === pauvre ===
 Je sais que t'es fauché, casse toi !
