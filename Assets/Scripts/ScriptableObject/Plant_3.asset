@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e67df5dc0f0674488b088ec6a3c2f22, type: 3}
-  m_Name: Plante_3
+  m_Name: Plant_3
   m_EditorClassIdentifier: 
   prefab: {fileID: 5121004268719652170, guid: ca8c45d6b701b3646ab46bfbb65efa0a, type: 3}
   plantName: Boost

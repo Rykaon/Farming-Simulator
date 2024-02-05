@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e67df5dc0f0674488b088ec6a3c2f22, type: 3}
-  m_Name: Plante_2
+  m_Name: Plant_2
   m_EditorClassIdentifier: 
   prefab: {fileID: 2708523230809217691, guid: f63c8cffdfab4354695b40edfcbdcbaa, type: 3}
   plantName: Move

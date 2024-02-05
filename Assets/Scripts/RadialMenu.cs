@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 public class RadialMenu : MonoBehaviour {
     public PlayerControls playerControls { get; private set; }
+    [SerializeField] public PlayerManager PC_Manager;
 
     public bool isActive = false;
 
@@ -112,25 +113,27 @@ public class RadialMenu : MonoBehaviour {
     {
         if (enabled)
         {
-            playerControls.Gamepad.Disable();
-            playerControls.UI.Enable();
             isActive = true;
-            PlayerController_Fight.instance.isActive = false;
-            PlayerController_Farm.instance.isActive = false;
+            if (PC_Manager.controlState == PlayerManager.ControlState.Farm)
+            {
+                PC_Manager.ChangeState(PlayerManager.ControlState.FarmUI);
+            }
+            else if (PC_Manager.controlState == PlayerManager.ControlState.Fight)
+            {
+                PC_Manager.ChangeState(PlayerManager.ControlState.FightUI);
+            }
         }
         else
         {
-            playerControls.Gamepad.Enable();
-            playerControls.UI.Disable();
             isActive = false;
 
             if (elements[0].actionType == RadialMenuElement.ActionType.Push || elements[0].actionType == RadialMenuElement.ActionType.Pull || elements[0].actionType == RadialMenuElement.ActionType.Move)
             {
-                PlayerController_Fight.instance.isActive = true;
+                PC_Manager.ChangeState(PlayerManager.ControlState.Fight);
             }
             else
             {
-                PlayerController_Farm.instance.isActive = true;
+                PC_Manager.ChangeState(PlayerManager.ControlState.Farm);
             }
         }
     }

@@ -212,6 +212,44 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    public void ChangeState(ControlState state)
+    {
+        switch (state)
+        {
+            case ControlState.Farm:
+                controlState = ControlState.Farm;
+                playerControls.Gamepad.Enable();
+                playerControls.UI.Disable();
+                PC_farm.isActive = true;
+                PC_fight.isActive = false;
+                break;
+
+            case ControlState.FarmUI:
+                controlState = ControlState.Farm;
+                playerControls.Gamepad.Disable();
+                playerControls.UI.Enable();
+                PC_farm.isActive = false;
+                PC_fight.isActive = false;
+                break;
+
+            case ControlState.Fight:
+                controlState = ControlState.Fight;
+                playerControls.Gamepad.Enable();
+                playerControls.UI.Disable();
+                PC_farm.isActive = false;
+                PC_fight.isActive = true;
+                break;
+
+            case ControlState.FightUI:
+                controlState = ControlState.Fight;
+                playerControls.Gamepad.Disable();
+                playerControls.UI.Enable();
+                PC_farm.isActive = false;
+                PC_fight.isActive = false;
+                break;
+        }
+    }
+
     public void EndTurn()
     {
         PlayerController_Fight.instance.isActive = false;
@@ -268,7 +306,7 @@ public class PlayerManager : MonoBehaviour
 
             while (unitManager.isActive)
             {
-                Debug.Log("Unit " + i + " = " + unitList[i].GetComponent<UnitManager>().unitNode);
+                //Debug.Log("Unit " + i + " = " + unitList[i].GetComponent<UnitManager>().unitNode);
                 yield return new WaitForEndOfFrame();
             }
 
@@ -282,10 +320,7 @@ public class PlayerManager : MonoBehaviour
                     Destroy(unit);
                 }
                 unitList.Clear();
-
-                controlState = ControlState.Farm;
-                PC_farm.isActive = true;
-                PC_fight.isActive = false;
+                ChangeState(ControlState.Farm);
                 yield break;
             }
         }

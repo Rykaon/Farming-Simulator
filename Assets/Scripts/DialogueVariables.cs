@@ -39,7 +39,7 @@ public class DialogueVariables
 
     private void VariableChanged(string name, Ink.Runtime.Object value)
     {
-        //Debug.Log("Variable change : " + name + " = " + value);
+        Debug.Log("Variable change : " + name + " = " + value);
 
         // only maintain variables that were initialized from the globals ink file
         if(variables.ContainsKey(name))

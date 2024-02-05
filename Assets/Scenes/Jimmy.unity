@@ -2758,7 +2758,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1453764211}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -3432,7 +3432,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1453764211}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -6972,6 +6972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3f03f1887aa304d8955b76b9f90df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PC_Manager: {fileID: 1453764201}
   isActive: 1
   isSubRM: 1
   upRM: {fileID: 1131141199}
@@ -10559,6 +10560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3f03f1887aa304d8955b76b9f90df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PC_Manager: {fileID: 1453764201}
   isActive: 1
   isSubRM: 1
   upRM: {fileID: 1131141199}
@@ -13492,6 +13494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3f03f1887aa304d8955b76b9f90df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PC_Manager: {fileID: 1453764201}
   isActive: 1
   isSubRM: 0
   upRM: {fileID: 0}
@@ -14103,7 +14106,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1453764211}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -14112,7 +14115,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: MakeChoice
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1139094689
@@ -18240,7 +18243,7 @@ MonoBehaviour:
   playerControllerFarm: {fileID: 1453764200}
   PC_Manager: {fileID: 1453764201}
   nbStartArgent: 50
-  nbStartPlant: 1
+  nbStartPlant: 10
   isShopOpen: 0
   nbAttack: 0
   nbMove: 0
@@ -18294,8 +18297,8 @@ MonoBehaviour:
   animator: {fileID: 1453764205}
   rigidBody: {fileID: 1453764204}
   movePathfinding: {fileID: 1453764202}
-  inventory: {fileID: 0}
-  dialogueManager: {fileID: 0}
+  inventory: {fileID: 1453764199}
+  dialogueManager: {fileID: 1453764211}
   controlState: 0
   actionState: 1
   turn: 0
@@ -21714,6 +21717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3f03f1887aa304d8955b76b9f90df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PC_Manager: {fileID: 1453764201}
   isActive: 1
   isSubRM: 0
   upRM: {fileID: 0}
@@ -24757,7 +24761,7 @@ MonoBehaviour:
   m_ActionsAsset: {fileID: -944628639613478452, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
   m_PointAction: {fileID: 2786076479811006823, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
   m_MoveAction: {fileID: 4470047156167596557, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
-  m_SubmitAction: {fileID: -9131506896610485214, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
+  m_SubmitAction: {fileID: 1454713692400210392, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
   m_CancelAction: {fileID: 0}
   m_LeftClickAction: {fileID: -224365082690336846, guid: 1ee32fd3c239bd44482ef5a831a0fda9, type: 3}
   m_MiddleClickAction: {fileID: 0}

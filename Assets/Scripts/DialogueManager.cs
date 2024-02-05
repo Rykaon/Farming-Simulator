@@ -74,7 +74,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (isActive)
         {
-            if (playerControls.UI.A.WasPressedThisFrame())
+            if (playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
             {
                 ContinueStory();
             }
@@ -101,13 +101,9 @@ public class DialogueManager : MonoBehaviour
         currentStory.variablesState["NbPlanteBleu"] = playerInventory.nbMove;
         currentStory.variablesState["NbPlanteJaune"] = playerInventory.nbBoost;
 
-        currentStory.BindExternalFunction("PlantBuy", (string PlantToBuy) =>
+        currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
         {
-            playerInventory.BuyPlant(PlantToBuy);
-        });
-        currentStory.BindExternalFunction("PlantSell", (string PlantToSell) =>
-        {
-            playerInventory.SellPlant(PlantToSell);
+            playerInventory.SellBuyPlant(PlantToBuy, PlantPrice, SellOrBuy);
         });
 
         ContinueStory();
@@ -118,8 +114,7 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         dialogueVariables.StopListening(currentStory);
 
-        currentStory.UnbindExternalFunction("PlantBuy");
-        currentStory.UnbindExternalFunction("PlantSell");
+        currentStory.UnbindExternalFunction("PlantSellBuy");
 
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
@@ -179,24 +174,20 @@ public class DialogueManager : MonoBehaviour
     public void MakeChoice(int choiceIndex)
     {
         currentStory.ChooseChoiceIndex(choiceIndex);
+        ContinueStory();
     }
 
     public void EnableDisable(bool enabled)
     {
         if (enabled)
         {
-            playerControls.Gamepad.Disable();
-            playerControls.UI.Enable();
             isActive = true;
-            PlayerController_Fight.instance.isActive = false;
-            PlayerController_Farm.instance.isActive = false;
+            PC_Manager.ChangeState(PlayerManager.ControlState.FarmUI);
         }
         else
         {
-            playerControls.Gamepad.Enable();
-            playerControls.UI.Disable();
             isActive = false;
-            PlayerController_Farm.instance.isActive = true;
+            PC_Manager.ChangeState(PlayerManager.ControlState.Farm);
         }
     }
 }

@@ -25,9 +25,6 @@ public class PlayerInventory : MonoBehaviour
     private void Awake()
     {
         playerControls = PC_Manager.playerControls;
-
-        itemList = new List<PlantItem>();
-        itemNbrList = new List<int>();
         
         // Pour l'instant on instantie une valeur au nombre d'item pour pouvoir travailler mais ça devra être enlevé plus tard
         for (int i = 0; i < itemList.Count; i++)
@@ -38,11 +35,11 @@ public class PlayerInventory : MonoBehaviour
         nbMove = nbStartPlant;
         nbBoost = nbStartPlant;
 
-    nbArgent = nbStartArgent;
+        nbArgent = nbStartArgent;
     }
 
     // **************************** //
-    // Rassembler ces deux fonction en une avec un booleen en plus en paramètre
+    // Rassembler ces deux fonction en une avec un int en plus en paramètre
     // **************************** //
 
     public void BuyPlant(string plantName/* int plantPrice*/)
@@ -78,36 +75,14 @@ public class PlayerInventory : MonoBehaviour
         }*/
     }
 
-    public void SellPlant(string plantName/* int plantPrice, bool isSelling*/)
+    public void SellBuyPlant(string plantName, int plantPrice, bool sellOrBuy)
     {
-        // Une fois les changements nécéssaires effectués du coté du DialogueManager et de Inky,
-        // enlever cette partie et la remplacer par la partie en commentaire
-        // isSelling est un boollen qui dit que true = vendre et false = acheter
-        // **************************** //
-        nbArgent = nbArgent + 10;
-
-        switch (plantName)
-        {
-            case "Rouge":
-                nbAttack--;
-                break;
-            case "Bleu":
-                nbMove--;
-                break;
-            case "Jaune":
-                nbBoost--;
-                break;
-            default:
-                Debug.LogWarning("La plante acheté n'est pas valide !");
-                break;
-        }
-        // **************************** //
-
-        /*int index = GetIndexByName(plantName);
-
+        Debug.Log(plantName + ", " + plantPrice + ", " + sellOrBuy);
+        int index = GetIndexByName(plantName);
+        Debug.Log("INDEX = " + index);
         if (index > -1)
         {
-            if (isSelling)
+            if (sellOrBuy)
             {
                 nbArgent += plantPrice; //Ajouter en paramètre de la fonction une référence en int qui correspond à Item.sellPrice
                 itemNbrList[index]--;
@@ -118,14 +93,14 @@ public class PlayerInventory : MonoBehaviour
                 itemNbrList[index]++;
             }
             
-        }*/
+        }
     }
 
     public int GetIndexByName(string name)
     {
         for (int i = 0; i < itemList.Count; ++i)
         {
-            if (name == itemList[i].name)
+            if (name == itemList[i].plantName)
             {
                 return i;
             }

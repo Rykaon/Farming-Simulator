@@ -1,11 +1,12 @@
 INCLUDE globals.ink
-EXTERNAL PlantBuy(PlantToBuy)
-EXTERNAL PlantSell(PlantToBuy)
-
+EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
+VAR PlantName = "Attack"
+VAR PlantPrice = 15
+ 
 { PlayerArgent>15  : ->main | ->pauvre}
 
 === main ===
-Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? 
+Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ?
 -> magasin
 
 === magasin ===
@@ -23,7 +24,7 @@ Laquelle voulez-vous acheter ? ({PlayerArgent}$)
                 {PlayerArgent > 15 :
                     ~ PlayerArgent = PlayerArgent-15
                     ~ NbPlanteRouge++
-                    ~ PlantBuy("Rouge")
+                    ~ PlantSellBuy(PlantName, PlantPrice, false)
                     Merci pour l'achat !
                     - else :
                     T'as pas assez d'argent mon pote !
@@ -33,7 +34,7 @@ Laquelle voulez-vous acheter ? ({PlayerArgent}$)
                 {PlayerArgent > 15 :
                     ~ PlayerArgent = PlayerArgent-15
                     ~ NbPlanteBleu++
-                    ~ PlantBuy("Bleu")
+                    ~ PlantSellBuy(PlantName, PlantPrice, false)
                     Merci pour l'achat !
                     - else :
                     T'as pas assez d'argent mon pote !
@@ -43,7 +44,7 @@ Laquelle voulez-vous acheter ? ({PlayerArgent}$)
                 {PlayerArgent > 15 :
                     ~ PlayerArgent = PlayerArgent-15
                     ~ NbPlanteJaune++
-                    ~ PlantBuy("Jaune")
+                    ~ PlantSellBuy(PlantName, PlantPrice, false)
                     Merci pour l'achat !
                     - else :
                     T'as pas assez d'argent mon pote !
@@ -56,7 +57,7 @@ Laquelle voulez-vous vendre ?
                 {NbPlanteRouge > 0 :
                     ~ PlayerArgent = PlayerArgent+10
                     ~ NbPlanteRouge--
-                    ~ PlantSell("Rouge")
+                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
                     C'est un plaisir de faire affaire avec vous ! (+10$)
                     - else :
                     Mais ... t'as aucune Rouge !
@@ -66,7 +67,7 @@ Laquelle voulez-vous vendre ?
                 {NbPlanteBleu > 0 :
                     ~ PlayerArgent = PlayerArgent+10
                     ~ NbPlanteBleu--
-                    ~ PlantSell("Bleu")
+                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
                     C'est un plaisir de faire affaire avec vous ! (+10$)
                     - else :
                     Mais ... t'as aucune Bleu !
@@ -76,7 +77,7 @@ Laquelle voulez-vous vendre ?
                 {NbPlanteJaune > 0 :
                     ~ PlayerArgent = PlayerArgent
                     ~ NbPlanteJaune--
-                    ~ PlantSell("Jaune")
+                    ~ PlantSellBuy(PlantName, PlantPrice, SellOrBuy)
                     C'est un plaisir de faire affaire avec vous ! (+10$)
                     - else :
                     Mais ... t'as aucune Jaune !
