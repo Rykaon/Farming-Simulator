@@ -8073,7 +8073,7 @@ MonoBehaviour:
   - {fileID: 183327169}
   playerControllerFarm: {fileID: 722398551}
   PC_Manager: {fileID: 722398543}
-  playerInventory: {fileID: 722398542}
+  inventory: {fileID: 722398542}
   isActive: 0
 --- !u!114 &722398542
 MonoBehaviour:

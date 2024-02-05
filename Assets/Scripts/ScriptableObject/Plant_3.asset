@@ -16,4 +16,4 @@ MonoBehaviour:
   plantName: Boost
   numberOfSeedRecolted: 2
   buyPrice: 15
-  sellPrice: 10
+  sellPrice: 15

@@ -1,7 +1,5 @@
 INCLUDE globals.ink
 EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
-VAR PlantName = "Attack"
-VAR PlantPrice = 15
  
 { PlayerArgent>15  : ->main | ->pauvre}
 
@@ -21,21 +19,21 @@ Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ?
 === buyPlant ===
 Laquelle voulez-vous acheter ? ({PlayerArgent}$)
             + [Une Rouge ! (15$)]
-                -> setUp (PlantName, PlantPrice, false, NbPlanteRouge)
+                -> setUp (NamePlant1, PricePlant1, false, NbPlant1)
             + [Une Bleu ! (15$)]
-                -> setUp (PlantName, PlantPrice, false, NbPlanteBleu)
+                -> setUp (NamePlant2, PricePlant2, false, NbPlant2)
             + [Une Jaune ! (15$)]
-                -> setUp (PlantName, PlantPrice, false, NbPlanteJaune)
+                -> setUp (NamePlant3, PricePlant3, false, NbPlant3)
                 
 
 === sellPlant ===
 Laquelle voulez-vous vendre ?
-            + [Une Rouge ! ({NbPlanteRouge})]
-                -> setUp (PlantName, PlantPrice, true, NbPlanteRouge)
-            + [Une Bleu ! ({NbPlanteBleu})]
-                -> setUp (PlantName, PlantPrice, true, NbPlanteBleu)
-            + [Une Jaune ! ({NbPlanteJaune})]
-                -> setUp (PlantName, PlantPrice, true, NbPlanteJaune)
+            + [Une Rouge ! ({NbPlant1})]
+                -> setUp (NamePlant1, PricePlant1, true, NbPlant1)
+            + [Une Bleu ! ({NbPlant2})]
+                -> setUp (NamePlant2, PricePlant2, true, NbPlant2)
+            + [Une Jaune ! ({NbPlant3})]
+                -> setUp (NamePlant3, PricePlant3, true, NbPlant3)
 
 
 === setUp (Name, Price, SellOrBuy, nbExemplaire) ===

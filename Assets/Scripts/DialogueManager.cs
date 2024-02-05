@@ -26,9 +26,10 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField] private PlayerController_Farm playerControllerFarm;
     [SerializeField] private PlayerManager PC_Manager;
-    [SerializeField] private PlayerInventory playerInventory;
+    [SerializeField] private PlayerInventory inventory;
 
     public bool isActive = false;
+    private bool isInitialized = false;
 
     public static DialogueManager instance;
 
@@ -96,17 +97,31 @@ public class DialogueManager : MonoBehaviour
 
         dialogueVariables.StartListening(currentStory);
 
-        currentStory.variablesState["PlayerArgent"] = playerInventory.nbArgent;
-        currentStory.variablesState["NbPlanteRouge"] = playerInventory.nbAttack;
-        currentStory.variablesState["NbPlanteBleu"] = playerInventory.nbMove;
-        currentStory.variablesState["NbPlanteJaune"] = playerInventory.nbBoost;
+        UpdateVariables();
 
         currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
         {
-            playerInventory.SellBuyPlant(PlantToBuy, PlantPrice, SellOrBuy);
+            inventory.SellBuyPlant(PlantToBuy, PlantPrice, SellOrBuy);
         });
 
         ContinueStory();
+    }
+
+    public void UpdateVariables()
+    {
+        currentStory.variablesState["PlayerArgent"] = inventory.nbArgent;
+
+        for (int i = 0; i < inventory.itemList.Count; i++)
+        {
+            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = inventory.itemNbrList[i];
+
+            if (!isInitialized)
+            {
+                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = inventory.itemList[i].plantName;
+                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = inventory.itemList[i].sellPrice;
+                isInitialized = true;
+            }
+        }
     }
 
     private IEnumerator ExitDialogueMode()
