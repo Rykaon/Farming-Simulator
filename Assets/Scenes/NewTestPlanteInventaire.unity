@@ -8262,7 +8262,7 @@ MonoBehaviour:
   controlState: 0
   actionState: 1
   turn: 0
-  groundTilePrefab: {fileID: 1860469231272007820, guid: 7be651a0f3b069b4b9c45eac59223465, type: 3}
+  groundTilePrefab: {fileID: 1860469231272007820, guid: c05924fb703f38c4f86ab4bb3207cc38, type: 3}
   unitPrefab: {fileID: 1604390708870458765, guid: cae03e1ac7e200e4cab7020083b9c639, type: 3}
   plantPrefab_1: {fileID: 4100846930786433046, guid: 3b0f88d2d57bf55429e6bb8f75f61230, type: 3}
   plantPrefab_2: {fileID: 2708523230809217691, guid: f63c8cffdfab4354695b40edfcbdcbaa, type: 3}
@@ -17946,7 +17946,7 @@ Transform:
   m_GameObject: {fileID: 1378702077}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.39, y: 0.7, z: 4.77}
+  m_LocalPosition: {x: 4, y: 0.7, z: 15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
