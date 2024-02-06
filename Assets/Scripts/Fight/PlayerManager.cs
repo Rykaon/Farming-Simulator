@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 using System.Linq;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
@@ -23,6 +24,12 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] public UnitMovePathfinding movePathfinding;
     [SerializeField] public PlayerInventory inventory;
     [SerializeField] public DialogueManager dialogueManager;
+    [SerializeField] private GameObject athFarm;
+    [SerializeField] private GameObject athFight;
+    [SerializeField] private TextMeshProUGUI argent;
+    [SerializeField] private TextMeshProUGUI plantes;
+    [SerializeField] private TextMeshProUGUI actions;
+
 
     public enum ControlState
     {
@@ -428,6 +435,10 @@ public class PlayerManager : MonoBehaviour
                     Debug.Log(new Vector3(playerNode.x, transform.position.y, playerNode.y));
                     rigidBody.velocity = Vector3.zero;
                     transform.position = new Vector3(playerNode.x, transform.position.y, playerNode.y);
+
+
+                    athFight.SetActive(true);
+                    athFarm.SetActive(false);
                     break;
 
                 case ControlState.Fight:
@@ -443,6 +454,9 @@ public class PlayerManager : MonoBehaviour
                     controlState = ControlState.Farm;
                     PC_farm.isActive = true;
                     PC_fight.isActive = false;
+
+                    athFarm.SetActive(true);
+                    athFight.SetActive(false);
                     break;
             }
         }
@@ -457,7 +471,11 @@ public class PlayerManager : MonoBehaviour
                 isPress = false;
             }
         }
-        
+
+        argent.text = inventory.nbArgent.ToString() + " $";
+        plantes.text = "A:"+ inventory.itemNbrList[0].ToString() +" / M:"+ inventory.itemNbrList[1].ToString() + " / B:"+inventory.itemNbrList[0].ToString();
+        actions.text = currentActionsPoints.ToString() + " / " + maxActionPoints + " Actions";
+
         switch (controlState)
         {
             case ControlState.Farm:

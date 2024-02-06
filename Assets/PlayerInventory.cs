@@ -12,6 +12,7 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private int nbStartArgent;
     [SerializeField] private int nbStartPlant;
 
+
     public bool isShopOpen = false;
 
     public int nbAttack;
