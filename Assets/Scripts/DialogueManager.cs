@@ -23,6 +23,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI dialogueText;
     [SerializeField] private TextMeshProUGUI displayNameText;
     [SerializeField] private Animator portraitAnimator;
+    [SerializeField] private GameObject continueIcon;
     private Animator layoutAnimator;
 
     [Header("Choices UI")]
@@ -90,6 +91,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (isActive)
         {
+
             if (canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
             {
                 ContinueStory();
@@ -99,8 +101,6 @@ public class DialogueManager : MonoBehaviour
             {
                 StartCoroutine(ExitDialogueMode());
             }
-
-
         }
     }
 
@@ -170,7 +170,6 @@ public class DialogueManager : MonoBehaviour
 
             displayLineCoroutine = StartCoroutine(DisplayLine(currentStory.Continue()));
 
-            DisplayChoices();
 
             HandleTags(currentStory.currentTags);
         }
@@ -183,16 +182,36 @@ public class DialogueManager : MonoBehaviour
     public IEnumerator DisplayLine(string line)
     {
         dialogueText.text = "";
+        continueIcon.SetActive(false);
+        HideChoices();
 
         canContinueToNextLine = false;
 
         foreach(char letter in line.ToCharArray())
         {
+            if (playerControls.UI.A.IsPressed())
+            {
+                dialogueText.text = line;
+                break;
+            }
+
             dialogueText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
 
+
+        DisplayChoices();
+        continueIcon.SetActive(true);
         canContinueToNextLine = true;
+        StartCoroutine(SelectFirstChoice());
+    }
+
+    private void HideChoices()
+    {
+        foreach(GameObject choiceButton in choices)
+        {
+            choiceButton.SetActive(false);
+        }
     }
 
     private void HandleTags(List<string> currentTags)
@@ -251,7 +270,6 @@ public class DialogueManager : MonoBehaviour
             choices[i].gameObject.SetActive(false);
         }
 
-        StartCoroutine(SelectFirstChoice());
     }
 
     private IEnumerator SelectFirstChoice()
@@ -267,7 +285,6 @@ public class DialogueManager : MonoBehaviour
         {
             currentStory.ChooseChoiceIndex(choiceIndex);
             //ContinueStory();
-
         }
     }
 

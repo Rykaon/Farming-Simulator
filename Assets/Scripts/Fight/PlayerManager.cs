@@ -473,7 +473,7 @@ public class PlayerManager : MonoBehaviour
         }
 
         argent.text = inventory.nbArgent.ToString() + " $";
-        plantes.text = "A:"+ inventory.itemNbrList[0].ToString() +" / M:"+ inventory.itemNbrList[1].ToString() + " / B:"+inventory.itemNbrList[0].ToString();
+        plantes.text = "A:"+ inventory.itemNbrList[0].ToString() +" / M:"+ inventory.itemNbrList[1].ToString() + " / B:"+inventory.itemNbrList[2].ToString();
         actions.text = currentActionsPoints.ToString() + " / " + maxActionPoints + " Actions";
 
         switch (controlState)
