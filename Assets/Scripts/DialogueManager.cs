@@ -12,6 +12,9 @@ using System.Linq.Expressions;
 
 public class DialogueManager : MonoBehaviour
 {
+    [Header("Params")]
+    [SerializeField] private float typingSpeed = 0.04f;
+
     [Header("Globals Ink File")]
     [SerializeField] private InkFile globalsInkFile;
 
@@ -27,6 +30,7 @@ public class DialogueManager : MonoBehaviour
     private TextMeshProUGUI[] choicesText;
 
     private Story currentStory;
+    private Coroutine displayLineCoroutine;
 
     [SerializeField] private PlayerController_Farm playerControllerFarm;
     [SerializeField] private PlayerManager PC_Manager;
@@ -34,6 +38,7 @@ public class DialogueManager : MonoBehaviour
 
     public bool isActive = false;
     private bool isInitialized = false;
+    private bool canContinueToNextLine = false;
 
     public static DialogueManager instance;
 
@@ -85,7 +90,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (isActive)
         {
-            if (playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
+            if (canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
             {
                 ContinueStory();
             }
@@ -156,7 +161,12 @@ public class DialogueManager : MonoBehaviour
     {
         if (currentStory.canContinue)
         {
-            dialogueText.text = currentStory.Continue();
+            if(displayLineCoroutine != null)
+            {
+                StopCoroutine(displayLineCoroutine);
+            }
+
+            displayLineCoroutine = StartCoroutine(DisplayLine(currentStory.Continue()));
 
             DisplayChoices();
 
@@ -166,6 +176,21 @@ public class DialogueManager : MonoBehaviour
         {
             StartCoroutine(ExitDialogueMode());
         }
+    }
+
+    public IEnumerator DisplayLine(string line)
+    {
+        dialogueText.text = "";
+
+        canContinueToNextLine = false;
+
+        foreach(char letter in line.ToCharArray())
+        {
+            dialogueText.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        canContinueToNextLine = true;
     }
 
     private void HandleTags(List<string> currentTags)
@@ -236,8 +261,12 @@ public class DialogueManager : MonoBehaviour
 
     public void MakeChoice(int choiceIndex)
     {
-        currentStory.ChooseChoiceIndex(choiceIndex);
-        //ContinueStory();
+        if (canContinueToNextLine)
+        {
+            currentStory.ChooseChoiceIndex(choiceIndex);
+            //ContinueStory();
+
+        }
     }
 
     public void EnableDisable(bool enabled)
