@@ -40,16 +40,12 @@ public class RadialMenuElement : MonoBehaviour {
     [Tooltip("This is the text label that will appear in the center of the radial menu when this option is moused over. Best to keep it short.")]
     public string label;
 
-    [HideInInspector]
     public float angleMin, angleMax;
 
-    [HideInInspector]
     public float angleOffset;
 
-    //[HideInInspector]
     public bool selected = false;
 
-    [HideInInspector]
     public int assignedIndex = 0;
     // Use this for initialization
 
