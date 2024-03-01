@@ -1,125 +1,129 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
+using Assets.Scripts;
+using Unity.VisualScripting;
+using System.Reflection;
 
 public class PlayerInventory : MonoBehaviour
 {
     [Header("Component References")]
-    private PlayerControls playerControls;
     [SerializeField] private PlayerController_Farm playerControllerFarm;
     [SerializeField] private PlayerManager PC_Manager;
 
     [SerializeField] private int nbStartArgent;
-    [SerializeField] private int nbStartPlant;
-
+    [SerializeField] private int nbStartPlants;
+    [SerializeField] private int nbStartSeeds;
+    [SerializeField] private int nbStartObjects;
 
     public bool isShopOpen = false;
 
-    public int nbAttack;
-    public int nbMove;
-    public int nbBoost;
+    [SerializeField] private List<Item> items;
+    private List<PlantItem> plantsList;
+    private List<SeedItem> seedsList;
+    private List<ObjectItem> objectsList;
 
-    public List<PlantItem> itemList;
-    public List<int> itemNbrList;
+    public Dictionary<Type, Dictionary<IItems, int>> inventory = new Dictionary<Type, Dictionary<IItems, int>>();
+
     public int nbArgent;
 
+
     private void Awake()
-    {
-        playerControls = PC_Manager.playerControls;
-        
-        // Pour l'instant on instantie une valeur au nombre d'item pour pouvoir travailler mais ça devra être enlevé plus tard
-        for (int i = 0; i < itemList.Count; i++)
+    {        
+        plantsList = items.OfType<PlantItem>().ToList();
+        seedsList = items.OfType<SeedItem>().ToList();
+        objectsList = items.OfType<ObjectItem>().ToList();
+
+        for (int i = 0; i < plantsList.Count; i++)
         {
-            itemNbrList[i] = nbStartPlant;
+            Utilities.AddToDictionary(inventory, plantsList[i], nbStartPlants);
         }
-        nbAttack = nbStartPlant;
-        nbMove = nbStartPlant;
-        nbBoost = nbStartPlant;
+
+        for (int i = 0; i < seedsList.Count; i++)
+        {
+            Utilities.AddToDictionary(inventory, seedsList[i], nbStartSeeds);
+        }
+
+        for (int i = 0; i < objectsList.Count; i++)
+        {
+            Utilities.AddToDictionary(inventory, objectsList[i], nbStartObjects);
+        }
 
         nbArgent = nbStartArgent;
     }
 
-    // **************************** //
-    // Rassembler ces deux fonction en une avec un int en plus en paramètre
-    // **************************** //
-
-    public void BuyPlant(string plantName/* int plantPrice*/)
+    public void SellBuy<T>(T item, bool sellOrBuy) where T : Items, IItems
     {
-        // Une fois les changements nécéssaires effectués du coté du DialogueManager et de Inky,
-        // enlever cette partie et la remplacer par la partie en commentaire
-        // **************************** //
         nbArgent = nbArgent - 15;
+        Type itemType = typeof(T);
 
-        switch (plantName)
-        {
-            case "Rouge":
-                nbAttack++;
-                break;
-            case "Bleu":
-                nbMove++;
-                break;
-            case "Jaune":
-                nbBoost++;
-                break;
-            default:
-                Debug.LogWarning("La plante acheté n'est pas valide !");
-                break;
-        }
-        // **************************** //
-
-        /*int index = GetIndexByName(plantName);
-
-        if (index > -1)
-        {
-            nbArgent -= plantPrice; //Ajouter en paramètre de la fonction une référence en int qui correspond à Item.buyPrice
-            itemNbrList[index]++;
-        }*/
-    }
-
-    public void SellBuyPlant(string plantName, int plantPrice, bool sellOrBuy)
-    {
-        Debug.Log(plantName + ", " + plantPrice + ", " + sellOrBuy);
-        int index = GetIndexByName(plantName);
-        Debug.Log("INDEX = " + index);
-        if (index > -1)
+        if (inventory.ContainsKey(itemType))
         {
             if (sellOrBuy)
             {
-                nbArgent += plantPrice; //Ajouter en paramètre de la fonction une référence en int qui correspond à Item.sellPrice
-                itemNbrList[index]--;
+                if (inventory[itemType][item] == 0)
+                {
+                    Debug.Log("LE JOUEUR N'A AUCUN ITEM DE CE TYPE A VENDRE");
+                }
+                else
+                {
+                    inventory[itemType][item] = inventory[itemType][item] - 1;
+                    nbArgent += item.SellPrice;
+                }
             }
             else
             {
-                nbArgent -= plantPrice; //Ajouter en paramètre de la fonction une référence en int qui correspond à Item.buyPrice
-                itemNbrList[index]++;
+                if (item.BuyPrice < nbArgent)
+                {
+                    inventory[itemType][item] = inventory[itemType][item] + 1;
+                    nbArgent -= item.BuyPrice;
+                }
+                else
+                {
+                    Debug.Log("LE JOUEUR N'A PAS ASSEZ D'ARGENT");
+                }
             }
-            
+           
+        }
+        else
+        {
+            Debug.LogWarning("LE TYPE D'ITEM N'EST PAS RECONNU");
+            return;
         }
     }
 
-    public int GetIndexByName(string name)
+    public void SellBuyGenericItem<T>(string itemName, bool sellOrBuy) where T : Items, IItems
     {
-        for (int i = 0; i < itemList.Count; ++i)
+        T item = Utilities.GetItemByName<T>(inventory, itemName);
+
+        if (item != null)
         {
-            if (name == itemList[i].plantName)
-            {
-                return i;
-            }
+            SellBuy(item, sellOrBuy);
         }
-        
-        return -1;
+        else
+        {
+            Debug.Log("AUCUN ITEM CORRESPONDANT A CE NOM N'A ÉTÉ TROUVÉ");
+        }
     }
 
-    public int GetIndexByObject(GameObject gameObject)
+    public void SellBuyItem(string itemName, int plantPrice, bool sellOrBuy)
     {
-        for (int i = 0; i < itemList.Count; ++i)
-        {
-            if (gameObject == itemList[i].prefab)
-            {
-                return i;
-            }
-        }
+        Type itemType = Utilities.GetTypeByName(inventory, itemName);
 
-        return -1;
+        if (itemType != null)
+        {
+            /*dynamic item = Utilities.GetItemByName(inventory, itemName);
+            SellBuy(item, sellOrBuy);*/
+
+            MethodInfo method = typeof(PlayerInventory).GetMethod("SellBuyGenericItem");
+            MethodInfo generic = method.MakeGenericMethod(itemType);
+            generic.Invoke(this, new object[] { itemName, sellOrBuy });
+        }
+        else
+        {
+            Debug.Log("AUCUN ITEM CORRESPONDANT A CE NOM N'A ÉTÉ TROUVÉ");
+        }
     }
 }

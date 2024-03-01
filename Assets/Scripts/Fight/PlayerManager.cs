@@ -5,7 +5,6 @@ using TMPro;
 using System.Linq;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
-using static UnitGridSystem;
 
 public class PlayerManager : MonoBehaviour
 {

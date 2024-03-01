@@ -118,7 +118,7 @@ public class DialogueManager : MonoBehaviour
 
         currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
         {
-            inventory.SellBuyPlant(PlantToBuy, PlantPrice, SellOrBuy);
+            inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
         });
 
         // Reset portrait, layout and speaker
@@ -133,14 +133,14 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory.variablesState["PlayerArgent"] = inventory.nbArgent;
 
-        for (int i = 0; i < inventory.itemList.Count; i++)
+        for (int i = 0; i < inventory.items.Count; i++)
         {
             currentStory.variablesState["NbPlant" + (i + 1).ToString()] = inventory.itemNbrList[i];
 
             if (!isInitialized)
             {
-                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = inventory.itemList[i].plantName;
-                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = inventory.itemList[i].sellPrice;
+                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = inventory.items[i].plantName;
+                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = inventory.items[i].sellPrice;
                 isInitialized = true;
             }
         }

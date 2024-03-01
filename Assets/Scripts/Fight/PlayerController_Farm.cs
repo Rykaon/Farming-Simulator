@@ -175,18 +175,17 @@ public class PlayerController_Farm : MonoBehaviour
         switch (PC_Manager.actionState)
         {
             case PlayerManager.ActionState.Plant:
-                if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
+                if (Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.plant) > 0)
                 {
-                    int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
-                    if (PC_Manager.inventory.itemNbrList[index] > 0)
-                    {
-                        InitializeWithObject(PC_Manager.plant);
-                    }
+                    InitializeWithObject(PC_Manager.plant);
                 }
                 break;
 
             case PlayerManager.ActionState.Object:
-                //InitializeWithObject(PC_Manager.object);
+                /*if (Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.object) > 0)
+                {
+                    InitializeWithObject(PC_Manager.object);
+                }*/
                 break;
 
             case PlayerManager.ActionState.Collect:
@@ -310,13 +309,9 @@ public class PlayerController_Farm : MonoBehaviour
             {
                 if (!node.isSeeded)
                 {
-                    if (PC_Manager.inventory.GetIndexByObject(PC_Manager.plant) > -1)
+                    if (Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.plant) > 0)
                     {
-                        int index = PC_Manager.inventory.GetIndexByObject(PC_Manager.plant);
-                        if (PC_Manager.inventory.itemNbrList[index] > 0)
-                        {
-                            PC_Manager.inventory.itemNbrList[index]--;
-                        }
+                        Utilities.RemoveItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.plant);
                     }
                     return true;
                 }

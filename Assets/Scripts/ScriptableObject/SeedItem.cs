@@ -5,14 +5,11 @@ using UnityEngine;
 namespace Assets.Scripts
 {
     [CreateAssetMenu]
-    public class PlantItem : Items, IItems
+    public class SeedItem : Items, IItems
     {
-        public int numberOfSeedRecolted;
-
         public GameObject Prefab { get { return base.prefab; } }
         public string ItemName { get { return base.itemName; } }
         public int BuyPrice { get { return base.buyPrice; } }
         public int SellPrice { get { return base.sellPrice; } }
-
     }
 }
