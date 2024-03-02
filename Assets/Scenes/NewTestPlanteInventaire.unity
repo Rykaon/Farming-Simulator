@@ -8442,10 +8442,8 @@ MonoBehaviour:
   turn: 0
   groundTilePrefab: {fileID: 1860469231272007820, guid: c05924fb703f38c4f86ab4bb3207cc38, type: 3}
   unitPrefab: {fileID: 1604390708870458765, guid: cae03e1ac7e200e4cab7020083b9c639, type: 3}
-  plantPrefab_1: {fileID: 4100846930786433046, guid: 3b0f88d2d57bf55429e6bb8f75f61230, type: 3}
-  plantPrefab_2: {fileID: 2708523230809217691, guid: f63c8cffdfab4354695b40edfcbdcbaa, type: 3}
-  plantPrefab_3: {fileID: 5121004268719652170, guid: ca8c45d6b701b3646ab46bfbb65efa0a, type: 3}
-  plant: {fileID: 0}
+  plantPrefab: {fileID: 0}
+  objectPrefab: {fileID: 0}
   tilesList: []
   plantList: []
   unitList: []
