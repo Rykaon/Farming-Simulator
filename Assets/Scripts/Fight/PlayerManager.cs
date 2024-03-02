@@ -5,6 +5,7 @@ using TMPro;
 using System.Linq;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
+using Unity.VisualScripting;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -62,10 +63,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] private GameObject groundTilePrefab;
     [SerializeField] private GameObject unitPrefab;
-    [SerializeField] public GameObject plantPrefab_1;
-    [SerializeField] public GameObject plantPrefab_2;
-    [SerializeField] public GameObject plantPrefab_3;
-    [HideInInspector] public GameObject plant = null;
+    [HideInInspector] public GameObject plantPrefab = null;
+    [HideInInspector] public GameObject objectPrefab = null;
     public PathNode playerNode;
 
     public List<GameObject> tilesList;
@@ -104,36 +103,19 @@ public class PlayerManager : MonoBehaviour
         SetGrid(level);
     }
 
-    private void SetUnits(Level level)
-    {
-        string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
-
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 15; ++j)
-            {
-                PathNode node = pathfinding.GetNodeWithCoords(i, j);
-
-                if (levelObjects[i][j][0] == 'F' || levelObjects[i][j][0] == 'J')
-                {
-                    
-                }
-                else if (levelObjects[i][j][0] == 'U')
-                {
-                    GameObject unit = Instantiate(unitPrefab, new Vector3(i, 1, j), Quaternion.identity);
-                    node.isContainingUnit = true;
-                    node.unit = unit;
-                    node.isWalkable = false;
-                    unitList.Add(unit);
-                    unit.GetComponent<UnitManager>().index = unitList.Count - 1;
-                }
-                else if (levelObjects[i][j][0] == 'P')
-                {
-
-                }
-            }
-        }
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////
+    // La première fonction sert à instancier les tiles du vaisseau. Le format est        //
+    // similaire avec ce qu'on a vu pour le Sokoban donc tu devrais pas être paumé.       //
+    // Le code c'est : F(Floor), J(Joueur), U(Unit) et P(Plant) et E(Empty) pour          //
+    // les cases virtuelles qu'on utilise pas sur la grille.                              //
+    //                                                                                    //
+    // On instantie un floor dans toutes les cases sauf les E(Empty).                     //
+    // Étant donné qu'on commence le jeu avec un vaisseau vide, la fonction est pas       //
+    // compliqué, mais j'ai mis plein de trucs en commentaire, fais-y pas gaffe,          //
+    // c'est la logique au cas-où le joueur aurait déjà une sauvegarde et on recréerait   //
+    // le setup qu'il avait pour qu'il retrouve les mêmes plantes et tout, c'est une      //
+    // aide pour plus tard mais pour l'instant no care.                                   //
+    ////////////////////////////////////////////////////////////////////////////////////////
 
     private void SetGrid(Level level)
     {
@@ -229,6 +211,60 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // Celle-là utilise exactement la même logique mais pour l'instantiation des ennemis    //
+    // au début d'un combat. Du coup ça veut dire que les ennemis sont toujours instantiés  //
+    // sur les mêmes cases. La seule vérification importante qu'il faut faire               //
+    // c'est qu'ils ne peuvent pas apparaître sur la case du joueur, mais pour ça faut      //
+    // vérifier sur quelle case est le joueur à ce moment-là (ça peut ne pas correspondre   //
+    // à la case J(Joueur) du level).                                                       //
+    //                                                                                      //
+    // Le mieux si tu veux te faire chier c'est même de virer tout ça et d'utiliser un      //
+    // système d'aléatoire pour que les ennemis spawns à des endroits différents entre les  //
+    // combats. Normalement c'est pas difficile, et peut-être que pour la présentation      //
+    // c'est pas nécéssaire mais si tu veux pousser le truc, ça pourrait plaire à Lénophie. //
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    private void SetUnits(Level level)
+    {
+        string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
+
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 15; ++j)
+            {
+                PathNode node = pathfinding.GetNodeWithCoords(i, j);
+
+                if (levelObjects[i][j][0] == 'F' || levelObjects[i][j][0] == 'J')
+                {
+
+                }
+                else if (levelObjects[i][j][0] == 'U')
+                {
+                    GameObject unit = Instantiate(unitPrefab, new Vector3(i, 1, j), Quaternion.identity);
+                    node.isContainingUnit = true;
+                    node.unit = unit;
+                    node.isWalkable = false;
+                    unitList.Add(unit);
+                    unit.GetComponent<UnitManager>().index = unitList.Count - 1;
+                }
+                else if (levelObjects[i][j][0] == 'P')
+                {
+
+                }
+            }
+        }
+    }
+
+    //////////////////////////////////////////////////////////////////////////////////////////
+    // La fonction qui setup le passage du mode "Farm" au mode "Fight" et inversement. Pour //
+    // savoir quelle actionMap utiliser pour les inputs du joueur avec le NewInputSystem,   //
+    // je fais la distinction si le joueur est en train d'utiliser les menus ou pas.        //
+    // Au final ça donne quatre modes distincts, "Farm", "FarmUI", "Fight" et "FightUI".    //
+    //                                                                                      //
+    // Normalement, t'as pas besoin d'y toucher, tout est déjà en place et fonctionnel.     //
+    //////////////////////////////////////////////////////////////////////////////////////////
+
     public void ChangeState(ControlState state)
     {
         switch (state)
@@ -267,6 +303,20 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    // Toutes les fonctions qui vont gérer l'ordre des actions pendant le combat.               //
+    //                                                                                          //
+    // Lorsque le joueur rentre en combat, c'est son tour. Une fois que ses points d'actions    //
+    // sont à 0 ou qu'il passe sont tour, on lui reset ses stats et on lance une première       //
+    // coroutine qui fait jouer toutes les plantes dans l'ordre dans lequel elles ont atteint   //
+    // la taille adulte (pas l'ordre de plantage, mais l'ordre d'arrosage si tu prèfères).      //
+    // Une fois le tour des plantes terminé, à la fin de la couroutine, j'en lance une          //
+    // deuxième qui va gérer le tour des ennemis. A la fin de cette couroutine, le joueur       //
+    // récupère le contrôle de son avatar et on recommence.                                     //
+    //                                                                                          //
+    // Pour résumer : Joueur > Plantes > Ennemis > Joueur > Plantes > Ennemis, etc.             //
+    //////////////////////////////////////////////////////////////////////////////////////////////
+
     public void EndTurn()
     {
         PlayerController_Fight.instance.isActive = false;
@@ -285,9 +335,33 @@ public class PlayerManager : MonoBehaviour
         actionRange = maxActionRange;
         currentActionsPoints = maxActionPoints;
         currentDistanceMoved = 0;
+
+        // isBoosted et boostFactor servent à savoir si les stats du joueur sont boostés par les plantes boost.
+        // A la fin du tour du joueur, on reset ses stats et donc les boost. Pendant le tour des plantes juste
+        // après, les boost s'appliquent si les conditions sont réunies. Lorsque le joueur récupère le contrôle
+        // de son avatar à son prochain tour, il garde les boosts qu'il a eu des plantes. Une fois son tour fini,
+        // on recommence l'opération.
+        // Pareil pour les plantes, ça veut dire que si on veut qu'une plante soit boostée, elle doit jouer APRES
+        // la plante qui la boost.
         isBoosted = false;
         boostFactor = 0;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // Les deux coroutines qui gèrent les tours des plantes et des ennemis fonctionnent            //
+    // exactement sur la même logique. La couroutine sert juste à passer dans une boucle pour      //
+    // gérer le tour des plantes/ennemis les uns à la suite. Les plantes sont ajoutées à la liste  //
+    // quand elles arrivent à maturité (arrosées ou ensolleillées), et les ennemis dans l'odre de  //
+    // leur spawn. Donc parcourir l'index suffit à gérer qui joue dans quel ordre.                 //
+    //                                                                                             //
+    // Les comportements spécifiques des plantes et ennemis sont gérés respectivement dans les     //
+    // scripts PlantManager et UnitManager. Leurs actions utilisent aussi des coroutines.          //
+    // Au début, on set la variable isActive = true, qui repassera à false à la fin des            //
+    // coroutines d'exécution de leur comportement. Donc on reste dans la boucle While tant que    //
+    // isActive = true, et lorsqu'on en sort on passe à la prochaine plante ou au prochain ennemi. //
+    //                                                                                             //
+    // Entre chaque plante ou ennemis on vérifie si le combat est gagné ou s'il est perdu.         //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
 
     public IEnumerator PlantsTurn()
     {
@@ -304,7 +378,8 @@ public class PlayerManager : MonoBehaviour
 
             if (CheckWinCondition())
             {
-
+                unitList.Clear();
+                ChangeState(ControlState.Farm);
                 break;
             }
         }
@@ -349,11 +424,26 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Unit Turn Ended");
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Les conditions de défaite et de victoire, mais pour être honnête y'a que la logique        //
+    // pour savoir si on a gagné ou perdu le combat qui est implémenté. Pour effectuer le         //
+    // comportement qui résulte d'une défaite/victoire, ça se fait juste au-dessus dans les       //
+    // coroutines des plantes/ennemis.                                                            //
+    //                                                                                            //
+    // Je vais être honnête, ça fait un moment que j'ai pas touché au code, et il me semble       //
+    // qu'en cas de victoire/défaite j'ai fait le strict minimum, y'a moyen que ça mérite un peu  //
+    // de débug. Et aucune récompense/punition n'est donnée au joueur encore. Donc si jamais      //
+    // t'as une idée simple et brillante, amuses-toi.                                             //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     private bool CheckWinCondition()
     {
-        bool hasWin = false;
+        if (unitList.Count == 0)
+        {
+            return true;
+        }
 
-        return hasWin;
+        return false;
     }
 
     private bool CheckLooseCondition()
@@ -365,6 +455,30 @@ public class PlayerManager : MonoBehaviour
 
         return false;
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Une fonction qui détecte si un input est isPressed() pendant un certain temps.                 //
+    //                                                                                                //
+    // Basiquement je m'en sers pour savoir si le joueur appuie une fois rapidement sur               //
+    // le bouton B ou s'il reste appuyé dessus longtemps. Si le joueur est en combat et que c'est     //
+    // un appui court, il passe son tour, mais si c'est un appuie long, ça met fin au combat.         //
+    //                                                                                                //
+    // Je t'avoue que le fait que ça mette fin au combat, c'est pas vraiment une question de GD,      //
+    // c'est plus une fonctionnalité utile pour tester le proto. MAis normalement t'as compris        //
+    // la logique.                                                                                    //
+    //                                                                                                //
+    // Et truc en plus, la fonction prends comme paramètre un InputAction, donc un input dans         //
+    // l'actionMap du NewInputSystem. Pour l'instant dans la fonction je fais pas de vérification     //
+    // pour savoir quel est l'input passé en paramètre parce que je n'appelle cette fonction que      //
+    // dans le cas où le joueur appuie sur B. Mais techniquement, si tu rajoutes des conditions       //
+    // pour checker quel est l'input, tu peux rajouter des comportements différents pour chaque       //
+    // touche de la manette entre appui long et appuie court.                                         //
+    //                                                                                                //
+    // Si tu sens que c'est pertinent de l'utiliser avec d'autres boutons en d'autres circonstances,  //
+    // fais-toi plaisir. Pour l'instant : Mode Farm et B court => Rien.                               //
+    // Mode Farm et B long => on lance un combat. Mode Fight et B court, le joueur passe son tour.    //
+    // Mode Fight et B long, on stop le combat et on retourne farmer.                                 //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private IEnumerator InputLongPress(InputAction action)
     {
@@ -401,7 +515,6 @@ public class PlayerManager : MonoBehaviour
             switch (controlState)
             {
                 case ControlState.Farm:
-                    Debug.Log("yo");
                     if (PC_farm.GetCurrentNode() != null)
                     {
                         if (!PC_farm.GetCurrentNode().isVirtual)
@@ -461,6 +574,51 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
+    /////////////////////////////////////////////////////////////////////////
+    // Pour éviter de constamment utiliser de la mémoire pour update l'UI  //
+    // j'ai fait des fonctions publiques pour les updates seulement quand  //
+    // un changement est fait dans l'inventaire ou au marchand.            //
+    //                                                                     //
+    // Si jamais tu vois un bug dans l'affichage de l'inventaire ou des    //
+    // informations de combat du joueur, c'est sûrement du à un oubli      //
+    // d'appel de ces fonctions. Mais dans le doute je les ai appelé       //
+    // directement dans les fonctions de la classe Utilities qui update    //
+    // l'inventaire, donc le problème devrait être réglé à la source.      //
+    /////////////////////////////////////////////////////////////////////////
+
+    public void UpdateUIInventory()
+    {
+        argent.text = inventory.nbArgent.ToString() + " $";
+
+        string nbrOfITemToDisplay = "";
+        for (int i = 0; i < inventory.plantsList.Count; i++)
+        {
+            nbrOfITemToDisplay = nbrOfITemToDisplay + inventory.plantsList[i].ItemName + " : " + Utilities.GetNumberOfItemByPrefab(inventory.inventory, inventory.plantsList[i].prefab).ToString() + " // ";
+        }
+        plantes.text = nbrOfITemToDisplay;
+    }
+
+    public void UpdateFightUI()
+    {
+        actions.text = currentActionsPoints.ToString() + " / " + maxActionPoints + " Actions";
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    // Cet update est assez court et ne check pas grand chose. La plupart des inputs sont checks   //
+    // séparément soit dans le PlayerController_Farm soit le PlayerController_Fight, ça permet     //
+    // d'éviter de tout rassembler en un seul méga update complètement tentaculaire et illisible.  //
+    //                                                                                             //
+    // Dans celui-là, (et comme dans les autres) on check d'abord les bool qui detectent si un     //
+    // input est isPressed ou non pour éviter que des fonctions soient appelées tous les updates   //
+    // alors que le joueur n'a appuyé qu'une fois. Ici on ne check que le bouton B. S'il était     //
+    // préssé la frame d'avant et qu'il ne l'est plus, on reset la bool pour pouvoir écouter le    //
+    // prochain input. Lorsqu'on le détecte, on fait le comportement décris dans la fonction       //
+    // juste au-dessus.                                                                            //
+    //                                                                                             //
+    // Dernière chose, c'est ici qu'on check si c'est le tour du joueur et que ses points d'action //
+    // sont à 0 ou non. Si oui, on passe le tour du joueur et on commence le tour des IA.          //
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+
     private void Update()
     {
         if (isPress)
@@ -470,10 +628,6 @@ public class PlayerManager : MonoBehaviour
                 isPress = false;
             }
         }
-
-        argent.text = inventory.nbArgent.ToString() + " $";
-        plantes.text = "A:"+ inventory.itemNbrList[0].ToString() +" / M:"+ inventory.itemNbrList[1].ToString() + " / B:"+inventory.itemNbrList[2].ToString();
-        actions.text = currentActionsPoints.ToString() + " / " + maxActionPoints + " Actions";
 
         switch (controlState)
         {

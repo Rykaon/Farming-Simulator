@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class RadialMenu : MonoBehaviour {
     public PlayerControls playerControls { get; private set; }
     [SerializeField] public PlayerManager PC_Manager;
@@ -59,6 +58,25 @@ public class RadialMenu : MonoBehaviour {
     private int previousActiveIndex = 0; //Used to determine which buttons to unhighlight in lazy selection.
 
     private PointerEventData pointer;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Ce script fait un peu peur si tu l'as jamais ouvert, mais en vérité y'a pas énromément     //
+    // de choses importante pour le reste de l'architecture. C'est essentiellement des fonctions  //
+    // utilitaires internes au fonctionnement du menu.                                            //
+    //                                                                                            //
+    // Basiquement, lorsque le gameObject du menu (l'objet sur lequel le script est attaché),     //
+    // les fonction OnEnabled et OnDisabled sont appelée et c'est là que le changement            //
+    // du Control.State du PlayerManager se fait pour passer soit de Farm à Farm.UI soit de       //
+    // Fight à Fight.UI (ou inversement, cf. les commentaires de la fonction LongInputPress dans  //
+    // le script PlayerManager).                                                                  //
+    // C'est aussi là où on effectue le changement d'actionMap pour le newInputSystem, et c'est   //
+    // ça qui permet de ne pas avoir besoin de booléen pour checker quand le joueur relâche le    //
+    // bouton Y, car instantanément l'actionMap change et techniquement il appuie toujours sur le //
+    // bouton mais l'input est plus écouté. Enfin bref c'est du détail.                           //
+    //                                                                                            //
+    // Y'a juste dans l'Update() que y'a un ou deux trucs à voir sinon rien d'autre (voir le      //
+    // commentaire correspondant plus bas).                                                       //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     void Awake()
     {
@@ -157,6 +175,16 @@ public class RadialMenu : MonoBehaviour {
             }*/
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Dans l'update, si le bouton du menu selectionné par le joueur est actif (donc pas les      //
+    // boutons invisibles sur le menu radial, sans actions), on écoute si le joueur appuie sur le //
+    // bouton A. Si le joueur est en mode Farm ou en mode Fight, on appelle pas la même fonction  //
+    // mais dans les deux cas, c'est la même logique, c'est une fonction qui se trouve dans le    //
+    // script MenuAction. Chaque éléments actif du menu (dans le script RadialMenuElements)       //
+    // contient une instance de cette classe abstraite MenuAction. Plus de précisions dans les    //
+    // commentaires du script MenuAction.                                                         //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     void Update()
     {

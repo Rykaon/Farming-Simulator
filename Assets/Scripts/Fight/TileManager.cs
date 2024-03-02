@@ -27,6 +27,35 @@ public class TileManager : MonoBehaviour
         High
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    // TileState gère l'état du sol de la case pour update son matérial en fonction de si le sol        //
+    // est arrosé, ensolleillé, plein d'herbe si la case est vierge ou de terre si une plante à été     //
+    // plantée.                                                                                         //
+    //                                                                                                  //
+    // SeedType gère si oui ou non une plante à été plantée sur la case.                                //
+    //                                                                                                  //
+    // GrowState gère l'état de maturité de la plante (si elle a été arrosée/ensoleillée ou pas).       //
+    // Il me semble que j'avais commencé en mettant 3 stades de maturités, mais que dans les faits      //
+    // pour le proto je n'utilise que GrowState.Low et GrowState.High parce qu'on est pas sûr           //
+    // niveau GD. Si t'es sûr de toi et que t'as envie de régler ça, je te fais confiance pour          //
+    // essayer d'implémenter ta propre idée.                                                            //
+    //                                                                                                  //
+    // Tous les changements d'états se font par des fonctions publiques appelées par le script          //
+    // PlayerController_Farm (cf. ExecuteAction dans ce script) et qui appellent ensuitent une          //
+    // coroutine privée pour faire le changement de façon fluide (pour le grossissement des plantes)    //
+    // ou gérer le temps écoulé (pour les changements de Material de la case pour faire sécher          //
+    // terre après avoir arrosé la case ou repousser l'herbe après avoir récolter une plante).          //
+    //                                                                                                  //
+    // Honnêtement, je trouve le script très lisible, très parlant et pas compliqué dans la logique     //
+    // (même si ça peut être un peu traître à débugger, je parle en connaissance de cause,              //
+    // les coroutines du démon), donc je vais pas rentrer dans tous les détails.                        //
+    //                                                                                                  //
+    // Le SEUL détail un peu tricky et important, même si je l'ai déjà mentionné dans plein d'autres    //
+    // commentaire, c'est que tileNode.plant != null quand la plante grandit, et c'est à ce moment-là   //
+    // qu'elle est ajoutée à la liste des plantes pour le combat. C'est donc l'ordre d'arrivée à        //
+    // maturité qui définit l'ordre de priorité des plantes au combat plutôt que l'ordre de plantation. //
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
     public TileState tileState;
     public SeedType seedType;
     public GrowState growState;
@@ -133,7 +162,6 @@ public class TileManager : MonoBehaviour
         switch (seedType)
         {
             case SeedType.None:
-                Debug.Log(plant);
                 StartCoroutine(DestroyPlant());
                 break;
 

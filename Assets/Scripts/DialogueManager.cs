@@ -119,6 +119,7 @@ public class DialogueManager : MonoBehaviour
         currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
         {
             inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
+            UpdateVariables();
         });
 
         // Reset portrait, layout and speaker
@@ -133,17 +134,40 @@ public class DialogueManager : MonoBehaviour
     {
         currentStory.variablesState["PlayerArgent"] = inventory.nbArgent;
 
-        for (int i = 0; i < inventory.items.Count; i++)
+        for (int i = 0; i < PC_Manager.inventory.plantsList.Count; i++)
         {
-            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = inventory.itemNbrList[i];
+            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.inventory.plantsList[i].prefab);
 
             if (!isInitialized)
             {
-                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = inventory.items[i].plantName;
-                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = inventory.items[i].sellPrice;
-                isInitialized = true;
+                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = PC_Manager.inventory.plantsList[i].itemName;
+                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = PC_Manager.inventory.plantsList[i].sellPrice;
             }
         }
+
+        /*for (int i = 0; i < PC_Manager.inventory.seedsList.Count; i++)
+        {
+            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.inventory.seedsList[i].prefab);
+
+            if (!isInitialized)
+            {
+                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = PC_Manager.inventory.seedsList[i].itemName;
+                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = PC_Manager.inventory.seedsList[i].sellPrice;
+            }
+        }
+
+        for (int i = 0; i < PC_Manager.inventory.objectsList.Count; i++)
+        {
+            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.inventory.objectsList[i].prefab);
+
+            if (!isInitialized)
+            {
+                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = PC_Manager.inventory.objectsList[i].itemName;
+                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = PC_Manager.inventory.objectsList[i].sellPrice;
+            }
+        }*/
+
+        isInitialized = true;
     }
 
     private IEnumerator ExitDialogueMode()

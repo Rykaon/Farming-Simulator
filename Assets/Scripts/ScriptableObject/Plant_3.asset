@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Plant_3
   m_EditorClassIdentifier: 
   prefab: {fileID: 5121004268719652170, guid: ca8c45d6b701b3646ab46bfbb65efa0a, type: 3}
-  plantName: Boost
-  numberOfSeedRecolted: 2
+  itemName: Boost
   buyPrice: 15
   sellPrice: 15
+  numberOfSeedRecolted: 2

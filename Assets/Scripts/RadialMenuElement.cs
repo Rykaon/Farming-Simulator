@@ -14,7 +14,7 @@ public class RadialMenuElement : MonoBehaviour {
         Pull,
         Plant,
         Collect,
-        Place,
+        Object,
         Water,
         Sun
     }
@@ -51,11 +51,28 @@ public class RadialMenuElement : MonoBehaviour {
 
     private CanvasGroup cg;
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+    // Pareil que pour le script RadialMenu, ça fait peur mais y'a que deux trois détails            //
+    // d'importants : d'abord pour savoir quel type d'évènement est set pour le button               //
+    // (le composant UI qui permet de changer la couleur si il est selected, pressed, hover, etc.)   //
+    // tu trouveras ça dans la première ligne des fonctions HighlightElement et UnhighlightElement.  //
+    //                                                                                               //
+    // La chose la plus importante par contre c'est la variable MenuAction action et l'enum          //
+    // ActionType. Dans l'inspecteur tu peux set l'enum ActionType. MenuAction action est instantiée //
+    // comme une variable de type MenuAction (une classe abstraite). Dans l'Awake(), en fonction     //
+    // de ActionType, MenuAction action est redéfinit comme une sous-classe de MenuAction et donc    //
+    // qui hérite d'elle. Toutes les sous-classes de MenuAction implémentes les mêmes fonctions,     //
+    // mais selon la sous-classe la même fonction ne fera pas la même chose. En gros ça permet de    //
+    // n'appeler qu'une seule fonction sans se soucier de qui est qui. Et comme ça j'implémente      //
+    // le comportement de toutes les actions du joueur (que ça soit les actions en mode Farm ou en   //
+    // mode Fight) dans un script à part pour éviter d'alourdir et de rendre illisible les autres.   //
+    ///////////////////////////////////////////////////////////////////////////////////////////////////
+
     void Awake()
     {
         rt = gameObject.GetComponent<RectTransform>();
 
-        if (actionType == ActionType.Plant || actionType == ActionType.Place)
+        if (actionType == ActionType.Plant || actionType == ActionType.Object)
         {
             nbrItem = 10;
         }
@@ -114,8 +131,8 @@ public class RadialMenuElement : MonoBehaviour {
                 action = new CollectAction(this);
                 break;
 
-            case ActionType.Place:
-                action = new PlaceAction(this);
+            case ActionType.Object:
+                action = new ObjectAction(this);
                 break;
 
             case ActionType.Water:
@@ -175,15 +192,6 @@ public class RadialMenuElement : MonoBehaviour {
         angleMax = offset + (baseOffset / 2f);
     }
 
-    //Highlights this button. Unity's default button wasn't really meant to be controlled through code so event handlers are necessary here.
-    //I would highly recommend not messing with this stuff unless you know what you're doing, if one event handler is wrong then the whole thing can break.
-    public void highlightThisElement(PointerEventData p)
-    {
-        ExecuteEvents.Execute(button.gameObject, p, ExecuteEvents.selectHandler);
-        selected = true;
-        setParentMenuLabel(label);
-    }
-
     public void setParentMenuLabel(string l)
     {
         if (parentRM.textLabel != null)
@@ -192,6 +200,12 @@ public class RadialMenuElement : MonoBehaviour {
         }
     }
 
+    public void highlightThisElement(PointerEventData p)
+    {
+        ExecuteEvents.Execute(button.gameObject, p, ExecuteEvents.selectHandler);
+        selected = true;
+        setParentMenuLabel(label);
+    }
 
     public void unHighlightThisElement(PointerEventData p)
     {
@@ -206,7 +220,7 @@ public class RadialMenuElement : MonoBehaviour {
 
     private void Update()
     {
-        if (actionType == ActionType.Plant ||  actionType == ActionType.Place)
+        if (actionType == ActionType.Plant ||  actionType == ActionType.Object)
         {
             if (nbrItem == 0 && active)
             {

@@ -8399,16 +8399,17 @@ MonoBehaviour:
   playerControllerFarm: {fileID: 722398551}
   PC_Manager: {fileID: 722398543}
   nbStartArgent: 50
-  nbStartPlant: 10
+  nbStartPlants: 3
+  nbStartSeeds: 0
+  nbStartObjects: 0
   isShopOpen: 0
-  nbAttack: 0
-  nbMove: 0
-  nbBoost: 0
-  itemList:
+  items:
   - {fileID: 11400000, guid: b085ed878f0dda94b97d7a8b8353c440, type: 2}
   - {fileID: 11400000, guid: bdf11a22890dc104f88cf669a46cd4f0, type: 2}
   - {fileID: 11400000, guid: 68ce7ccd54e6dd542ab4f7b4cb8b826e, type: 2}
-  itemNbrList: 000000000000000000000000
+  plantsList: []
+  seedsList: []
+  objectsList: []
   nbArgent: 0
 --- !u!114 &722398543
 MonoBehaviour:

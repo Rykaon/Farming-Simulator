@@ -19,16 +19,41 @@ public class PlayerInventory : MonoBehaviour
     [SerializeField] private int nbStartObjects;
 
     public bool isShopOpen = false;
-
-    [SerializeField] private List<Item> items;
-    private List<PlantItem> plantsList;
-    private List<SeedItem> seedsList;
-    private List<ObjectItem> objectsList;
+    
+    [SerializeField] private List<Items> items;
+    public List<PlantItem> plantsList;
+    public List<SeedItem> seedsList;
+    public List<ObjectItem> objectsList;
 
     public Dictionary<Type, Dictionary<IItems, int>> inventory = new Dictionary<Type, Dictionary<IItems, int>>();
 
     public int nbArgent;
 
+    /////////////////////////////////////////////////////////////////
+    // Normalement la logique de l'inventaire est définitive       //
+    // t'auras pas besoin de la modifier pour rajouter les         //
+    // graines ou autres objets.                                   //
+    //                                                             //
+    // La seule chose que t'auras à faire, c'est créer les         //
+    // instances des scriptableObjects et les rajouter             //
+    // depuis l'inspecteur à la liste "items", le code             //
+    // fera le reste.                                              //
+    //                                                             //
+    // Du coté de Inky, par contre t'auras besoin de rajouter      //
+    // les variables globales par contre, et bien modifier         //
+    // la fonction UpdateVariables(), mais la logique est déjà     //
+    // écrite, t'auras juste à décommenter les deux dernières      //
+    // boucles for et chnager le nom des variables pour qu'elles   //
+    // correspondent aux nouvelles variables globales de Inky      //
+    // que t'auras défini pour les graines et les objets.          //
+    //                                                             //
+    // Par contre ce que t'auras besoin d'utiliser pour update     //
+    // l'inventaire en dehors de Inky (dans le cas où le joueur    //
+    // récolte des graines en coupant les plantes par exemple),    //
+    // c'est les fonctions qui se trouvent dans la classe          //
+    // static Utilities. Pour ça, réfère toi aux commentaires      //
+    // directement dans la classe Utilities si besoin.             //
+    /////////////////////////////////////////////////////////////////
 
     private void Awake()
     {        
@@ -40,7 +65,7 @@ public class PlayerInventory : MonoBehaviour
         {
             Utilities.AddToDictionary(inventory, plantsList[i], nbStartPlants);
         }
-
+        
         for (int i = 0; i < seedsList.Count; i++)
         {
             Utilities.AddToDictionary(inventory, seedsList[i], nbStartSeeds);
@@ -52,11 +77,11 @@ public class PlayerInventory : MonoBehaviour
         }
 
         nbArgent = nbStartArgent;
+        PC_Manager.UpdateUIInventory();
     }
 
     public void SellBuy<T>(T item, bool sellOrBuy) where T : Items, IItems
     {
-        nbArgent = nbArgent - 15;
         Type itemType = typeof(T);
 
         if (inventory.ContainsKey(itemType))
@@ -85,7 +110,7 @@ public class PlayerInventory : MonoBehaviour
                     Debug.Log("LE JOUEUR N'A PAS ASSEZ D'ARGENT");
                 }
             }
-           
+            PC_Manager.UpdateUIInventory();
         }
         else
         {
@@ -114,9 +139,6 @@ public class PlayerInventory : MonoBehaviour
 
         if (itemType != null)
         {
-            /*dynamic item = Utilities.GetItemByName(inventory, itemName);
-            SellBuy(item, sellOrBuy);*/
-
             MethodInfo method = typeof(PlayerInventory).GetMethod("SellBuyGenericItem");
             MethodInfo generic = method.MakeGenericMethod(itemType);
             generic.Invoke(this, new object[] { itemName, sellOrBuy });

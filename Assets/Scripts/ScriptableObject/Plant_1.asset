@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Plant_1
   m_EditorClassIdentifier: 
   prefab: {fileID: 4100846930786433046, guid: 3b0f88d2d57bf55429e6bb8f75f61230, type: 3}
-  plantName: Attack
-  numberOfSeedRecolted: 2
+  itemName: Attack
   buyPrice: 15
   sellPrice: 15
+  numberOfSeedRecolted: 2
