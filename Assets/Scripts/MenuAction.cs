@@ -103,6 +103,8 @@ public abstract class MenuAction
         {
             Vector3 targetPos = new Vector3(Mathf.RoundToInt(target.transform.position.x), 0, Mathf.RoundToInt(target.transform.position.z));
             playerManager.movePathfinding.SetVelocity(targetPos);
+
+            playerManager.UpdateFightUI();
         }
 
         public override void UndoAction()
@@ -205,6 +207,8 @@ public abstract class MenuAction
             {
                 Debug.Log("Degats");
             }
+
+            playerManager.UpdateFightUI();
         }
 
         public override void UndoAction()
@@ -286,6 +290,8 @@ public abstract class MenuAction
             {
                 Debug.Log("Degats");
             }
+
+            playerManager.UpdateFightUI();
         }
 
         public override void UndoAction()

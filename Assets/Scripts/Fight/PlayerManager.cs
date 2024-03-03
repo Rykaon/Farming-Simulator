@@ -345,6 +345,8 @@ public class PlayerManager : MonoBehaviour
         // la plante qui la boost.
         isBoosted = false;
         boostFactor = 0;
+
+        UpdateFightUI();
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////

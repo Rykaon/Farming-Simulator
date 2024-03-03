@@ -49,6 +49,7 @@ public class UnitManager : MonoBehaviour
     float animTime = 0;
     public bool isReactionAnimLonger = false;
     public int index = 0;
+    public Animator ennemiAnimator;
 
     public GameObject target;
 
@@ -111,6 +112,8 @@ public class UnitManager : MonoBehaviour
     {
         float elapsedTime = 0f;
         float animTime = 1;
+
+        ennemiAnimator.SetTrigger("Attack"); //POUR LE MOMENT JE LE METS EN MODE GROSSE BRUTE, JE VERRAIS POUR UTILISER LES TIMINGS PLUS TARD
 
         if (animTime > (this.animTime - this.elapsedTime))
         {
