@@ -41,7 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - Active_: 1
+    - Active_: 0.333
     - Vector1_1F977523: -0.4
     - Vector1_2202B3E4: 1
     - Vector1_7B843B75: 1
