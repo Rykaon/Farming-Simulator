@@ -65,6 +65,7 @@ public class PlantManager : MonoBehaviour
     float animTime = 0;
     public bool isReactionAnimLonger = false;
     public int index = 0;
+    public Animator animatorPlant;
 
     // isBoosted et boostFactor, de la même façon que pour le joueur dans le script PlayerController_Fight ça représente si
     // oui ou non la plante est boostée par une plante boost (la plante qui boost doit jouer avant cette plante pour que son execution
@@ -133,6 +134,7 @@ public class PlantManager : MonoBehaviour
         elapsedTime = 0f;
         animTime = 1f;
 
+
         // Selon le type de la plante, on applique une méthode différente pour calculer les target (on veut par exemple que les plantes
         // boost puissent cible le joueur, mais pas les plantes attack).
         switch (type)
@@ -146,6 +148,9 @@ public class PlantManager : MonoBehaviour
                         {
                             target = targetNode.unit;
                             Debug.Log("TAREGT = " + targetNode);
+
+
+                            animatorPlant.SetTrigger("Attack");
                         }
                     }
                 }

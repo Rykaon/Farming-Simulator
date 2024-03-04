@@ -595,7 +595,7 @@ public class PlayerManager : MonoBehaviour
         string nbrOfITemToDisplay = "";
         for (int i = 0; i < inventory.plantsList.Count; i++)
         {
-            nbrOfITemToDisplay = nbrOfITemToDisplay + inventory.plantsList[i].ItemName + " : " + Utilities.GetNumberOfItemByPrefab(inventory.inventory, inventory.plantsList[i].prefab).ToString() + " // ";
+            nbrOfITemToDisplay = nbrOfITemToDisplay + inventory.plantsList[i].ItemName[0] + ":" + Utilities.GetNumberOfItemByPrefab(inventory.inventory, inventory.plantsList[i].prefab).ToString() + " / ";
         }
         plantes.text = nbrOfITemToDisplay;
     }

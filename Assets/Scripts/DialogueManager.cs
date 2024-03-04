@@ -205,6 +205,7 @@ public class DialogueManager : MonoBehaviour
 
     public IEnumerator DisplayLine(string line)
     {
+        var indexLetter = 0;
         dialogueText.text = "";
         continueIcon.SetActive(false);
         HideChoices();
@@ -213,11 +214,13 @@ public class DialogueManager : MonoBehaviour
 
         foreach(char letter in line.ToCharArray())
         {
-            if (playerControls.UI.A.IsPressed())
+            if (playerControls.UI.A.IsPressed() && indexLetter>5)
             {
                 dialogueText.text = line;
                 break;
             }
+
+            indexLetter++;
 
             dialogueText.text += letter;
             yield return new WaitForSeconds(typingSpeed);

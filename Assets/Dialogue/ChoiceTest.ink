@@ -8,31 +8,31 @@ Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros 
 -> magasin
 
 === magasin ===
-    + [Je veux acheter une plante !]
+    + [Je veux acheter une graine !]
         -> buyPlant
-    + [Je veux vendre une plante !]
+    + [Je veux vendre une graine !]
         -> sellPlant
     * [Au revoir !]
         Salut mon pote !
         -> END
 
 === buyPlant ===
-Laquelle voulez-vous acheter ? ({PlayerArgent}$) #speaker:Le Gros Rat #portrait:GrosRat #layout:right
-            + [Une Rouge ! (15$)]
+Laquelle voulez-vous acheter ? ({PlayerArgent}$) #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:right
+            + [Une Attaque ! (15$)]
                 -> setUp (NamePlant1, PricePlant1, false, NbPlant1)
-            + [Une Bleu ! (15$)]
+            + [Une Ressort ! (15$)]
                 -> setUp (NamePlant2, PricePlant2, false, NbPlant2)
-            + [Une Jaune ! (15$)]
+            + [Une Boost ! (15$)]
                 -> setUp (NamePlant3, PricePlant3, false, NbPlant3)
                 
 
 === sellPlant ===
-Laquelle voulez-vous vendre ? #speaker:Le Gros Rat #portrait:GrosRat #layout:left
-            + [Une Rouge ! ({NbPlant1})]
+Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
+            + [Une Attaque ! ({NbPlant1})]
                 -> setUp (NamePlant1, PricePlant1, true, NbPlant1)
-            + [Une Bleu ! ({NbPlant2})]
+            + [Une Ressort ! ({NbPlant2})]
                 -> setUp (NamePlant2, PricePlant2, true, NbPlant2)
-            + [Une Jaune ! ({NbPlant3})]
+            + [Une Boost ! ({NbPlant3})]
                 -> setUp (NamePlant3, PricePlant3, true, NbPlant3)
 
 
@@ -60,5 +60,5 @@ Laquelle voulez-vous vendre ? #speaker:Le Gros Rat #portrait:GrosRat #layout:lef
 
 
 === pauvre ===
-Je sais que t'es fauché, casse toi ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
+Je sais que t'es fauché, casse toi ! #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
 ->magasin

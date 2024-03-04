@@ -78,7 +78,7 @@ public abstract class MenuAction
         // commenté aussi.                                                                            //
         ////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public MoveAction(RadialMenuElement rme)
+        public MoveAction(RadialMenuElement rme) //Consomme trop de points d'actions (de façon aléatoire ????)
         {
             this.rme = rme;
             playerController = PlayerController_Fight.instance;

@@ -160,6 +160,7 @@ MonoBehaviour:
   isPlaying: 0
   isReactionAnimLonger: 0
   index: 0
+  animatorPlant: {fileID: 2139707154774788457}
   isBoosted: 0
   boostFactor: 0
   type: 2
@@ -258,6 +259,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2102268641460575239}
   m_SourcePrefab: {fileID: 100100000, guid: 6324b73cf8c166842800cfcb4715c788, type: 3}
+--- !u!95 &2139707154774788457 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2754411290661927119, guid: 6324b73cf8c166842800cfcb4715c788, type: 3}
+  m_PrefabInstance: {fileID: 4289790982667121062}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2469562915783853452 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1859353639249409066, guid: 6324b73cf8c166842800cfcb4715c788, type: 3}
