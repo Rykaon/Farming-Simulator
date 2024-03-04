@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Bon, j'espère que t'es prêt, parce que si je pense que je t'ai commenté toute l'architecture  //
@@ -31,6 +32,7 @@ public class PlantManager : MonoBehaviour
     // sur plusieurs cibles.
     public PathNode plantNode;
     public PathNode targetNode;
+    private List<PathNode> targetNodeList = new List<PathNode>();
     private GameObject target;
     private List<GameObject> targetList = new List<GameObject>();
     private Pathfinding pathfinding;
@@ -62,10 +64,13 @@ public class PlantManager : MonoBehaviour
     public bool isPlaying = false;
     private bool hasReaction = false;
     private float elapsedTime = 0f;
-    float animTime = 0;
     public bool isReactionAnimLonger = false;
     public int index = 0;
     public Animator animatorPlant;
+    [SerializeField] private AnimationClip plantActionAnim;
+    [SerializeField] private float animReactionTime;
+    private float animTime;
+    [SerializeField] private GameObject boostVFX;
 
     // isBoosted et boostFactor, de la même façon que pour le joueur dans le script PlayerController_Fight ça représente si
     // oui ou non la plante est boostée par une plante boost (la plante qui boost doit jouer avant cette plante pour que son execution
@@ -85,6 +90,15 @@ public class PlantManager : MonoBehaviour
     private void Awake()
     {
         pathfinding = PlayerManager.instance.pathfinding;
+
+        if (type == Type.Attack)
+        {
+            animTime = plantActionAnim.length;
+        }
+        else
+        {
+            animTime = plantActionAnim.length * 2;
+        }
     }
 
     private void Start()
@@ -98,7 +112,7 @@ public class PlantManager : MonoBehaviour
     // qui est attaché sur tous les objets que le joueur peut placer dans le vaisseau. Au moment où il choisit sa position
     // définitive, on update la position de la plante pour qu'elle corresponde à la case choisie par le joueur.
     // On calcule ensuite quelle est la case que la plante va target avec son action selon sa rotation.
-    public void CalculateTargetNode()
+    public void CalculateTargetNode(int range)
     {
         plantNode = pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
         PathNode node = null;
@@ -132,8 +146,7 @@ public class PlantManager : MonoBehaviour
         // pour tester. Bien sûr, animTime reste égale à AnimationClip anim.lenght
         isPlaying = true;
         elapsedTime = 0f;
-        animTime = 1f;
-
+        animatorPlant.SetBool("Action", true);
 
         // Selon le type de la plante, on applique une méthode différente pour calculer les target (on veut par exemple que les plantes
         // boost puissent cible le joueur, mais pas les plantes attack).
@@ -147,10 +160,6 @@ public class PlantManager : MonoBehaviour
                         if (targetNode.unit.tag == "Unit")
                         {
                             target = targetNode.unit;
-                            Debug.Log("TAREGT = " + targetNode);
-
-
-                            animatorPlant.SetTrigger("Attack");
                         }
                     }
                 }
@@ -179,7 +188,8 @@ public class PlantManager : MonoBehaviour
                         target = targetNode.plant;
                         targetList.Add(target);
                     }
-
+                    targetNode.tileManager.isBoosted = true;
+                    targetNode.tileManager.boostVFX = Instantiate(boostVFX, new Vector3(targetNode.x, 0, targetNode.y), Quaternion.identity);
                 }
                 break;
         }
@@ -210,9 +220,13 @@ public class PlantManager : MonoBehaviour
             // tu auras les animations, tu pourras les jouer dans l'inspecteur depuis les assets pour connaitre ce temps et lui définir.
             // Je suppose que tu devras ajouter une variable float au script pour set cette valeur dans l'inspecteur du script.
             // Une fois ce temps atteint, isReactionSet passe à true;
-            if (elapsedTime >= animTime / 2)
+            if ((elapsedTime >= animReactionTime))
             {
-                isReactionSet = true;
+                animatorPlant.SetBool("Action", false);
+                if (hasReaction)
+                {
+                    isReactionSet = true;
+                }
             }
 
             // On utilise les deux booléns pour être sûr de ne passer qu'une seule fois dans la condition, et on appelle la fonction
@@ -233,6 +247,7 @@ public class PlantManager : MonoBehaviour
         // Une fois fait ça veut dire que le tour de la plante sera terminé et que l'on commencera le tour de la prochaine unité.
         // Du coup ça permet de s'assurer que tous les feedbacks et animations se soient joués entièrement pour plus de lisibilité des actions
         // à l'écran pour le joueur.
+        
         if (!isReactionAnimLonger)
         {
             isPlaying = false;
@@ -271,7 +286,6 @@ public class PlantManager : MonoBehaviour
         switch (type)
         {
             case Type.Attack:
-                animTime = 1;
 
                 target.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
                 target.GetComponent<UnitManager>().unitNode.unit = null;
@@ -295,7 +309,6 @@ public class PlantManager : MonoBehaviour
                 break;
 
             case Type.Move:
-                animTime = 1;
 
                 if (targetNode != null)
                 {
@@ -322,7 +335,6 @@ public class PlantManager : MonoBehaviour
                 break;
 
             case Type.Boost:
-                animTime = 1;
 
                 for (int i = 0; i < targetList.Count; ++i)
                 {
@@ -340,6 +352,7 @@ public class PlantManager : MonoBehaviour
                         PlayerManager.instance.moveRange++;
                         PlayerManager.instance.actionRange++;
                     }
+
                 }
 
                 Debug.Log("Boost");

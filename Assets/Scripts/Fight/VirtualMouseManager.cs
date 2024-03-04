@@ -239,7 +239,6 @@ public class VirtualMouseManager : MonoBehaviour
             {
                 if (RaycastToWorldPosition(virtualMouse.position.ReadValue()) != null && playerManager.currentActionsPoints > 0)
                 {
-                    playerManager.currentActionsPoints--;
                     action.ExecuteAction(RaycastToWorldPosition(virtualMouse.position.ReadValue()));
                     Disable();
                 }

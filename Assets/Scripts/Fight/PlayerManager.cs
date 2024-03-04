@@ -6,6 +6,7 @@ using System.Linq;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -75,6 +76,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] public int maxMoveRange;
     [SerializeField] public int maxActionPoints;
     public int currentDistanceMoved;
+    public int curentActionDistanceMoved;
     public int currentActionsPoints;
     public int moveRange;
     public int actionRange;
@@ -97,6 +99,7 @@ public class PlayerManager : MonoBehaviour
 
         currentActionsPoints = maxActionPoints;
         currentDistanceMoved = 0;
+        curentActionDistanceMoved = 0;
         actionRange = maxActionRange;
         moveRange = maxMoveRange;
 
@@ -343,6 +346,25 @@ public class PlayerManager : MonoBehaviour
         // on recommence l'opération.
         // Pareil pour les plantes, ça veut dire que si on veut qu'une plante soit boostée, elle doit jouer APRES
         // la plante qui la boost.
+        for (int i = 0; i < pathfinding.GetGrid().GetWidth(); ++i)
+        {
+            for (int j = 0; j < pathfinding.GetGrid().GetHeight(); ++j)
+            {
+                if (pathfinding.GetNodeWithCoords(i, j) != null)
+                {
+                    if (!pathfinding.GetNodeWithCoords(i, j).isVirtual)
+                    {
+                        if (pathfinding.GetNodeWithCoords(i, j).tileManager.isBoosted)
+                        {
+                            Destroy(pathfinding.GetNodeWithCoords(i, j).tileManager.boostVFX);
+                            pathfinding.GetNodeWithCoords(i, j).tileManager.boostVFX = null;
+                            pathfinding.GetNodeWithCoords(i, j).tileManager.isBoosted = false;
+                        }
+                    }
+                }
+            }
+        }
+
         isBoosted = false;
         boostFactor = 0;
 
@@ -369,12 +391,12 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < plantList.Count; i++)
         {
+            Debug.Log("Plant " + i + " turn Start");
             PlantManager plantManager = plantList[i].GetComponent<PlantManager>();
             plantManager.isActive = true;
 
             while (plantManager.isActive)
             {
-                Debug.Log("Plant " + i + " = " + plantList[i].GetComponent<PlantManager>().plantNode);
                 yield return new WaitForEndOfFrame();
             }
 
@@ -384,11 +406,12 @@ public class PlayerManager : MonoBehaviour
                 ChangeState(ControlState.Farm);
                 break;
             }
+            Debug.Log("Plant " + i + " turn End");
         }
 
         StartCoroutine(UnitsTurn());
 
-        Debug.Log("Plant Turn Ended");
+        Debug.Log("Plants Turn Ended");
     }
 
     public IEnumerator UnitsTurn()
@@ -546,7 +569,6 @@ public class PlayerManager : MonoBehaviour
                     PC_farm.isActive = false;
                     PC_fight.isActive = true;
 
-                    Debug.Log(new Vector3(playerNode.x, transform.position.y, playerNode.y));
                     rigidBody.velocity = Vector3.zero;
                     transform.position = new Vector3(playerNode.x, transform.position.y, playerNode.y);
 

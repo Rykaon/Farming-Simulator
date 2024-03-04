@@ -78,6 +78,8 @@ public class TileManager : MonoBehaviour
     public Coroutine noneToSeeded;
 
     public bool isGrowing = false;
+    public bool isBoosted = false;
+    public GameObject boostVFX;
 
     [SerializeField] float dirtToGrassDelay;
     [SerializeField] float wetToDirtDelay;

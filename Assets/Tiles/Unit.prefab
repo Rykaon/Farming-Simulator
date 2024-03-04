@@ -58,6 +58,8 @@ MonoBehaviour:
   isReactionAnimLonger: 0
   index: 0
   ennemiAnimator: {fileID: 1511648975965032636}
+  unitAttackAnim: {fileID: 7400000, guid: 27c8c83a2a8567c4d945e2b0a96756cd, type: 2}
+  animReactionTime: 1
   target: {fileID: 0}
 --- !u!114 &8488181416227739906
 MonoBehaviour:

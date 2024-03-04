@@ -89,7 +89,7 @@ public abstract class MenuAction
         public override void SelectActionTarget()
         {
             List<GameObject> list = new List<GameObject>();
-            int range = (playerManager.currentActionsPoints * playerManager.moveRange) - playerManager.currentDistanceMoved;
+            int range = (playerManager.maxActionPoints * playerManager.moveRange) - (playerManager.currentDistanceMoved - 1);
             list = playerController.GetValidTarget(true, false, range, playerManager.playerNode);
             
             if (list != null)
@@ -185,7 +185,6 @@ public abstract class MenuAction
             // Dans ce cas-là, il est possible de lui infliger un dégât si l'idée te plait (comme les collisions dans Into The Breach).
             // Pour l'instant ce n'est pas implémenté, mais c'est facilement faisable en 3/4 lignes.
             PathNode node = pathfinding.GetNodeWithCoords(targetEndPos.x, targetEndPos.y);
-            Debug.Log(node.x + ", " + node.y);
             bool isValidPosition = false;
 
             if (node != null)
@@ -202,7 +201,7 @@ public abstract class MenuAction
                     }
                 }
             }
-            Debug.Log(node.isContainingUnit +", " + node.unit + ", " + node.isWalkable);
+
             if (!isValidPosition)
             {
                 Debug.Log("Degats");

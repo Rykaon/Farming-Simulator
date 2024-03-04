@@ -48,9 +48,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3869276648734960433, guid: 895018481b615d94eb29b5af4001c5d3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -3869276648734960433, guid: 895018481b615d94eb29b5af4001c5d3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 76.38332
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 895018481b615d94eb29b5af4001c5d3, type: 3}
       propertyPath: m_Name
-      value: Plant1
+      value: Plant1Prefab
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

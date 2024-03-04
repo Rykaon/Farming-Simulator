@@ -46,16 +46,19 @@ public class UnitManager : MonoBehaviour
     public bool isPlaying = false;
     private bool hasReaction = false;
     private float elapsedTime = 0f;
-    float animTime = 0;
     public bool isReactionAnimLonger = false;
     public int index = 0;
     public Animator ennemiAnimator;
+    [SerializeField] private AnimationClip unitAttackAnim;
+    [SerializeField] private float animReactionTime;
+    float animTime;
 
     public GameObject target;
 
     private void Awake()
     {
         pathfinding = PlayerManager.instance.pathfinding;
+        animTime = unitAttackAnim.length;
     }
 
     private void Start()
@@ -71,16 +74,18 @@ public class UnitManager : MonoBehaviour
     {
         isPlaying = true;
         elapsedTime = 0f;
-        animTime = 1;
         hasReaction = true;
+
+        ennemiAnimator.SetBool("Attack", true);
 
         bool isReactionSet = false;
         bool hasReactionSet = false;
         while (elapsedTime < animTime)
         {
             elapsedTime += Time.deltaTime;
-            if (elapsedTime >= animTime / 2)
+            if (elapsedTime >= animReactionTime)
             {
+                ennemiAnimator.SetBool("Attack", false);
                 isReactionSet = true;
             }
 
@@ -111,9 +116,7 @@ public class UnitManager : MonoBehaviour
     public IEnumerator ResolveReaction()
     {
         float elapsedTime = 0f;
-        float animTime = 1;
-
-        ennemiAnimator.SetTrigger("Attack"); //POUR LE MOMENT JE LE METS EN MODE GROSSE BRUTE, JE VERRAIS POUR UTILISER LES TIMINGS PLUS TARD
+        float animTime = 0f;
 
         if (animTime > (this.animTime - this.elapsedTime))
         {
@@ -132,6 +135,8 @@ public class UnitManager : MonoBehaviour
         targetNode.isPlant = false;
         targetNode.plant = null;
         targetNode.tileManager.ChangeTileState(TileManager.TileState.Dirt);
+        target = null;
+        targetNode = null;
 
         for (int i = 0; i < PlayerManager.instance.plantList.Count; i++)
         {
@@ -249,8 +254,6 @@ public class UnitManager : MonoBehaviour
             if (!playerManager.plantList[i].GetComponent<PlantManager>().plantNode.isContainingUnit)
             {
                 pathList = pathfinding.FindAreaPathMove(unitNode.x, unitNode.y, playerManager.plantList[i].GetComponent<PlantManager>().plantNode.x, playerManager.plantList[i].GetComponent<PlantManager>().plantNode.y);
-                Debug.Log(pathList.Count);
-                //Debug.Log(pathList[pathList.Count - 1]);
                 if (!hasFindOne)
                 {
                     currentRange = pathList.Count;
@@ -270,7 +273,6 @@ public class UnitManager : MonoBehaviour
                         targetList.Add(playerManager.plantList[i]);
                     }
                 }
-                Debug.Log("unitCount = " + index + " // plantList.Count = " + i + " // currentRange = " + currentRange);
             }
         }
 

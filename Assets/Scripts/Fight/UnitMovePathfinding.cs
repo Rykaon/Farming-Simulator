@@ -101,20 +101,18 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
                 transform.GetComponent<UnitManager>().unitNode = endNode;
             }
 
-            foreach (PathNode node in nodeList)
-            {
-                PathNode targetNode = pathfinding.GetNodeWithCoords((int)Mathf.Round(node.x), (int)Mathf.Round(node.y));
+            Debug.Log("NODES = " + nodeList.Count);
 
+            for (int i = 0; i < nodeList.Count - 1; i++)
+            {
                 if (transform.tag == "Player")
                 {
-                    if (targetNode != startNode)
-                    {
-                        playerManager.currentDistanceMoved++;
+                    playerManager.currentDistanceMoved++;
 
-                        if (playerManager.currentDistanceMoved == 1 || playerManager.currentDistanceMoved == 3 || playerManager.currentDistanceMoved == 5)
-                        {
-                            playerManager.currentActionsPoints--;
-                        }
+                    if (playerManager.currentDistanceMoved == 3 || playerManager.currentDistanceMoved == 6 || playerManager.currentDistanceMoved == 9)
+                    {
+                        Debug.Log("kgjkseg");
+                        playerManager.currentActionsPoints--;
                     }
                 }
             }

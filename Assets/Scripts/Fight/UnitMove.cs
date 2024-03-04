@@ -39,7 +39,6 @@ public class UnitMove : MonoBehaviour, IUnitMove
                 PlayerManager.instance.animator.SetBool("isWalking", false);
                 PlayerManager.instance.animator.SetBool("isRunning", true);
             }
-            Debug.Log(velocityVector);
         }
         else
         {

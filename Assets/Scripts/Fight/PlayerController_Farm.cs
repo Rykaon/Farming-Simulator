@@ -379,6 +379,7 @@ public class PlayerController_Farm : MonoBehaviour
         obj.transform.localScale = new Vector3(0, 0, 0);
 
         buildObject = obj.GetComponent<BuildObject>();
+        buildObject.Initialize();
         obj.AddComponent<BuildObjectDrag>();
     }
 

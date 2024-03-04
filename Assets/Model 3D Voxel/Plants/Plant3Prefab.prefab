@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 61fe56ad44a046341bca2f880a3cfeaa, type: 3}
       propertyPath: m_Name
-      value: Plant3
+      value: Plant3Prefab
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -75,7 +75,7 @@ Animator:
   m_GameObject: {fileID: 1334772911033691792}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: af622457400d9ad449509cf65426c557, type: 2}
+  m_Controller: {fileID: 9100000, guid: a4c24da3b763f234e9e8327ee629e7e8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
