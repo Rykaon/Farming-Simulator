@@ -3311,6 +3311,8 @@ MonoBehaviour:
   isActive: 1
   isSubRM: 0
   upRM: {fileID: 0}
+  listeInterfaceInfo: []
+  interfaceInfo: {fileID: 0}
   rt: {fileID: 0}
   useGamepad: 1
   useLazySelection: 1
@@ -17108,6 +17110,8 @@ MonoBehaviour:
   isActive: 1
   isSubRM: 1
   upRM: {fileID: 217883933}
+  listeInterfaceInfo: []
+  interfaceInfo: {fileID: 0}
   rt: {fileID: 0}
   useGamepad: 1
   useLazySelection: 1
@@ -19803,6 +19807,8 @@ MonoBehaviour:
   isActive: 1
   isSubRM: 1
   upRM: {fileID: 217883933}
+  listeInterfaceInfo: []
+  interfaceInfo: {fileID: 0}
   rt: {fileID: 0}
   useGamepad: 1
   useLazySelection: 1
@@ -24362,6 +24368,8 @@ MonoBehaviour:
   isActive: 1
   isSubRM: 0
   upRM: {fileID: 0}
+  listeInterfaceInfo: []
+  interfaceInfo: {fileID: 0}
   rt: {fileID: 0}
   useGamepad: 1
   useLazySelection: 1
@@ -26492,7 +26500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -27132,6 +27140,7 @@ MonoBehaviour:
   maxMoveRange: 3
   maxActionPoints: 3
   currentDistanceMoved: 0
+  curentActionDistanceMoved: 0
   currentActionsPoints: 0
   moveRange: 0
   actionRange: 0
