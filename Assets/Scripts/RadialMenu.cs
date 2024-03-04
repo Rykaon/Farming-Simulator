@@ -17,6 +17,9 @@ public class RadialMenu : MonoBehaviour {
     [SerializeField]
     public RadialMenu upRM;
 
+    public Sprite[] listeInterfaceInfo;
+    public GameObject interfaceInfo;
+
     [HideInInspector]
     public RectTransform rt;
     //public RectTransform baseCircleRT;
@@ -190,6 +193,8 @@ public class RadialMenu : MonoBehaviour {
     {
         if (isActive)
         {
+            interfaceInfo.SetActive(true);
+
             bool joystickMoved = playerControls.UI.Navigate.ReadValue<Vector2>() != Vector2.zero;
 
             float rawAngle;
@@ -220,6 +225,12 @@ public class RadialMenu : MonoBehaviour {
 
                 if (elements[index] != null)
                 {
+                    if (index < listeInterfaceInfo.Length)
+                    {
+                        interfaceInfo.GetComponent<Image>().sprite = listeInterfaceInfo[index];
+                    }
+                    
+
                     if (elements[index].active)
                     {
                         //Select it.
@@ -233,6 +244,10 @@ public class RadialMenu : MonoBehaviour {
                                 {
                                     ExecuteEvents.Execute(elements[index].button.gameObject, pointer, ExecuteEvents.submitHandler);
                                     elements[index].action.ExecuteAction(null);
+                                    if (elements[index].actionType != RadialMenuElement.ActionType.Submenu)
+                                    {
+                                        interfaceInfo.SetActive(false);
+                                    }
                                 }
                                 break;
 
@@ -266,6 +281,7 @@ public class RadialMenu : MonoBehaviour {
                         else
                         {
                             transform.gameObject.SetActive(false);
+                            interfaceInfo.SetActive(false);
                         }
                     }
                 }
