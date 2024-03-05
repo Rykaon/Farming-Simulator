@@ -82,7 +82,9 @@ public class PlayerController_Farm : MonoBehaviour
 
             if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>() != Vector2.zero)
             {
-                movement += new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
+                movement = new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
+                movement.x = movement.x * Utilities.GetTransformRight(Camera.main.transform).x * moveSpeed * Time.deltaTime;
+                movement.z = movement.x * Utilities.GetTransformForward(Camera.main.transform).x * moveSpeed * Time.deltaTime;
             }
 
             if (movement.magnitude > 0.1f && movement.magnitude < 0.5f)
@@ -103,12 +105,13 @@ public class PlayerController_Farm : MonoBehaviour
 
             if (movement != Vector3.zero)
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
+                //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
+                PC_Manager.rigidBody.rotation = Quaternion.LookRotation(PC_Manager.rigidBody.velocity, Vector3.up);
             }
 
             if (!RaycastCollision())
             {
-                PC_Manager.rigidBody.velocity = movement * moveSpeed * Time.deltaTime;
+                PC_Manager.rigidBody.velocity = movement;
             }
             else
             {
