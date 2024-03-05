@@ -107,6 +107,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightStick"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""a5aae2fb-a4a0-4820-9008-1b029a6aab66"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -252,6 +261,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4f8eb95-ac2e-4de4-85b9-62bd52c6948e"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightStick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -377,6 +397,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Gamepad_LB = m_Gamepad.FindAction("LB", throwIfNotFound: true);
         m_Gamepad_Arrows = m_Gamepad.FindAction("Arrows", throwIfNotFound: true);
         m_Gamepad_Select = m_Gamepad.FindAction("Select", throwIfNotFound: true);
+        m_Gamepad_RightStick = m_Gamepad.FindAction("RightStick", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -454,6 +475,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gamepad_LB;
     private readonly InputAction m_Gamepad_Arrows;
     private readonly InputAction m_Gamepad_Select;
+    private readonly InputAction m_Gamepad_RightStick;
     public struct GamepadActions
     {
         private @PlayerControls m_Wrapper;
@@ -467,6 +489,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @LB => m_Wrapper.m_Gamepad_LB;
         public InputAction @Arrows => m_Wrapper.m_Gamepad_Arrows;
         public InputAction @Select => m_Wrapper.m_Gamepad_Select;
+        public InputAction @RightStick => m_Wrapper.m_Gamepad_RightStick;
         public InputActionMap Get() { return m_Wrapper.m_Gamepad; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -503,6 +526,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Select.started += instance.OnSelect;
             @Select.performed += instance.OnSelect;
             @Select.canceled += instance.OnSelect;
+            @RightStick.started += instance.OnRightStick;
+            @RightStick.performed += instance.OnRightStick;
+            @RightStick.canceled += instance.OnRightStick;
         }
 
         private void UnregisterCallbacks(IGamepadActions instance)
@@ -534,6 +560,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Select.started -= instance.OnSelect;
             @Select.performed -= instance.OnSelect;
             @Select.canceled -= instance.OnSelect;
+            @RightStick.started -= instance.OnRightStick;
+            @RightStick.performed -= instance.OnRightStick;
+            @RightStick.canceled -= instance.OnRightStick;
         }
 
         public void RemoveCallbacks(IGamepadActions instance)
@@ -640,6 +669,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnLB(InputAction.CallbackContext context);
         void OnArrows(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnRightStick(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

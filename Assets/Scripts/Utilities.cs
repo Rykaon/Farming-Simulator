@@ -14,6 +14,20 @@ using Assets.Scripts;
 
 public static class Utilities
 {
+    public static Vector3 GetTransformForward(Transform transform)
+    {
+        Vector3 forward = transform.forward;
+        forward.y = 0f;
+        return forward.normalized;
+    }
+
+    public static Vector3 GetTransformRight(Transform transform)
+    {
+        Vector3 right = transform.right;
+        right.y = 0f;
+        return right.normalized;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////
     // Les deux premières fonctions te permettent de récupérer                        //
     // une référence à n'importe quel item stocké dans l'inventaire                   //
