@@ -17,6 +17,7 @@ public class PlayerManager : MonoBehaviour
     public Pathfinding pathfinding { get; private set; }
 
     [Header("Component References")]
+    [SerializeField] public CameraManager cameraManager;
     [SerializeField] public PlayerController_Fight PC_fight;
     [SerializeField] public PlayerController_Farm PC_farm;
     [SerializeField] public VirtualMouseManager virtualMouseManager;
@@ -230,7 +231,42 @@ public class PlayerManager : MonoBehaviour
 
     private void SetUnits(Level level)
     {
-        string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
+        // nbrUnits doit devenir un paramètre de la fonction pour instancier le nombre d'ennemis que l'on veut selon le combat choisi
+        List<PathNode> emptyNodes = new List<PathNode>();
+        int nbrUnits = 5;
+
+        for (int i = 0; i < pathfinding.GetGrid().GetWidth(); i++)
+        {
+            for (int j = 0; j < pathfinding.GetGrid().GetHeight(); ++j)
+            {
+                PathNode node = pathfinding.GetNodeWithCoords(i, j);
+
+                if (node != null)
+                {
+                    if (!node.isVirtual)
+                    {
+                        if (node.plant == null && !node.isContainingUnit)
+                        {
+                            emptyNodes.Add(node);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < Mathf.Min(nbrUnits, emptyNodes.Count); i++)
+        {
+            int randomIndex = Random.Range(0, emptyNodes.Count);
+            GameObject unit = Instantiate(unitPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
+            emptyNodes[randomIndex].isContainingUnit = true;
+            emptyNodes[randomIndex].unit = unit;
+            emptyNodes[randomIndex].isWalkable = false;
+            unitList.Add(unit);
+            unit.GetComponent<UnitManager>().index = unitList.Count - 1;
+            emptyNodes.RemoveAt(randomIndex);
+        }
+
+        /*string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
 
         for (int i = 0; i < 9; i++)
         {
@@ -256,7 +292,7 @@ public class PlayerManager : MonoBehaviour
 
                 }
             }
-        }
+        }*/
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -371,6 +407,16 @@ public class PlayerManager : MonoBehaviour
         UpdateFightUI();
     }
 
+    public void SetCameraTarget(Transform follow, Transform look)
+    {
+        if (cameraManager.cameraTransition != null)
+        {
+            StopCoroutine(cameraManager.cameraTransition);
+        }
+
+        cameraManager.cameraTransition = StartCoroutine(cameraManager.SetCameraTarget(follow, look));
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////
     // Les deux coroutines qui gèrent les tours des plantes et des ennemis fonctionnent            //
     // exactement sur la même logique. La couroutine sert juste à passer dans une boucle pour      //
@@ -394,6 +440,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Plant " + i + " turn Start");
             PlantManager plantManager = plantList[i].GetComponent<PlantManager>();
             plantManager.isActive = true;
+            SetCameraTarget(plantManager.transform, plantManager.transform);
 
             while (plantManager.isActive)
             {
@@ -420,6 +467,7 @@ public class PlayerManager : MonoBehaviour
         {
             UnitManager unitManager = unitList[i].GetComponent<UnitManager>();
             unitManager.isActive = true;
+            SetCameraTarget(unitManager.transform, unitManager.transform);
 
             while (unitManager.isActive)
             {
@@ -445,6 +493,7 @@ public class PlayerManager : MonoBehaviour
         PC_fight.isActive = true;
         playerControls.Gamepad.Enable();
         playerControls.UI.Disable();
+        SetCameraTarget(transform, transform);
 
         Debug.Log("Unit Turn Ended");
     }

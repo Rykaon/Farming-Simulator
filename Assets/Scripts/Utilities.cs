@@ -14,6 +14,42 @@ using Assets.Scripts;
 
 public static class Utilities
 {
+    public static Vector3 GetTransformForward(Transform transform)
+    {
+        Vector3 forward = transform.forward;
+        forward.y = 0f;
+        return forward.normalized;
+    }
+
+    public static Vector3 GetTransformRight(Transform transform)
+    {
+        Vector3 right = transform.right;
+        right.y = 0f;
+        return right.normalized;
+    }
+
+    public static void SetEmission(Material material, float value)
+    {
+        if (material != null)
+        {
+            if (material.HasProperty("_EmissionColor"))
+            {
+                Color finalEmissionColor = Color.white * value;
+                material.SetColor("_EmissionColor", finalEmissionColor);
+                material.EnableKeyword("_EMISSION");
+                material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            }
+            else
+            {
+                Debug.LogError("Le shader du matériau ne prend pas en charge l'émission.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Le matériau cible n'est pas défini.");
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////
     // Les deux premières fonctions te permettent de récupérer                        //
     // une référence à n'importe quel item stocké dans l'inventaire                   //
