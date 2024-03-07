@@ -72,6 +72,8 @@ public class UnitOrderUI : MonoBehaviour
                     elements[i].SetEntity(i);
                 }
             }
+
+            selectionFollowerContainer.transform.position = new Vector3(elements[0].rt.transform.position.x, selectionFollowerContainer.transform.position.y, 0f);
         }
     }
 
@@ -87,6 +89,11 @@ public class UnitOrderUI : MonoBehaviour
         for (int i = 0; i < elements.Count; ++i)
         {
             elements[i].SetEntity(newIndex);
+
+            if (i == 0)
+            {
+                PC_Manager.SetCameraTarget(elements[i].entity, elements[i].entity);
+            }
 
             newIndex = (newIndex + 1) % listCount;
         }

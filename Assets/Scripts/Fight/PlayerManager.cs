@@ -428,6 +428,8 @@ public class PlayerManager : MonoBehaviour
             StopCoroutine(cameraManager.cameraTransition);
         }
 
+        Debug.Log("kjbfkjfs");
+
         cameraManager.cameraTransition = StartCoroutine(cameraManager.SetCameraTarget(follow, look));
     }
 

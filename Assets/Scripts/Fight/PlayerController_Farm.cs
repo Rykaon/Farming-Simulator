@@ -78,9 +78,6 @@ public class PlayerController_Farm : MonoBehaviour
 
         if (isActive)
         {
-            PathNode node = GetCurrentNode();
-            GameObject target = null;
-
             if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>() != Vector2.zero && !RaycastCollision())
             {
                 movement += direction.x * Utilities.GetTransformRight(Camera.main.transform) * moveSpeed * Time.deltaTime;
@@ -112,53 +109,38 @@ public class PlayerController_Farm : MonoBehaviour
                 //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
                 LookAt(value);
             }
+        }
 
-            if (node != null)
+        PathNode node = GetCurrentNode();
+        GameObject target = null;
+
+        if (node != null)
+        {
+            if (!node.isVirtual)
             {
-                if (!node.isVirtual)
+                if (isPlacing)
                 {
-                    if (isPlacing)
-                    {
-                        if (!node.isSeeded)
-                        {
-                            target = node.tile;
-                        }
-                    }
-                    else
+                    if (!node.isSeeded)
                     {
                         target = node.tile;
                     }
                 }
-            }
-
-            if (previousTarget != null)
-            {
-                Outline(false, previousTarget.transform);
-                //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
-            }
-            if (target != null)
-            {
-                Outline(true, target.transform);
-                //target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
-            }
-            previousTarget = target;
-        }
-        else
-        {
-            if (previousTarget != null)
-            {
-                if (PC_Manager.virtualMouseManager.isActive)
-                {
-                    Outline(false, previousTarget.transform);
-                    //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
-                }
                 else
                 {
-                    Outline(true, previousTarget.transform);
-                    //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+                    target = node.tile;
                 }
             }
         }
+
+        if (previousTarget != null)
+        {
+            Outline(false, previousTarget.transform);
+        }
+        if (target != null)
+        {
+            Outline(true, target.transform);
+        }
+        previousTarget = target;
 
         movement = Vector3.zero;
     }
