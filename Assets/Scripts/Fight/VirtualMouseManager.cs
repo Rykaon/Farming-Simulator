@@ -142,7 +142,30 @@ public class VirtualMouseManager : MonoBehaviour
     {
         foreach (GameObject element in targetList)
         {
-            OutlineElement(enable, element, color);
+            if (typeToSelect == TypeToSelect.Tile)
+            {
+                if (tagToSelect == "Tile")
+                {
+                    for (int i = 0; i < element.transform.childCount; i++)
+                    {
+                        for (int j = 0; j < element.transform.GetChild(i).GetComponent<MeshRenderer>().materials.Length; j++)
+                        {
+                            if (enable)
+                            {
+                                Utilities.SetEmission(element.transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 0.15f);
+                            }
+                            else 
+                            {
+                                Utilities.SetEmission(element.transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 0f);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                OutlineElement(enable, element, color);
+            }
         }
     }
 
@@ -203,10 +226,31 @@ public class VirtualMouseManager : MonoBehaviour
                             if (target != null)
                             {
                                 target.transform.GetChild(0).GetComponent<Outline>().OutlineColor = Color.white;
+                                if (tagToSelect == "Tile")
+                                {
+                                    for (int i = 0; i < target.transform.childCount; i++)
+                                    {
+                                        for (int j = 0; j < target.transform.GetChild(i).GetComponent<MeshRenderer>().materials.Length; j++)
+                                        {
+                                            Utilities.SetEmission(target.transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 00.15f);
+                                        }
+                                    }
+                                }
                             }
 
                             target = hit.collider.transform.parent.gameObject;
                             target.transform.GetChild(0).GetComponent<Outline>().OutlineColor = Color.blue;
+                            
+                            if (tagToSelect == "Tile")
+                            {
+                                for (int i = 0; i < target.transform.childCount; i++)
+                                {
+                                    for (int j = 0; j < target.transform.GetChild(i).GetComponent<MeshRenderer>().materials.Length; j++)
+                                    {
+                                        Utilities.SetEmission(target.transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 0.35f);
+                                    }
+                                }
+                            }
                         }
                         return hit.collider.transform.parent.gameObject;
                     }

@@ -28,6 +28,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] public DialogueManager dialogueManager;
     [SerializeField] private GameObject athFarm;
     [SerializeField] private GameObject athFight;
+    [SerializeField] private UnitOrderUI fightOrderUI;
     [SerializeField] private TextMeshProUGUI argent;
     [SerializeField] private TextMeshProUGUI plantes;
     [SerializeField] private TextMeshProUGUI actions;
@@ -72,6 +73,7 @@ public class PlayerManager : MonoBehaviour
     public List<GameObject> tilesList;
     public List<GameObject> plantList;
     public List<GameObject> unitList;
+    public List<GameObject> entitiesList;
 
     [SerializeField] public int maxActionRange;
     [SerializeField] public int maxMoveRange;
@@ -86,6 +88,7 @@ public class PlayerManager : MonoBehaviour
     public int boostFactor = 0;
 
     private bool isPress;
+    public bool LBRBisPressed = false;
 
     private void Awake()
     {
@@ -231,9 +234,17 @@ public class PlayerManager : MonoBehaviour
 
     private void SetUnits(Level level)
     {
+        entitiesList = new List<GameObject>();
+        entitiesList.Add(gameObject);
+        
+        for (int i = 0; i < plantList.Count; ++i)
+        {
+            entitiesList.Add(plantList[i]);
+        }
+
         // nbrUnits doit devenir un paramètre de la fonction pour instancier le nombre d'ennemis que l'on veut selon le combat choisi
         List<PathNode> emptyNodes = new List<PathNode>();
-        int nbrUnits = 5;
+        int nbrUnits = 3;
 
         for (int i = 0; i < pathfinding.GetGrid().GetWidth(); i++)
         {
@@ -262,9 +273,12 @@ public class PlayerManager : MonoBehaviour
             emptyNodes[randomIndex].unit = unit;
             emptyNodes[randomIndex].isWalkable = false;
             unitList.Add(unit);
+            entitiesList.Add(unit);
             unit.GetComponent<UnitManager>().index = unitList.Count - 1;
             emptyNodes.RemoveAt(randomIndex);
         }
+
+        
 
         /*string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
 
@@ -437,6 +451,7 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < plantList.Count; i++)
         {
+            fightOrderUI.SetNextEntity();
             Debug.Log("Plant " + i + " turn Start");
             PlantManager plantManager = plantList[i].GetComponent<PlantManager>();
             plantManager.isActive = true;
@@ -465,6 +480,7 @@ public class PlayerManager : MonoBehaviour
     {
         for (int i = 0; i < unitList.Count; i++)
         {
+            fightOrderUI.SetNextEntity();
             UnitManager unitManager = unitList[i].GetComponent<UnitManager>();
             unitManager.isActive = true;
             SetCameraTarget(unitManager.transform, unitManager.transform);
@@ -494,6 +510,8 @@ public class PlayerManager : MonoBehaviour
         playerControls.Gamepad.Enable();
         playerControls.UI.Disable();
         SetCameraTarget(transform, transform);
+        fightOrderUI.SetNextEntity();
+
 
         Debug.Log("Unit Turn Ended");
     }
@@ -624,9 +642,12 @@ public class PlayerManager : MonoBehaviour
 
                     athFight.SetActive(true);
                     athFarm.SetActive(false);
+                    fightOrderUI.gameObject.SetActive(true);
+                    fightOrderUI.UpdateEntities();
                     break;
 
                 case ControlState.Fight:
+                    fightOrderUI.gameObject.SetActive(false);
                     foreach (GameObject unit in unitList)
                     {
                         unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
@@ -702,6 +723,14 @@ public class PlayerManager : MonoBehaviour
             }
         }
 
+        if (LBRBisPressed)
+        {
+            if (!playerControls.Gamepad.LB.IsPressed() && !playerControls.Gamepad.RB.IsPressed())
+            {
+                LBRBisPressed = false;
+}
+        }
+
         switch (controlState)
         {
             case ControlState.Farm:
@@ -724,6 +753,17 @@ public class PlayerManager : MonoBehaviour
                     isPress = true;
                     StartCoroutine(InputLongPress(playerControls.Gamepad.B));
 
+                }
+
+                if (turn == Turn.Player && playerControls.Gamepad.LB.IsPressed() && !LBRBisPressed)
+                {
+                    fightOrderUI.RunThroughEntities(-1);
+                    LBRBisPressed = true;
+                }
+                else if (turn == Turn.Player && playerControls.Gamepad.RB.IsPressed() && !LBRBisPressed)
+                {
+                    fightOrderUI.RunThroughEntities(1);
+                    LBRBisPressed = true;
                 }
                 break;
         }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -71,48 +72,45 @@ public class PlayerController_Farm : MonoBehaviour
     // d'y toucher, elle s'adapte déjà à tous les comportements du joueur.                        //
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private void Move()
+    private void Move(Vector2 value)
     {
-        movement = Vector3.zero;
+        Vector3 direction = new Vector3(value.x, 0f, value.y);
 
         if (isActive)
         {
             PathNode node = GetCurrentNode();
             GameObject target = null;
 
-            if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>() != Vector2.zero)
+            if (playerControls.Gamepad.LeftStick.ReadValue<Vector2>() != Vector2.zero && !RaycastCollision())
             {
-                movement += new Vector3(playerControls.Gamepad.LeftStick.ReadValue<Vector2>().x, 0f, playerControls.Gamepad.LeftStick.ReadValue<Vector2>().y);
+                movement += direction.x * Utilities.GetTransformRight(Camera.main.transform) * moveSpeed * Time.deltaTime;
+                movement += direction.z * Utilities.GetTransformForward(Camera.main.transform) * moveSpeed * Time.deltaTime;
             }
 
-            if (movement.magnitude > 0.1f && movement.magnitude < 0.5f)
-            {
-                PC_Manager.animator.SetBool(isWalking, true);
-                PC_Manager.animator.SetBool(isRunning, false);
-            }
-            else if (movement.magnitude > 0.5f)
-            {
-                PC_Manager.animator.SetBool(isWalking, false);
-                PC_Manager.animator.SetBool(isRunning, true);
-            }
-            else
-            {
-                PC_Manager.animator.SetBool(isWalking, false);
-                PC_Manager.animator.SetBool(isRunning, false);
-            }
+            //PC_Manager.rigidBody.AddForce(movement);
 
-            if (movement != Vector3.zero)
-            {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
-            }
-
-            if (!RaycastCollision())
-            {
-                PC_Manager.rigidBody.velocity = movement * moveSpeed * Time.deltaTime;
-            }
-            else
+            if (value == Vector2.zero)
             {
                 PC_Manager.rigidBody.velocity = Vector3.zero;
+            }
+            else
+            {
+                PC_Manager.rigidBody.velocity = movement;
+            }
+
+            if (value.magnitude > 0.1f)
+            {
+                PC_Manager.animator.SetBool("isMoving", true);
+            }
+            else
+            {
+                PC_Manager.animator.SetBool("isMoving", false);
+            }
+            
+            if (movement != Vector3.zero)
+            {
+                //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement.normalized), 0.15f);
+                LookAt(value);
             }
 
             if (node != null)
@@ -135,11 +133,13 @@ public class PlayerController_Farm : MonoBehaviour
 
             if (previousTarget != null)
             {
-                previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
+                Outline(false, previousTarget.transform);
+                //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
             }
             if (target != null)
             {
-                target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+                Outline(true, target.transform);
+                //target.transform.GetChild(0).GetComponent<Outline>().enabled = true;
             }
             previousTarget = target;
         }
@@ -149,12 +149,52 @@ public class PlayerController_Farm : MonoBehaviour
             {
                 if (PC_Manager.virtualMouseManager.isActive)
                 {
-                    previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
+                    Outline(false, previousTarget.transform);
+                    //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = false;
                 }
                 else
                 {
-                    previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = true;
+                    Outline(true, previousTarget.transform);
+                    //previousTarget.transform.GetChild(0).GetComponent<Outline>().enabled = true;
                 }
+            }
+        }
+
+        movement = Vector3.zero;
+    }
+
+    private void Outline(bool enable, Transform transform)
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            for (int j = 0; j < transform.GetChild(i).GetComponent<MeshRenderer>().materials.Length; j++)
+            {
+                if (enable)
+                {
+                    Utilities.SetEmission(transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 0.35f);
+                }
+                else
+                {
+                    Utilities.SetEmission(transform.GetChild(i).GetComponent<MeshRenderer>().materials[j], 0f);
+                }
+            }
+        }
+    }
+
+    public void LookAt(Vector2 value)
+    {
+        Vector3 direction = PC_Manager.rigidBody.velocity;
+        direction.y = 0f;
+
+        if (value.sqrMagnitude > 0.1f && direction.sqrMagnitude > 0.1f)
+        {
+            PC_Manager.rigidBody.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        }
+        else
+        {
+            if (!PC_Manager.rigidBody.isKinematic)
+            {
+                PC_Manager.rigidBody.angularVelocity = Vector3.zero;
             }
         }
     }
@@ -434,7 +474,7 @@ public class PlayerController_Farm : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        Move(playerControls.Gamepad.LeftStick.ReadValue<Vector2>());
 
         if (isActive)
         {

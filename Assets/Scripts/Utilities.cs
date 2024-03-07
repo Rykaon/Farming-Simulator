@@ -28,6 +28,16 @@ public static class Utilities
         return right.normalized;
     }
 
+    public static void RotateList<T>(List<T> list)
+    {
+        if (list.Count > 1)
+        {
+            T firstItem = list[0];
+            list.RemoveAt(0);
+            list.Add(firstItem);
+        }
+    }
+
     public static void SetEmission(Material material, float value)
     {
         if (material != null)

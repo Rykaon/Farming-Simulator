@@ -326,7 +326,7 @@ public abstract class MenuAction
         public override void ExecuteAction(GameObject target)
         {
             playerManager.actionState = PlayerManager.ActionState.Plant;
-            playerManager.objectPrefab = playerManager.inventory.plantsList[rme.itemIndex - 1].Prefab;
+            playerManager.objectPrefab = playerManager.inventory.plantsList[rme.itemIndex].Prefab;
 
             rme.parentRM.gameObject.SetActive(false);
             rme.parentRM.upRM.gameObject.SetActive(false);
@@ -363,7 +363,7 @@ public abstract class MenuAction
         public override void ExecuteAction(GameObject target)
         {
             playerManager.actionState = PlayerManager.ActionState.Object;
-            //playerManager.objectPrefab = playerManager.inventory.objectsList[rme.itemIndex - 1].Prefab;
+            //playerManager.objectPrefab = playerManager.inventory.objectsList[rme.itemIndex].Prefab;
         }
 
         public override void UndoAction()

@@ -57,6 +57,8 @@ MonoBehaviour:
   plant: {fileID: 0}
   plantManager: {fileID: 0}
   isGrowing: 0
+  isBoosted: 0
+  boostVFX: {fileID: 0}
   dirtToGrassDelay: 60
   wetToDirtDelay: 1
 --- !u!1 &2989601324849021700

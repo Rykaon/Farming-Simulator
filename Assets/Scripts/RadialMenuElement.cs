@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using static MenuAction;
+using UnityEditor.Experimental.GraphView;
 
 public class RadialMenuElement : MonoBehaviour {
     public enum ActionType
@@ -72,9 +73,13 @@ public class RadialMenuElement : MonoBehaviour {
     {
         rt = gameObject.GetComponent<RectTransform>();
 
-        if (actionType == ActionType.Plant || actionType == ActionType.Object)
+        if (actionType == ActionType.Plant)
         {
-            nbrItem = 10;
+            nbrItem = Utilities.GetNumberOfItemByPrefab(parentRM.PC_Manager.inventory.inventory, parentRM.PC_Manager.inventory.plantsList[itemIndex].Prefab);
+        }
+        else if (actionType == ActionType.Object)
+        {
+            nbrItem = Utilities.GetNumberOfItemByPrefab(parentRM.PC_Manager.inventory.inventory, parentRM.PC_Manager.inventory.objectsList[itemIndex].Prefab);
         }
 
         if (gameObject.GetComponent<CanvasGroup>() == null)
