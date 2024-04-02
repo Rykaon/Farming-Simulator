@@ -41,28 +41,34 @@ public class BarkManager : MonoBehaviour
         }
     }
 
-    /*private void Update()
+    private void Update()
     {
         if (Input.GetButtonDown("Jump")){
             GetObjectFromPool(testLock, JoueurAttaque);
         }
-    }*/
+    }
 
     public BarkDialogue GetObjectFromPool(GameObject ObjectToTrack, List<string> StateBark)
     {
-        if (pool.Count > 0)
+        int rand = Random.Range(1, 100);
+
+        if(rand > 0 && rand <= 40)
         {
-            BarkDialogue pulledObject = pool[0];
-            pool.RemoveAt(0);
-            objectsInUse.Add(pulledObject);
-            pulledObject.gameObject.SetActive(true);
-            pulledObject.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.InOutSine, 0.5f);
+            if (pool.Count > 0)
+            {
+                BarkDialogue pulledObject = pool[0];
+                pool.RemoveAt(0);
+                objectsInUse.Add(pulledObject);
+                pulledObject.gameObject.SetActive(true);
+                pulledObject.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f).SetEase(Ease.InOutSine, 0.5f);
 
-            pulledObject.tracker = ObjectToTrack;
+                pulledObject.tracker = ObjectToTrack;
 
-            pulledObject.StartCoroutine(pulledObject.DisplayLine(StateBark[Random.Range(0, StateBark.Count)]));
-            return pulledObject;
+                pulledObject.StartCoroutine(pulledObject.DisplayLine(StateBark[Random.Range(0, StateBark.Count)]));
+                return pulledObject;
+            }
         }
+        
         return null;
     }
 
