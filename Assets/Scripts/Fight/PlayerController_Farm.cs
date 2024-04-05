@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -462,66 +463,73 @@ public class PlayerController_Farm : MonoBehaviour
         {
             hasMovementBeenReset = false;
 
-            if (isPlacing)
+            if (PC_Manager.controlState == PlayerManager.ControlState.Farm)
             {
-                PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
-
-                if ((!playerControls.Gamepad.LB.IsPressed() && !playerControls.Gamepad.RB.IsPressed()) && LBRBisPressed)
+                if (isPlacing)
                 {
-                    LBRBisPressed = false;
-                }
+                    PathNode node = PlayerManager.instance.pathfinding.GetNodeWithCoords(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.z));
 
-                if (playerControls.Gamepad.A.IsPressed())
-                {
-                    if (CanBePlaced())
+                    if ((!playerControls.Gamepad.LB.IsPressed() && !playerControls.Gamepad.RB.IsPressed()) && LBRBisPressed)
                     {
-                        
-                        buildObject.Place();
-                        node.tileManager.ChangeSeedType(TileManager.SeedType.Seeded);
-                        buildObject = null;
                         LBRBisPressed = false;
-                        isPlacing = false;
                     }
-                    else
+
+                    if (playerControls.Gamepad.A.IsPressed())
+                    {
+                        if (CanBePlaced())
+                        {
+
+                            buildObject.Place();
+                            node.tileManager.ChangeSeedType(TileManager.SeedType.Seeded);
+                            buildObject = null;
+                            LBRBisPressed = false;
+                            isPlacing = false;
+                        }
+                        else
+                        {
+                            Destroy(buildObject.gameObject);
+                            buildObject = null;
+                            LBRBisPressed = false;
+                            isPlacing = false;
+                        }
+                    }
+                    else if (playerControls.Gamepad.B.IsPressed())
                     {
                         Destroy(buildObject.gameObject);
                         buildObject = null;
                         LBRBisPressed = false;
                         isPlacing = false;
                     }
-                }
-                else if (playerControls.Gamepad.B.IsPressed())
-                {
-                    Destroy(buildObject.gameObject);
-                    buildObject = null;
-                    LBRBisPressed = false;
-                    isPlacing = false;
-                }
-                else if (playerControls.Gamepad.LB.IsPressed() && !LBRBisPressed)
-                {
-                    buildObject.Rotate(-1);
+                    else if (playerControls.Gamepad.LB.IsPressed() && !LBRBisPressed)
+                    {
+                        buildObject.Rotate(-1);
 
-                    LBRBisPressed = true;
-                }
-                else if (playerControls.Gamepad.RB.IsPressed() && !LBRBisPressed)
-                {
-                    buildObject.Rotate(1);
+                        LBRBisPressed = true;
+                    }
+                    else if (playerControls.Gamepad.RB.IsPressed() && !LBRBisPressed)
+                    {
+                        buildObject.Rotate(1);
 
-                    LBRBisPressed = true;
+                        LBRBisPressed = true;
+                    }
+                }
+                else
+                {
+                    if (playerControls.Gamepad.Y.IsPressed())
+                    {
+                        rm.gameObject.SetActive(true);
+                    }
+
+                    if (playerControls.Gamepad.X.IsPressed() && !isPlaying)
+                    {
+                        isPlaying = true;
+                        StartCoroutine(ExecuteAction());
+                    }
                 }
             }
-            else
+            else if (PC_Manager.controlState == PlayerManager.ControlState.World)
             {
-                if (playerControls.Gamepad.Y.IsPressed())
-                {
-                    rm.gameObject.SetActive(true);
-                }
 
-                if (playerControls.Gamepad.X.IsPressed() && !isPlaying)
-                {
-                    isPlaying = true;
-                    StartCoroutine(ExecuteAction());
-                }
             }
         }
         else

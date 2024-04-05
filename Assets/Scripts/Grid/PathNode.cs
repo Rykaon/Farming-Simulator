@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Map;
 
 public class PathNode
 {
@@ -17,11 +18,17 @@ public class PathNode
     public bool isValidMovePosition;
     public bool isContainingUnit;
 
+    public bool isEvent;
+    public MapEvent mapEvent;
+    public List<PathNode> fromNodes;
+    public List<PathNode> toNodes;
+    public List<float> toNodesTime;
+
     public GameObject unit;
     public GameObject plant;
     public GameObject tile;
     public TileManager tileManager;
-    
+
     public PathNode(GridMap<PathNode> grid, int x, int y)
     {
         this.grid = grid;
@@ -34,6 +41,19 @@ public class PathNode
         isWalkable = true;
         isValidMovePosition = false;
         isContainingUnit = false;
+    }
+
+    public PathNode(GridMap<PathNode> grid, int x, int y, bool isEvent)
+    {
+        this.grid = grid;
+        this.x = x;
+        this.y = y;
+
+        this.isEvent = isEvent;
+        mapEvent = null;
+        fromNodes = new List<PathNode>();
+        toNodes = new List<PathNode>();
+        toNodesTime = new List<float>();
     }
 
     public void CalculateFCost()

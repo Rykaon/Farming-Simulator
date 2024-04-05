@@ -14,6 +14,11 @@ using Assets.Scripts;
 
 public static class Utilities
 {
+    public static int FindIndexInList<T>(T item, List<T> list)
+    {
+        return list.IndexOf(item);
+    }
+
     public static Vector3 GetTransformForward(Transform transform)
     {
         Vector3 forward = transform.forward;

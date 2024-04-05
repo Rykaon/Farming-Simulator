@@ -12,6 +12,7 @@ TagManager:
   - Unit
   - Plant
   - NPC
+  - MapEvent
   layers:
   - Default
   - TransparentFX

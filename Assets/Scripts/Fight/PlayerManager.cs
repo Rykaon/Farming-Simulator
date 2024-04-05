@@ -7,6 +7,7 @@ using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
+using Map;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -21,14 +22,20 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] public PlayerController_Fight PC_fight;
     [SerializeField] public PlayerController_Farm PC_farm;
     [SerializeField] public VirtualMouseManager virtualMouseManager;
+    [SerializeField] public MapGenerator mapGenerator;
     [SerializeField] public Animator animator;
     [SerializeField] public Rigidbody rigidBody;
     [SerializeField] public UnitMovePathfinding movePathfinding;
     [SerializeField] public PlayerInventory inventory;
     [SerializeField] public DialogueManager dialogueManager;
-    [SerializeField] private GameObject athFarm;
-    [SerializeField] private GameObject athFight;
-    [SerializeField] private UnitOrderUI fightOrderUI;
+
+    [Header("VFX References")]
+    [SerializeField] private ParticleSystem particuleSystem;
+
+    [Header("UI References")]
+    [SerializeField] public GameObject athFarm;
+    [SerializeField] public GameObject athFight;
+    [SerializeField] public UnitOrderUI fightOrderUI;
     [SerializeField] private TextMeshProUGUI argent;
     [SerializeField] private TextMeshProUGUI plantes;
     [SerializeField] private TextMeshProUGUI actions;
@@ -58,6 +65,12 @@ public class PlayerManager : MonoBehaviour
         Player,
         Plant,
         Unit
+    }
+
+    public enum Position
+    {
+        Outside,
+        Inside
     }
 
     public ControlState controlState;
@@ -232,11 +245,11 @@ public class PlayerManager : MonoBehaviour
     // c'est pas nécéssaire mais si tu veux pousser le truc, ça pourrait plaire à Lénophie. //
     //////////////////////////////////////////////////////////////////////////////////////////
 
-    private void SetUnits(Level level)
+    public void SetUnits(int nbrUnits, bool isBoss)
     {
         entitiesList = new List<GameObject>();
         entitiesList.Add(gameObject);
-        
+
         for (int i = 0; i < plantList.Count; ++i)
         {
             entitiesList.Add(plantList[i]);
@@ -244,7 +257,6 @@ public class PlayerManager : MonoBehaviour
 
         // nbrUnits doit devenir un paramètre de la fonction pour instancier le nombre d'ennemis que l'on veut selon le combat choisi
         List<PathNode> emptyNodes = new List<PathNode>();
-        int nbrUnits = 3;
 
         for (int i = 0; i < pathfinding.GetGrid().GetWidth(); i++)
         {
@@ -268,7 +280,18 @@ public class PlayerManager : MonoBehaviour
         for (int i = 0; i < Mathf.Min(nbrUnits, emptyNodes.Count); i++)
         {
             int randomIndex = Random.Range(0, emptyNodes.Count);
-            GameObject unit = Instantiate(unitPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
+            GameObject unit;
+
+            if (isBoss && i == 0)
+            {
+                // Changer en instantiation d'un Boss
+                unit = Instantiate(unitPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
+            }
+            else
+            {
+                unit = Instantiate(unitPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
+            }
+
             emptyNodes[randomIndex].isContainingUnit = true;
             emptyNodes[randomIndex].unit = unit;
             emptyNodes[randomIndex].isWalkable = false;
@@ -278,7 +301,7 @@ public class PlayerManager : MonoBehaviour
             emptyNodes.RemoveAt(randomIndex);
         }
 
-        
+
 
         /*string[][] levelObjects = level.Content.Split('\n').Select(x => x.Split(',')).ToArray();
 
@@ -322,6 +345,22 @@ public class PlayerManager : MonoBehaviour
     {
         switch (state)
         {
+            case ControlState.World:
+                controlState = ControlState.World;
+                playerControls.Gamepad.Enable();
+                playerControls.UI.Disable();
+                PC_farm.isActive = true;
+                PC_fight.isActive = false;
+                break;
+
+            case ControlState.WorldUI:
+                controlState = ControlState.World;
+                playerControls.Gamepad.Disable();
+                playerControls.UI.Enable();
+                PC_farm.isActive = false;
+                PC_fight.isActive = false;
+                break;
+
             case ControlState.Farm:
                 controlState = ControlState.Farm;
                 playerControls.Gamepad.Enable();
@@ -631,12 +670,10 @@ public class PlayerManager : MonoBehaviour
 
                     ResetStats();
 
-                    SetUnits(level);
+                    SetUnits(3, false);
 
                     turn = Turn.Player;
-                    controlState = ControlState.Fight;
-                    PC_farm.isActive = false;
-                    PC_fight.isActive = true;
+                    ChangeState(ControlState.Fight);
 
                     rigidBody.velocity = Vector3.zero;
                     transform.position = new Vector3(playerNode.x, transform.position.y, playerNode.y);
@@ -717,6 +754,25 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //particuleSystem.Stop();
+
+            /*if (!virtualMouseManager.isActive)
+            {
+                mapGenerator.ShowHideUIMap(true);
+                ChangeState(ControlState.WorldUI);
+                virtualMouseManager.Enable();
+            }
+            else
+            {
+                mapGenerator.ShowHideUIMap(false);
+                ChangeState(ControlState.Farm);
+                virtualMouseManager.Disable(false);
+            }*/
+            
+        }
+
         if (isPress)
         {
             if (!playerControls.Gamepad.B.IsPressed())
