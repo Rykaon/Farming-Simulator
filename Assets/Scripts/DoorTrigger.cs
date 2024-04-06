@@ -5,6 +5,9 @@ using static PlayerManager;
 
 public class DoorTrigger : InteractionTrigger
 {
+    [SerializeField] Transform outsidePoint, insidePoint;
+    private bool southButtonIsPressed = false;
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,9 +20,32 @@ public class DoorTrigger : InteractionTrigger
 
     protected override void Update()
     {
+        if (southButtonIsPressed && !playerControls.Gamepad.A.IsPressed())
+        {
+            southButtonIsPressed = false;
+        }
+
         if (playerInRange)
         {
-            visualCue.SetActive(true);
+            if (PC_Manager.controlState == ControlState.World)
+            {
+                visualCue.SetActive(true);
+
+                if (playerControls.Gamepad.A.IsPressed() && !southButtonIsPressed)
+                {
+                    southButtonIsPressed = true;
+                    if (PC_Manager.position == Position.Inside)
+                    {
+                        PC_Manager.rigidBody.position = new Vector3(outsidePoint.position.x, PC_Manager.rigidBody.position.y, outsidePoint.position.z);
+                        PC_Manager.position = Position.Outside;
+                    }
+                    else
+                    {
+                        PC_Manager.rigidBody.position = new Vector3(insidePoint.position.x, PC_Manager.rigidBody.position.y, insidePoint.position.z);
+                        PC_Manager.position = Position.Inside;
+                    }
+                }
+            }
         }
         else
         {

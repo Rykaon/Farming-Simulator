@@ -76,6 +76,7 @@ public class PlayerManager : MonoBehaviour
     public ControlState controlState;
     public ActionState actionState;
     public Turn turn;
+    public Position position;
 
     [SerializeField] private GameObject groundTilePrefab;
     [SerializeField] private GameObject unitPrefab;
@@ -648,7 +649,7 @@ public class PlayerManager : MonoBehaviour
             switch (controlState)
             {
                 case ControlState.Farm:
-                    if (PC_farm.GetCurrentNode() != null)
+                    /*if (PC_farm.GetCurrentNode() != null)
                     {
                         if (!PC_farm.GetCurrentNode().isVirtual)
                         {
@@ -682,7 +683,9 @@ public class PlayerManager : MonoBehaviour
                     athFight.SetActive(true);
                     athFarm.SetActive(false);
                     fightOrderUI.gameObject.SetActive(true);
-                    fightOrderUI.UpdateEntities();
+                    fightOrderUI.UpdateEntities();*/
+
+                    mapGenerator.travelElapsedTime = mapGenerator.travelTime;
                     break;
 
                 case ControlState.Fight:

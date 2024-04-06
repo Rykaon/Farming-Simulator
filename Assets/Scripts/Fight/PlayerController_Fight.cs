@@ -103,7 +103,6 @@ public class PlayerController_Fight : MonoBehaviour
                                         {
                                             if (node.unit.tag == "Unit")
                                             {
-                                                Debug.Log("yo");
                                                 pathList = pathfinding.FindLinearPathAction(startNode.x, startNode.y, i, j);
                                                 
                                                 if (pathList != null)

@@ -101,8 +101,6 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
                 transform.GetComponent<UnitManager>().unitNode = endNode;
             }
 
-            Debug.Log("NODES = " + nodeList.Count);
-
             for (int i = 0; i < nodeList.Count - 1; i++)
             {
                 if (transform.tag == "Player")
@@ -111,7 +109,6 @@ public class UnitMovePathfinding : MonoBehaviour, IUnitMove
 
                     if (playerManager.currentDistanceMoved == 3 || playerManager.currentDistanceMoved == 6 || playerManager.currentDistanceMoved == 9)
                     {
-                        Debug.Log("kgjkseg");
                         playerManager.currentActionsPoints--;
                     }
                 }

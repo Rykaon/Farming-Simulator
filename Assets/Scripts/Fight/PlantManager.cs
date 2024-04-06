@@ -147,6 +147,7 @@ public class PlantManager : MonoBehaviour
         isPlaying = true;
         elapsedTime = 0f;
         animatorPlant.SetBool("Action", true);
+        hasReaction = false;
 
         // Selon le type de la plante, on applique une méthode différente pour calculer les target (on veut par exemple que les plantes
         // boost puissent cible le joueur, mais pas les plantes attack).
@@ -286,11 +287,12 @@ public class PlantManager : MonoBehaviour
         switch (type)
         {
             case Type.Attack:
-
-                target.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
-                target.GetComponent<UnitManager>().unitNode.unit = null;
-                target.GetComponent<UnitManager>().unitNode.isWalkable = true;
+                UnitManager targetManager = target.GetComponent<UnitManager>();
+                targetManager.unitNode.isContainingUnit = false;
+                targetManager.unitNode.unit = null;
+                targetManager.unitNode.isWalkable = true;
                 PlayerManager.instance.unitList.Remove(target);
+                PlayerManager.instance.entitiesList.Remove(target);
                 Destroy(target);
 
                 // Ici on se sert enfin de la variable index définit juste en dessous de isReactionAnimLonger dans le script.
@@ -358,6 +360,7 @@ public class PlantManager : MonoBehaviour
                 Debug.Log("Boost");
                 break;
         }
+        target = null;
 
         // Si effectivement l'animation de reaction de la target se finis APRES l'animation de la plante, alors seuelement maintenant
         // on set les booléen isPlaying et hasPlay afin de finir le tour de la plante et passer à celui de la prochaine unité.

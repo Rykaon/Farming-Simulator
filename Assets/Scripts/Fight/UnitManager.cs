@@ -130,6 +130,7 @@ public class UnitManager : MonoBehaviour
         }
 
         PlayerManager.instance.plantList.Remove(target);
+        PlayerManager.instance.entitiesList.Remove(target);
         Destroy(target);
         targetNode.isSeeded = false;
         targetNode.isPlant = false;

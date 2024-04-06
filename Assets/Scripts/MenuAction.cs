@@ -149,6 +149,11 @@ public abstract class MenuAction
 
         public override void ExecuteAction(GameObject target)
         {
+            if (playerManager.currentActionsPoints == 0)
+            {
+                return;
+            }
+
             // TargetStartPos est la position en X,Y dans la grille de l'ennemi.
             // TargetEndPos est la position en X,Y sur laquelle on veut déplacer l'ennemi.
             // On l'instantie comme Vector2.zero afin d'éviter d'utiliser une variable non assignée ce qui donne une erreur.
@@ -197,6 +202,7 @@ public abstract class MenuAction
                         {
                             target.GetComponent<UnitMovePathfinding>().SetVelocity(new Vector3(node.x, 0, node.y));
                             isValidPosition = true;
+                            playerManager.currentActionsPoints--;
                         }
                     }
                 }
@@ -247,6 +253,11 @@ public abstract class MenuAction
 
         public override void ExecuteAction(GameObject target)
         {
+            if (playerManager.currentActionsPoints == 0)
+            {
+                return;
+            }
+
             Vector2Int targetStartPos = new Vector2Int(Mathf.RoundToInt(target.transform.position.x), Mathf.RoundToInt(target.transform.position.z));
             Vector2Int targetEndPos = Vector2Int.zero;
 
@@ -280,6 +291,7 @@ public abstract class MenuAction
                         {
                             target.GetComponent<UnitMovePathfinding>().SetVelocity(new Vector3(node.x, 0, node.y));
                             isValidPosition = true;
+                            playerManager.currentActionsPoints--;
                         }
                     }
                 }

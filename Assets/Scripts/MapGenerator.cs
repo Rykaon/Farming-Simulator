@@ -24,6 +24,12 @@ namespace Map
         public AnimationCurve startAnimCurve;
         public AnimationCurve endAnimCurve;
 
+        [Header("Beahviour References")]
+        [HideInInspector] public float travelElapsedTime;
+        [HideInInspector] public float travelTime;
+        [SerializeField] private float travelArrivalTime;
+        [SerializeField] private Transform spawnPoint, dispawnPoint, stopPoint;
+
         [Header("Grid References")]
         private GridMap<PathNode> nodeGrid;
         public List<PathNode> eventNodes;
@@ -416,12 +422,13 @@ namespace Map
             manager.athFight.SetActive(false);
 
             // La Coroutine pour la phase Farm
-            float elapsedTime = 0f;
             int thisMapEventIndex = Utilities.FindIndexInList(mapEvent.eventNode, currentNode.toNodes);
-            while (elapsedTime < currentNode.toNodesTime[thisMapEventIndex])
+            travelElapsedTime = 0f;
+            travelTime = currentNode.toNodesTime[thisMapEventIndex];
+            while (travelElapsedTime < travelTime)
             {
-                Debug.Log("CURRENT TIME = " + elapsedTime + " // END TIME " + currentNode.toNodesTime[thisMapEventIndex]);
-                elapsedTime += Time.deltaTime;
+                Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
+                travelElapsedTime += Time.deltaTime;
                 yield return new WaitForEndOfFrame();
             }
 
