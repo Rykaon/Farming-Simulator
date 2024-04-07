@@ -25,10 +25,16 @@ namespace Map
         public AnimationCurve endAnimCurve;
 
         [Header("Beahviour References")]
+        [HideInInspector] public bool onMap = false;
         [HideInInspector] public float travelElapsedTime;
         [HideInInspector] public float travelTime;
         [SerializeField] private float travelArrivalTime;
         [SerializeField] private Transform spawnPoint, dispawnPoint, stopPoint;
+        [SerializeField] private GameObject worldToSpawn;
+        [SerializeField] private List<GameObject> fightToSpawn;
+        [SerializeField] private List<GameObject> shopToSpawn;
+        [SerializeField] private List<GameObject> randomToSpawn;
+        [SerializeField] private List<GameObject> endToSpawn;
 
         [Header("Grid References")]
         private GridMap<PathNode> nodeGrid;
@@ -41,6 +47,8 @@ namespace Map
         [SerializeField] private float widthPadding, heightPadding;
         [SerializeField] private GameObject mapParent;
         [SerializeField] private TextMeshProUGUI mapElementInfo;
+        [SerializeField] private GameObject mapInfoEventNotCheck;
+        [SerializeField] private GameObject mapInfoDestinationNotSet;
         [SerializeField] private GameObject mapEventPrefab;
         [SerializeField] private GameObject mapEventLinkPrefab;
         [SerializeField] private GameObject poolParent;
@@ -185,6 +193,7 @@ namespace Map
             }
 
             currentNode = eventNodes[0];
+            currentNode.mapEvent.isEventCheck = true;
 
             GenerateUIMap();
         }
@@ -213,6 +222,35 @@ namespace Map
         public void ShowHideUIMap(bool value)
         {
             mapParent.SetActive(value);
+            onMap = value;
+        }
+
+        public void SetMapInfoErrorMessage(bool eventNotCheck, bool destinationNotSet)
+        {
+            GameObject info = null;
+
+            if (eventNotCheck && !destinationNotSet)
+            {
+                info = mapInfoEventNotCheck;
+            }
+            else if (!eventNotCheck && destinationNotSet)
+            {
+                info = mapInfoDestinationNotSet;
+            }
+            else
+            {
+                Debug.Log("Parameters not set");
+                return;
+            }
+
+            StartCoroutine(SetMapInfoErrorMessage(info));
+        }
+
+        private IEnumerator SetMapInfoErrorMessage(GameObject mapInfo)
+        {
+            mapInfo.SetActive(true);
+            yield return new WaitForSecondsRealtime(3);
+            mapInfo.SetActive(false);
         }
 
         public void DesactivatePreviousEvents(int value)
@@ -401,21 +439,17 @@ namespace Map
         public IEnumerator StartEventBehavior(MapEvent mapEvent)
         {
             ShowHideUIMap(false);
+            float elapsedTime = 0f;
+            worldToSpawn.transform.DOMove(dispawnPoint.position, travelArrivalTime).SetEase(startAnimCurve);
 
-            // SetUp la phase Farm en attendant l'event
-            if (currentNode.mapEvent.eventType == MapEvent.EventType.Boss || currentNode.mapEvent.eventType == MapEvent.EventType.Fight)
+            while (elapsedTime < travelArrivalTime)
             {
-                manager.fightOrderUI.gameObject.SetActive(false);
-                foreach (GameObject unit in manager.unitList)
-                {
-                    unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
-                    unit.GetComponent<UnitManager>().unitNode.unit = null;
-                    unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
-                    Destroy(unit);
-                }
-                manager.unitList.Clear();
+                elapsedTime += Time.deltaTime;
             }
 
+            Destroy(worldToSpawn);
+
+            // SetUp la phase Farm en attendant l'event
             manager.ChangeState(ControlState.Farm);
 
             manager.athFarm.SetActive(true);
@@ -427,17 +461,49 @@ namespace Map
             travelTime = currentNode.toNodesTime[thisMapEventIndex];
             while (travelElapsedTime < travelTime)
             {
-                Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
-                travelElapsedTime += Time.deltaTime;
+                //Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
+                if (!onMap)
+                {
+                    travelElapsedTime += Time.deltaTime;
+                }
+                
                 yield return new WaitForEndOfFrame();
             }
 
-            // Trouver un truc pour cacher le setup de l'event
+            currentNode = mapEvent.eventNode;
+            List<GameObject> worldToSpawnList = new List<GameObject>();
+
+            if (mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
+            {
+                worldToSpawnList = fightToSpawn;
+            }
+            else if (mapEvent.eventType == MapEvent.EventType.Shop)
+            {
+                worldToSpawnList = shopToSpawn;
+            }
+            else if (mapEvent.eventType == MapEvent.EventType.Random)
+            {
+                worldToSpawnList = randomToSpawn;
+            }
+            else if (mapEvent.eventType == MapEvent.EventType.End)
+            {
+                worldToSpawnList = endToSpawn;
+            }
+
+            int index = UnityEngine.Random.Range(0, worldToSpawnList.Count);
+            worldToSpawn = Instantiate(worldToSpawnList[index], spawnPoint.position, Quaternion.identity);
+
+            elapsedTime = 0f;
+            worldToSpawn.transform.DOMove(stopPoint.position, travelArrivalTime).SetEase(endAnimCurve);
+
+            while (elapsedTime < travelArrivalTime)
+            {
+                elapsedTime += Time.deltaTime;
+            }
 
             // SetUp la phase de l'event selectionné
             if (mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
             {
-                Debug.Log("YEAH");
                 if (manager.PC_farm.GetCurrentNode() != null)
                 {
                     if (!manager.PC_farm.GetCurrentNode().isVirtual)
@@ -483,10 +549,29 @@ namespace Map
             else if (mapEvent.eventType == MapEvent.EventType.Shop)
             {
                 manager.ChangeState(ControlState.World);
+                mapEvent.isEventCheck = true;
             }
-            else
+            else if (mapEvent.eventType == MapEvent.EventType.Random)
             {
                 manager.ChangeState(ControlState.World);
+            }
+            else if (mapEvent.eventType == MapEvent.EventType.End)
+            {
+                manager.ChangeState(ControlState.World);
+
+                manager.PC_farm.CollectAll();
+                int nbrOfGold = 0;
+                for (int i = 0; i < manager.inventory.plantsList.Count; ++i)
+                {
+                    nbrOfGold += Utilities.GetNumberOfItemByPrefab(manager.inventory.inventory, manager.inventory.plantsList[i].Prefab);
+                }
+                nbrOfGold *= manager.inventory.plantsList[0].sellPrice;
+                nbrOfGold += manager.inventory.nbArgent;
+
+                if (nbrOfGold < mapEvent.nbrReward)
+                {
+                    // La run est loose
+                }
             }
         }
 
@@ -575,6 +660,7 @@ namespace Map
         public int nbrReward;
         public string rewardName;
         public PathNode eventNode;
+        public bool isEventCheck;
 
         // Fight values
         public int nbrUnits;
@@ -588,6 +674,7 @@ namespace Map
             eventNode = node;
             eventType = type;
             isBonus = true;
+            isEventCheck = false;
 
             if (eventType == EventType.End)
             {

@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -288,6 +289,7 @@ public class PlayerController_Farm : MonoBehaviour
                         {
                             if (node.tileManager.growState == TileManager.GrowState.High)
                             {
+                                Utilities.AddItemByPrefab(PC_Manager.inventory.inventory, node.tileManager.plantItem);
                                 node.tileManager.ChangeSeedType(TileManager.SeedType.None);
                             }
                         }
@@ -351,6 +353,30 @@ public class PlayerController_Farm : MonoBehaviour
 
         isPlaying = false;
         yield return null;
+    }
+
+    public void CollectAll()
+    {
+        Pathfinding pathfinding = PC_Manager.pathfinding;
+
+        for (int i = 0; i < pathfinding.GetGrid().GetWidth(); ++i)
+        {
+            for (int j = 0; j < pathfinding.GetGrid().GetHeight(); ++j)
+            {
+                PathNode node = pathfinding.GetNodeWithCoords(i, j);
+                if (node != null)
+                {
+                    if (!node.isVirtual)
+                    {
+                        if (node.tileManager.plant != null)
+                        {
+                            Utilities.AddItemByPrefab(PC_Manager.inventory.inventory, node.tileManager.plantItem);
+                            node.tileManager.ChangeSeedType(TileManager.SeedType.None);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -461,6 +487,10 @@ public class PlayerController_Farm : MonoBehaviour
 
         if (isActive)
         {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                CollectAll();
+            }
             hasMovementBeenReset = false;
 
             if (PC_Manager.controlState == PlayerManager.ControlState.Farm)

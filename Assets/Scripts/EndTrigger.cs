@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using static PlayerManager;
 
-public class RandomTrigger : InteractionTrigger
+public class EndTrigger : InteractionTrigger
 {
     protected override void Awake()
     {
@@ -27,10 +25,15 @@ public class RandomTrigger : InteractionTrigger
                 {
                     if (!PC_Manager.mapGenerator.currentNode.mapEvent.isEventCheck)
                     {
-                        PC_Manager.mapGenerator.currentNode.mapEvent.isEventCheck = true;
-                        // Lancer le dialogue du randomEvent
-
-                        // Il faudra appeler en fin de dialogue la fonction TakeReward du MapGenerator
+                        if (PC_Manager.inventory.nbArgent < PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward)
+                        {
+                            // Lancer un dialogue qui dit "T'as pas assez de thune sur toi, passe au marchand d'abord"
+                        }
+                        else
+                        {
+                            PC_Manager.mapGenerator.currentNode.mapEvent.isEventCheck = true;
+                            // Lancer le dialogue pour finir la run
+                        }
                     }
                     else
                     {

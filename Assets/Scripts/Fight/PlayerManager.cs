@@ -110,6 +110,7 @@ public class PlayerManager : MonoBehaviour
         playerControls = new PlayerControls();
         pathfinding = new Pathfinding(9, 15);
         turn = Turn.Player;
+        position = Position.Inside;
 
         tilesList = new List<GameObject>();
         plantList = new List<GameObject>();
@@ -506,9 +507,23 @@ public class PlayerManager : MonoBehaviour
 
             if (CheckWinCondition())
             {
+                fightOrderUI.gameObject.SetActive(false);
+                foreach (GameObject unit in unitList)
+                {
+                    unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
+                    unit.GetComponent<UnitManager>().unitNode.unit = null;
+                    unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
+                    Destroy(unit);
+                }
                 unitList.Clear();
-                ChangeState(ControlState.Farm);
-                break;
+
+                ChangeState(ControlState.World);
+                mapGenerator.currentNode.mapEvent.isEventCheck = true;
+
+                athFarm.SetActive(true);
+                athFight.SetActive(false);
+                mapGenerator.TakeReward();
+                yield break;
             }
             Debug.Log("Plant " + i + " turn End");
         }
@@ -543,7 +558,9 @@ public class PlayerManager : MonoBehaviour
                     Destroy(unit);
                 }
                 unitList.Clear();
-                ChangeState(ControlState.Farm);
+                ChangeState(ControlState.World);
+
+                // fin de la run
                 yield break;
             }
         }
@@ -588,6 +605,34 @@ public class PlayerManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void SetLooseRun(bool isFightLoose, bool isRunLoose)
+    {
+        GameObject info = null;
+
+        if (isFightLoose && !isRunLoose)
+        {
+            //info = mapInfoEventNotCheck;
+        }
+        else if (!isFightLoose && isRunLoose)
+        {
+            //info = mapInfoDestinationNotSet;
+        }
+        else
+        {
+            Debug.Log("Parameters not set");
+            return;
+        }
+
+        StartCoroutine(SetLooseRun(info));
+    }
+
+    public IEnumerator SetLooseRun(GameObject info)
+    {
+        info.SetActive(true);
+        yield return new WaitForSecondsRealtime(5);
+        // Retour au menu
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -649,62 +694,11 @@ public class PlayerManager : MonoBehaviour
             switch (controlState)
             {
                 case ControlState.Farm:
-                    /*if (PC_farm.GetCurrentNode() != null)
-                    {
-                        if (!PC_farm.GetCurrentNode().isVirtual)
-                        {
-                            playerNode = PC_farm.GetCurrentNode();
-                        }
-                        else
-                        {
-                            playerNode = pathfinding.GetNodeWithCoords(0, 0);
-                        }
-                    }
-                    else
-                    {
-                        playerNode = pathfinding.GetNodeWithCoords(0, 0);
-                    }
-
-                    playerNode.isContainingUnit = true;
-                    playerNode.unit = gameObject;
-                    playerNode.isWalkable = false;
-
-                    ResetStats();
-
-                    SetUnits(3, false);
-
-                    turn = Turn.Player;
-                    ChangeState(ControlState.Fight);
-
-                    rigidBody.velocity = Vector3.zero;
-                    transform.position = new Vector3(playerNode.x, transform.position.y, playerNode.y);
-
-
-                    athFight.SetActive(true);
-                    athFarm.SetActive(false);
-                    fightOrderUI.gameObject.SetActive(true);
-                    fightOrderUI.UpdateEntities();*/
-
                     mapGenerator.travelElapsedTime = mapGenerator.travelTime;
                     break;
 
                 case ControlState.Fight:
-                    fightOrderUI.gameObject.SetActive(false);
-                    foreach (GameObject unit in unitList)
-                    {
-                        unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
-                        unit.GetComponent<UnitManager>().unitNode.unit = null;
-                        unit.GetComponent<UnitManager>().unitNode.isWalkable = true;
-                        Destroy(unit);
-                    }
-                    unitList.Clear();
-
-                    controlState = ControlState.Farm;
-                    PC_farm.isActive = true;
-                    PC_fight.isActive = false;
-
-                    athFarm.SetActive(true);
-                    athFight.SetActive(false);
+                    
                     break;
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEditor.Experimental.GraphView;
+using Assets.Scripts;
 
 public class TileManager : MonoBehaviour
 {
@@ -68,6 +69,7 @@ public class TileManager : MonoBehaviour
     [SerializeField] private Material sunDirtMat;
 
     [HideInInspector] public GameObject plant;
+    [HideInInspector] public GameObject plantItem;
     [HideInInspector] public PlantManager plantManager;
     [HideInInspector] public PathNode tileNode;
 
@@ -186,6 +188,7 @@ public class TileManager : MonoBehaviour
         tileNode.isSeeded = false;
         tileNode.isPlant = false;
         tileNode.plant = null;
+        plantItem = null;
         plant.transform.DOScale(0f, wetToDirtDelay).SetEase(Ease.OutSine);
         GameObject plantToDestroy = plant;
         plant = null;

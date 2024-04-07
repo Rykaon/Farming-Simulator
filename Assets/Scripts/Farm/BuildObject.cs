@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Assets.Scripts;
 using DelaunatorSharp;
 
 public class BuildObject : MonoBehaviour
@@ -12,12 +13,14 @@ public class BuildObject : MonoBehaviour
     private Material startMaterial;
     private List<MeshRenderer> meshRenderer;
     private List<SkinnedMeshRenderer> skinnedMeshRenderer;
-
+    private GameObject itemPrefab;
     private void Awake()
     {
         playerManager = PlayerManager.instance;
         meshRenderer = new List<MeshRenderer>();
         skinnedMeshRenderer = new List<SkinnedMeshRenderer>();
+
+        itemPrefab = playerManager.objectPrefab;
         for (int i = 0; i < animator.transform.childCount; i++)
         {
             MeshRenderer childMeshRenderer = animator.transform.GetChild(i).GetComponent<MeshRenderer>();
@@ -108,6 +111,7 @@ public class BuildObject : MonoBehaviour
                 {
                     Debug.Log(node.tileManager);
                     node.tileManager.plant = transform.gameObject;
+                    node.tileManager.plantItem = itemPrefab;
                 }
             }
         }

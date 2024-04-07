@@ -31,14 +31,24 @@ public class MapUIElement : MonoBehaviour
 
     public void Select()
     {
-        if (mapEvent.eventNode.x - generator.currentNode.x != 1)
+        if (mapEvent.eventNode.x - generator.currentNode.x == 1)
         {
-            return;
-        }
-        else
-        {
-            generator.DesactivatePreviousEvents(mapEvent.eventNode.x);
-            StartCoroutine(SelectBehavior());
+            if (PlayerManager.instance.controlState == PlayerManager.ControlState.World)
+            {
+                if (generator.currentNode.mapEvent.isEventCheck)
+                {
+                    generator.DesactivatePreviousEvents(mapEvent.eventNode.x);
+                    StartCoroutine(SelectBehavior());
+                }
+                else
+                {
+                    generator.SetMapInfoErrorMessage(true, false);
+                }
+            }
+            else
+            {
+                generator.SetMapInfoErrorMessage(false, true);
+            }
         }
     }
 
