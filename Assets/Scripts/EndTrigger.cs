@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EndTrigger : InteractionTrigger
 {
+    [Header("Ink JSON")]
+    [SerializeField] private TextAsset inkJSON;
+
     protected override void Awake()
     {
         base.Awake();
@@ -28,6 +31,7 @@ public class EndTrigger : InteractionTrigger
                         if (PC_Manager.inventory.nbArgent < PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward)
                         {
                             // Lancer un dialogue qui dit "T'as pas assez de thune sur toi, passe au marchand d'abord"
+
                         }
                         else
                         {

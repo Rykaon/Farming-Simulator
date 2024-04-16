@@ -115,11 +115,32 @@ public class DialogueManager : MonoBehaviour
 
         UpdateVariables();
 
-        currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
+        if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Random)
         {
-            inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
-            UpdateVariables();
-        });
+            currentStory.BindExternalFunction("StealGive", (string RewardType, int NbrReward, bool IsBonus) =>
+            {
+                PC_Manager.mapGenerator.TakeReward();
+                UpdateVariables();
+            });
+        }
+        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Shop)
+        {
+            if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End)
+            {
+                currentStory.BindExternalFunction("CheckRun", () =>
+                {
+                    PC_Manager.mapGenerator.TakeReward();
+                    UpdateVariables();
+                });
+            }
+
+            currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
+            {
+                inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
+                UpdateVariables();
+            });
+        }
+
 
         // Reset portrait, layout and speaker
         displayNameText.text = "???";
@@ -144,27 +165,22 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        /*for (int i = 0; i < PC_Manager.inventory.seedsList.Count; i++)
+        if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Random)
         {
-            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.inventory.seedsList[i].prefab);
-
-            if (!isInitialized)
-            {
-                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = PC_Manager.inventory.seedsList[i].itemName;
-                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = PC_Manager.inventory.seedsList[i].sellPrice;
-            }
+            currentStory.variablesState["RewardType"] = PC_Manager.mapGenerator.currentNode.mapEvent.rewardType.ToString();
+            currentStory.variablesState["NbrReward"] = PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward;
+            currentStory.variablesState["IsBonus"] = PC_Manager.mapGenerator.currentNode.mapEvent.isBonus;
         }
-
-        for (int i = 0; i < PC_Manager.inventory.objectsList.Count; i++)
+        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End)
         {
-            currentStory.variablesState["NbPlant" + (i + 1).ToString()] = Utilities.GetNumberOfItemByPrefab(PC_Manager.inventory.inventory, PC_Manager.inventory.objectsList[i].prefab);
-
-            if (!isInitialized)
-            {
-                currentStory.variablesState["NamePlant" + (i + 1).ToString()] = PC_Manager.inventory.objectsList[i].itemName;
-                currentStory.variablesState["PricePlant" + (i + 1).ToString()] = PC_Manager.inventory.objectsList[i].sellPrice;
-            }
-        }*/
+            currentStory.variablesState["RewardType"] = PC_Manager.mapGenerator.currentNode.mapEvent.rewardType.ToString();
+            currentStory.variablesState["NbrReward"] = PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward;
+            //isBonus == true => Fin de run
+        }
+        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Start)
+        {
+            //isBonus == false => Début de run
+        }
 
         isInitialized = true;
     }

@@ -317,15 +317,15 @@ namespace Map
                     rewardType = " Pièces d'or";
                     break;
 
-                case MapEvent.RewardType.AttackSeed:
+                case MapEvent.RewardType.Attack:
                     rewardType = " Plantes Attaque";
                     break;
 
-                case MapEvent.RewardType.MoveSeed:
+                case MapEvent.RewardType.Move:
                     rewardType = " Plantes Move";
                     break;
 
-                case MapEvent.RewardType.BoostSeed:
+                case MapEvent.RewardType.Boost:
                     rewardType = " Plantes Boost";
                     break;
             }
@@ -596,15 +596,15 @@ namespace Map
                     }
                     break;
 
-                case MapEvent.RewardType.AttackSeed:
+                case MapEvent.RewardType.Attack:
                     item = manager.inventory.plantsList[0].Prefab;
                     break;
 
-                case MapEvent.RewardType.MoveSeed:
+                case MapEvent.RewardType.Move:
                     item = manager.inventory.plantsList[1].Prefab;
                     break;
 
-                case MapEvent.RewardType.BoostSeed:
+                case MapEvent.RewardType.Boost:
                     item = manager.inventory.plantsList[2].Prefab;
                     break;
             }
@@ -649,9 +649,9 @@ namespace Map
         public enum RewardType
         {
             Gold,
-            AttackSeed,
-            MoveSeed,
-            BoostSeed
+            Attack,
+            Move,
+            Boost
         }
 
         // General values
@@ -691,17 +691,17 @@ namespace Map
                 }
                 else if (randReward > 25 && randReward < 51)
                 {
-                    rewardType = RewardType.AttackSeed;
+                    rewardType = RewardType.Attack;
                     rewardName = "Attack";
                 }
                 else if (randReward > 50 && randReward < 76)
                 {
-                    rewardType = RewardType.MoveSeed;
+                    rewardType = RewardType.Move;
                     rewardName = "Move";
                 }
                 else
                 {
-                    rewardType = RewardType.BoostSeed;
+                    rewardType = RewardType.Boost;
                     rewardName = "Boost";
                 }
             }
