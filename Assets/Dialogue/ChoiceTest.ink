@@ -1,7 +1,5 @@
 INCLUDE globals.ink
 EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
- 
-{ PlayerArgent>15  : ->main | ->pauvre}
 
 === main ===
 Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
