@@ -2770,7 +2770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &168477390
 Transform:
   m_ObjectHideFlags: 0
@@ -11851,11 +11851,13 @@ MonoBehaviour:
   PC_fight: {fileID: 722398550}
   PC_farm: {fileID: 722398551}
   virtualMouseManager: {fileID: 722398548}
+  mapGenerator: {fileID: 0}
   animator: {fileID: 722398547}
   rigidBody: {fileID: 722398546}
   movePathfinding: {fileID: 722398544}
   inventory: {fileID: 722398542}
   dialogueManager: {fileID: 722398541}
+  particuleSystem: {fileID: 0}
   athFarm: {fileID: 172602167}
   athFight: {fileID: 175759847}
   fightOrderUI: {fileID: 1716480599}
@@ -11865,6 +11867,7 @@ MonoBehaviour:
   controlState: 0
   actionState: 1
   turn: 0
+  position: 0
   groundTilePrefab: {fileID: 1860469231272007820, guid: c05924fb703f38c4f86ab4bb3207cc38, type: 3}
   unitPrefab: {fileID: 1604390708870458765, guid: cae03e1ac7e200e4cab7020083b9c639, type: 3}
   plantPrefab: {fileID: 0}
@@ -11976,7 +11979,9 @@ MonoBehaviour:
   playerManager: {fileID: 722398543}
   playerInput: {fileID: 722398549}
   canvas: {fileID: 1641500860}
+  canvasRectTransform: {fileID: 0}
   cursorRectTransform: {fileID: 2017902264}
+  raycaster: {fileID: 0}
   cursorSpeed: 1000
   padding: 5
   target: {fileID: 0}
@@ -20765,7 +20770,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1899143260827095189, guid: ca845ba5013c20f4ba1dd6a0dd591a97, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4146473730436795743, guid: ca845ba5013c20f4ba1dd6a0dd591a97, type: 3}
       propertyPath: m_IsActive
@@ -26011,7 +26016,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.047753744, y: 0.0000000034856025, z: -0.000000002324671, w: 0.9988591}
+  m_LocalRotation: {x: 0.047753744, y: -0.000000025143994, z: 0.000000016769414, w: 0.9988591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -28197,6 +28202,28 @@ MonoBehaviour:
   poolSize: 10
   prefabToPool: {fileID: 3758574590470893494, guid: 8f29687259f541a44b284c838b693a25, type: 3}
   testLock: {fileID: 1378702077}
+  JoueurPerdUnePlante:
+  - Oh non !
+  - Salaud !
+  - "Touche pas \xE0 mon potager !"
+  JoueurAttaque:
+  - "Prend \xE7a !"
+  - "Casse toi de l\xE0 !"
+  - Barre toi de mon champ !
+  EnnemiMeurt:
+  - "A\xEFe"
+  - Pourquoi tant de haine ...
+  - J'ai si faim ...
+  - Il fait si noir ici ...
+  - Au secours ...
+  EnnemiSeFaitBouger:
+  - D'accords ...
+  - Pourquoi tant de haine ?
+  - "J'\xE9tais si proche ..."
+  EnnemiAttaque:
+  - Merci pour le repas ...
+  - J'avais si faim ....
+  - '*Miam miam*'
 --- !u!1 &1542535577 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1692d491f4814c747846dbd2628afd98, type: 3}
@@ -32296,11 +32323,13 @@ MonoBehaviour:
   PC_fight: {fileID: 1807526449}
   PC_farm: {fileID: 1807526448}
   virtualMouseManager: {fileID: 1807526446}
+  mapGenerator: {fileID: 0}
   animator: {fileID: 808754732}
   rigidBody: {fileID: 1807526444}
   movePathfinding: {fileID: 1807526442}
   inventory: {fileID: 1807526441}
   dialogueManager: {fileID: 1807526440}
+  particuleSystem: {fileID: 0}
   athFarm: {fileID: 172602167}
   athFight: {fileID: 175759847}
   fightOrderUI: {fileID: 1716480599}
@@ -32310,6 +32339,7 @@ MonoBehaviour:
   controlState: 0
   actionState: 1
   turn: 0
+  position: 0
   groundTilePrefab: {fileID: 1860469231272007820, guid: c05924fb703f38c4f86ab4bb3207cc38, type: 3}
   unitPrefab: {fileID: 1604390708870458765, guid: cae03e1ac7e200e4cab7020083b9c639, type: 3}
   plantPrefab: {fileID: 0}
@@ -32481,7 +32511,9 @@ MonoBehaviour:
   playerManager: {fileID: 1807526439}
   playerInput: {fileID: 1807526447}
   canvas: {fileID: 1641500860}
+  canvasRectTransform: {fileID: 0}
   cursorRectTransform: {fileID: 2017902264}
+  raycaster: {fileID: 0}
   cursorSpeed: 1000
   padding: 5
   target: {fileID: 0}

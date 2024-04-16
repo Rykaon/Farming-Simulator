@@ -9,3 +9,7 @@ VAR PricePlant3 = 15
 VAR NamePlant1 = "Attack"
 VAR NamePlant2 = "Move"
 VAR NamePlant3 = "Boost"
+
+VAR RewardType = "Gold"
+VAR NbrReward = 0
+VAR IsBonus = false
