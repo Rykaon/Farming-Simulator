@@ -173,12 +173,16 @@ public class DialogueManager : MonoBehaviour
         }
         else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End)
         {
-            currentStory.variablesState["RewardType"] = PC_Manager.mapGenerator.currentNode.mapEvent.rewardType.ToString();
+            currentStory.variablesState["RewardType"] = "Gold";
             currentStory.variablesState["NbrReward"] = PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward;
+            currentStory.variablesState["IsBonus"] = true;
             //isBonus == true => Fin de run
         }
         else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Start)
         {
+            currentStory.variablesState["RewardType"] = "Gold";
+            currentStory.variablesState["NbrReward"] = PC_Manager.mapGenerator.currentNode.mapEvent.nbrReward;
+            currentStory.variablesState["IsBonus"] = false;
             //isBonus == false => Début de run
         }
 

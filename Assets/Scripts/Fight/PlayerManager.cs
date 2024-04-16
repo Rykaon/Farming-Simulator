@@ -518,7 +518,6 @@ public class PlayerManager : MonoBehaviour
                 unitList.Clear();
 
                 ChangeState(ControlState.World);
-                mapGenerator.currentNode.mapEvent.isEventCheck = true;
 
                 athFarm.SetActive(true);
                 athFight.SetActive(false);
