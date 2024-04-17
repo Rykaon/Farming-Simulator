@@ -487,10 +487,6 @@ public class PlayerController_Farm : MonoBehaviour
 
         if (isActive)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                CollectAll();
-            }
             hasMovementBeenReset = false;
 
             if (PC_Manager.controlState == PlayerManager.ControlState.Farm)

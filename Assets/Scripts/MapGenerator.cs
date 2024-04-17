@@ -23,6 +23,9 @@ namespace Map
         public float baseTimeBetweenEvents, additionalTimeBetweenEvents;
         public AnimationCurve startAnimCurve;
         public AnimationCurve endAnimCurve;
+        public int runIndex = 1;
+        public int nbrRunReward;
+        public int nbrGoldObjectif;
 
         [Header("Beahviour References")]
         [HideInInspector] public bool onMap = false;
@@ -292,6 +295,8 @@ namespace Map
             objectToReturn.transform.position = transform.position;
             objectToReturn.transform.rotation = transform.rotation;
             objectToReturn.transform.parent = poolParent.transform;
+            objectToReturn.mapEvent = null;
+            objectToReturn.generator = null;
 
             // Ici on reset tout autre paramètre modifié par le cycle de vie de l'objet
             objectToReturn.gameObject.SetActive(false);
@@ -560,24 +565,14 @@ namespace Map
                 manager.ChangeState(ControlState.World);
 
                 manager.PC_farm.CollectAll();
-                int nbrOfGold = 0;
-                for (int i = 0; i < manager.inventory.plantsList.Count; ++i)
-                {
-                    nbrOfGold += Utilities.GetNumberOfItemByPrefab(manager.inventory.inventory, manager.inventory.plantsList[i].Prefab);
-                }
-                nbrOfGold *= manager.inventory.plantsList[0].sellPrice;
-                nbrOfGold += manager.inventory.nbArgent;
-
-                if (nbrOfGold < mapEvent.nbrReward)
-                {
-                    // La run est loose
-                }
+                
             }
         }
 
         public void TakeReward()
         {
             GameObject item = null;
+            bool isRunLoose = false;
 
             switch (currentNode.mapEvent.rewardType)
             {
@@ -592,6 +587,11 @@ namespace Map
                         if (manager.inventory.nbArgent < 0)
                         {
                             manager.inventory.nbArgent = 0;
+
+                            if (currentNode.mapEvent.eventType == MapEvent.EventType.End)
+                            {
+                                isRunLoose = true;
+                            }
                         }
                     }
                     break;
@@ -624,6 +624,29 @@ namespace Map
                     {
                         Utilities.RemoveItemByPrefab(manager.inventory.inventory, item);
                     }
+                }
+            }
+
+            
+            currentNode.mapEvent.isEventCheck = true;
+
+            if (currentNode.mapEvent.eventType == MapEvent.EventType.End)
+            {
+                if (isRunLoose)
+                {
+                    // La run est loose
+                }
+                else
+                {
+                    manager.inventory.nbArgent += runIndex * nbrRunReward;
+                    runIndex++;
+
+                    for (int i = objectsInUse.Count - 1; i > -1; --i)
+                    {
+                        ReturnObjectToPool(objectsInUse[i]);
+                    }
+
+                    GenerateMap();
                 }
             }
 
@@ -676,10 +699,11 @@ namespace Map
             isBonus = true;
             isEventCheck = false;
 
-            if (eventType == EventType.End)
+            if (eventType == EventType.End || eventType == EventType.Start)
             {
                 rewardType = RewardType.Gold;
-                nbrReward = (generator.mapWidth - 3) * (generator.minUnits * 15);
+                nbrReward = (generator.mapWidth - 3) * (generator.minUnits * 15) + (generator.runIndex * generator.nbrGoldObjectif);
+                isBonus = false;
             }
             else
             {
@@ -722,7 +746,7 @@ namespace Map
                     break;
 
                 case EventType.Fight:
-                    nbrUnits = UnityEngine.Random.Range(generator.minUnits, generator.maxUnits + 1);
+                    nbrUnits = UnityEngine.Random.Range(generator.minUnits, generator.maxUnits + (generator.runIndex);
 
                     if (rewardType == RewardType.Gold)
                     {
