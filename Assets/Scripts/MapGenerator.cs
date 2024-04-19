@@ -746,7 +746,7 @@ namespace Map
                     break;
 
                 case EventType.Fight:
-                    nbrUnits = UnityEngine.Random.Range(generator.minUnits, generator.maxUnits + (generator.runIndex);
+                    nbrUnits = UnityEngine.Random.Range(generator.minUnits, generator.maxUnits + (generator.runIndex));
 
                     if (rewardType == RewardType.Gold)
                     {
