@@ -11847,7 +11847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: {fileID: 11400000, guid: f4754447d91aeca49950f0784953b024, type: 2}
-  cameraManager: {fileID: 640862375}
+  cameraManager: {fileID: 0}
   PC_fight: {fileID: 722398550}
   PC_farm: {fileID: 722398551}
   virtualMouseManager: {fileID: 722398548}
@@ -11860,7 +11860,7 @@ MonoBehaviour:
   particuleSystem: {fileID: 0}
   athFarm: {fileID: 172602167}
   athFight: {fileID: 175759847}
-  fightOrderUI: {fileID: 1716480599}
+  fightOrderUI: {fileID: 0}
   argent: {fileID: 1487204038}
   plantes: {fileID: 1455823002}
   actions: {fileID: 175759849}
@@ -26030,7 +26030,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.047753744, y: 0.0000000034856025, z: -0.000000002324671, w: 0.9988591}
+  m_LocalRotation: {x: 0.047753744, y: -0.000000025143994, z: 0.000000016769414, w: 0.9988591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -32333,7 +32333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: {fileID: 11400000, guid: f4754447d91aeca49950f0784953b024, type: 2}
-  cameraManager: {fileID: 640862375}
+  cameraManager: {fileID: 0}
   PC_fight: {fileID: 1807526449}
   PC_farm: {fileID: 1807526448}
   virtualMouseManager: {fileID: 1807526446}
@@ -32346,7 +32346,7 @@ MonoBehaviour:
   particuleSystem: {fileID: 0}
   athFarm: {fileID: 172602167}
   athFight: {fileID: 175759847}
-  fightOrderUI: {fileID: 1716480599}
+  fightOrderUI: {fileID: 0}
   argent: {fileID: 1487204038}
   plantes: {fileID: 1455823002}
   actions: {fileID: 175759849}
