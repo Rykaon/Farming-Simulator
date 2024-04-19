@@ -75,11 +75,11 @@ public class RadialMenuElement : MonoBehaviour {
 
         if (actionType == ActionType.Plant)
         {
-            nbrItem = Utilities.GetNumberOfItemByPrefab(parentRM.PC_Manager.inventory.inventory, parentRM.PC_Manager.inventory.plantsList[itemIndex].Prefab);
+            nbrItem = Utilities.GetNumberOfItemByPrefab(PlayerManager.instance.inventory.inventory, PlayerManager.instance.inventory.plantsList[itemIndex].Prefab);
         }
         else if (actionType == ActionType.Object)
         {
-            nbrItem = Utilities.GetNumberOfItemByPrefab(parentRM.PC_Manager.inventory.inventory, parentRM.PC_Manager.inventory.objectsList[itemIndex].Prefab);
+            nbrItem = Utilities.GetNumberOfItemByPrefab(PlayerManager.instance.inventory.inventory, PlayerManager.instance.inventory.objectsList[itemIndex].Prefab);
         }
 
         if (gameObject.GetComponent<CanvasGroup>() == null)
