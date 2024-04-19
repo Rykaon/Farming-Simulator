@@ -256,6 +256,10 @@ public class RadialMenu : MonoBehaviour {
                                 {
                                     ExecuteEvents.Execute(elements[index].button.gameObject, pointer, ExecuteEvents.submitHandler);
                                     elements[index].action.SelectActionTarget();
+                                    if (elements[index].actionType != RadialMenuElement.ActionType.Submenu)
+                                    {
+                                        interfaceInfo.SetActive(false);
+                                    }
                                 }
                                 break;
                         }

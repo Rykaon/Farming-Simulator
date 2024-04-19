@@ -41,18 +41,11 @@ public class BarkManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetButtonDown("Jump")){
-            GetObjectFromPool(testLock, JoueurAttaque);
-        }
-    }
-
     public BarkDialogue GetObjectFromPool(GameObject ObjectToTrack, List<string> StateBark)
     {
         int rand = Random.Range(1, 100);
 
-        if(rand > 0 && rand <= 40)
+        if(rand > 0 && rand <= 60)
         {
             if (pool.Count > 0)
             {

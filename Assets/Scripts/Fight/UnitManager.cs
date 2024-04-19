@@ -77,6 +77,8 @@ public class UnitManager : MonoBehaviour
         hasReaction = true;
 
         ennemiAnimator.SetBool("Attack", true);
+        BarkManager.instance.GetObjectFromPool(target, BarkManager.instance.EnnemiAttaque);
+        BarkManager.instance.GetObjectFromPool(PlayerManager.instance.gameObject, BarkManager.instance.JoueurPerdUnePlante);
 
         bool isReactionSet = false;
         bool hasReactionSet = false;
@@ -218,18 +220,26 @@ public class UnitManager : MonoBehaviour
             }
             else
             {
-                
-                List<PathNode> pathList = new List<PathNode>();
-                pathList = pathfinding.FindAreaPathMove(unitNode.x, unitNode.y, targetNode.x, targetNode.y);
-
-                if (pathList.Count > 0)
+                if (targetNode.isWalkable)
                 {
-                    transform.GetComponent<UnitMovePathfinding>().SetVelocity(new Vector3(pathList[range].x, 0, pathList[range].y));
-                    StartCoroutine(MoveAction());
+                    List<PathNode> pathList = new List<PathNode>();
+                    pathList = pathfinding.FindAreaPathMove(unitNode.x, unitNode.y, targetNode.x, targetNode.y);
+
+                    if (pathList.Count > 0)
+                    {
+                        transform.GetComponent<UnitMovePathfinding>().SetVelocity(new Vector3(pathList[range].x, 0, pathList[range].y));
+                        StartCoroutine(MoveAction());
+                    }
+                    else
+                    {
+                        Debug.Log("Erreur Path Not Found Between Unit and Target");
+                    }
                 }
                 else
                 {
-                    Debug.Log("Erreur Path Not Found Between Unit and Target");
+                    FindTarget();
+                    isPlaying = false;
+                    hasPlay = false;
                 }
             }
         }

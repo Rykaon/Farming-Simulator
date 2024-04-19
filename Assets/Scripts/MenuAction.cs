@@ -154,6 +154,9 @@ public abstract class MenuAction
                 return;
             }
 
+            BarkManager.instance.GetObjectFromPool(playerManager.gameObject, BarkManager.instance.JoueurAttaque);
+            BarkManager.instance.GetObjectFromPool(target, BarkManager.instance.EnnemiSeFaitBouger);
+
             // TargetStartPos est la position en X,Y dans la grille de l'ennemi.
             // TargetEndPos est la position en X,Y sur laquelle on veut déplacer l'ennemi.
             // On l'instantie comme Vector2.zero afin d'éviter d'utiliser une variable non assignée ce qui donne une erreur.
@@ -257,6 +260,9 @@ public abstract class MenuAction
             {
                 return;
             }
+
+            BarkManager.instance.GetObjectFromPool(playerManager.gameObject, BarkManager.instance.JoueurAttaque);
+            BarkManager.instance.GetObjectFromPool(target, BarkManager.instance.EnnemiSeFaitBouger);
 
             Vector2Int targetStartPos = new Vector2Int(Mathf.RoundToInt(target.transform.position.x), Mathf.RoundToInt(target.transform.position.z));
             Vector2Int targetEndPos = Vector2Int.zero;

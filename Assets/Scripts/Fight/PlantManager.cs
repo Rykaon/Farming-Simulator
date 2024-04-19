@@ -200,6 +200,10 @@ public class PlantManager : MonoBehaviour
         if (target != null)
         {
             hasReaction = true;
+            if (type == Type.Attack)
+            {
+                BarkManager.instance.GetObjectFromPool(target, BarkManager.instance.EnnemiMeurt);
+            }
         }
 
         // On instantie des booléns qui vont permettre de garder une trace de l'avancement de la réaction de la target.
