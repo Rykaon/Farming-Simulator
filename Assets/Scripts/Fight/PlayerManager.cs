@@ -125,6 +125,11 @@ public class PlayerManager : MonoBehaviour
         SetGrid(level);
     }
 
+    private void Start()
+    {
+        AudioManager.instance.Play("MusicInterPhase");
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////
     // La première fonction sert à instancier les tiles du vaisseau. Le format est        //
     // similaire avec ce qu'on a vu pour le Sokoban donc tu devrais pas être paumé.       //
@@ -249,6 +254,7 @@ public class PlayerManager : MonoBehaviour
 
     public void SetUnits(int nbrUnits, bool isBoss)
     {
+        
         entitiesList = new List<GameObject>();
         entitiesList.Add(gameObject);
 

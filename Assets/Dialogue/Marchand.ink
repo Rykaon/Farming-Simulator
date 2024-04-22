@@ -3,7 +3,7 @@ EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
 ->main
 
 === main ===
-Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
+Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:right
 -> magasin
 
 === magasin ===
@@ -26,7 +26,7 @@ Laquelle voulez-vous acheter ? ({PlayerArgent}$) #speaker:Le Gros Ratz #portrait
                 
 
 === sellPlant ===
-Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
+Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:right
             + [Une Attaque ! ({NbPlant1})]
                 -> setUp (NamePlant1, PricePlant1, true, NbPlant1)
             + [Une Ressort ! ({NbPlant2})]
@@ -41,18 +41,18 @@ Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layo
             ~ PlayerArgent = PlayerArgent-Price
             ~ nbExemplaire++
             ~ PlantSellBuy(Name, Price, false)
-            Merci pour l'achat ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
+            Merci pour l'achat ! #speaker:Le Gros Rat #portrait:GrosRat #layout:right
             - else :
-            T'as pas assez d'argent mon pote ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
+            T'as pas assez d'argent mon pote ! #speaker:Le Gros Rat #portrait:GrosRat #layout:right
        }
        - else :
        {nbExemplaire > 0 :
             ~ PlayerArgent = PlayerArgent+Price
             ~ nbExemplaire--
             ~ PlantSellBuy(Name, Price, true)
-            C'est un plaisir de faire affaire avec vous ! ({Price}) #speaker:Le Gros Rat #portrait:GrosRat #layout:left
+            C'est un plaisir de faire affaire avec vous ! ({Price}) #speaker:Le Gros Rat #portrait:GrosRat #layout:right
             - else :
-            Mais ... t'as aucune {Name} ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
+            Mais ... t'as aucune {Name} ! #speaker:Le Gros Rat #portrait:GrosRat #layout:right
         }
     }
     ->magasin

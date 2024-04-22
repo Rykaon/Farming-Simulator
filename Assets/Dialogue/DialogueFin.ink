@@ -5,12 +5,12 @@ EXTERNAL CheckRun()
 { IsBonus>true  : ->fin | ->debut}
 
 === fin ===
-Voulez-vous finir la partie ? #speaker:Narrateur #portrait:? #layout:left
+Voulez-vous finir la partie ? #speaker:Narrateur #portrait:Narrateur #layout:left
 -> event
 
 === event ===
     + [Oui]
-        Est-tu sûr ? Tu peux toujours passer au marchand pour avoir {NbrReward} $. #speaker:Narrateur #portrait:? #layout:left
+        Est-tu sûr ? Tu peux toujours passer au marchand pour avoir {NbrReward} $. #speaker:Narrateur #portrait:Narrateur #layout:left
         ++ [Oui]
             -> FinPartie
         ++ [Non]
@@ -20,9 +20,9 @@ Voulez-vous finir la partie ? #speaker:Narrateur #portrait:? #layout:left
 
 === FinPartie ===
     {NbrReward <= PlayerArgent :
-               Tu as gagné ... #speaker:Narrateur #portrait:? #layout:left
+               Tu as gagné ... #speaker:Narrateur #portrait:Narrateur #layout:left
         - else :
-               Tu as perdu ... #speaker:Narrateur #portrait:? #layout:left
+               Tu as perdu ... #speaker:Narrateur #portrait:Narrateur #layout:left
     }
     ~ CheckRun()
     -> END

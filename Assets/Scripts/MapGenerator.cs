@@ -460,6 +460,7 @@ namespace Map
         public void StartEvent(MapEvent mapEvent)
         {
             StartCoroutine(StartEventBehavior(mapEvent));
+            Debug.Log("monGrosBool");
         }
 
         public IEnumerator StartEventBehavior(MapEvent mapEvent)
