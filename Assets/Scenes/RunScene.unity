@@ -7229,7 +7229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438863168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06541952, y: 0.09558702, z: -0.06628687, w: 0.9910547}
+  m_LocalRotation: {x: 0.065419555, y: 0.09558706, z: -0.06628689, w: 0.9910548}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11413,7 +11413,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640862369}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3275902, y: 0.1098128, z: -0.03836644, w: 0.937632}
+  m_LocalRotation: {x: 0.3275902, y: 0.10981285, z: -0.03836645, w: 0.9376321}
   m_LocalPosition: {x: -1.6174548, y: 7.59695, z: -6.8105683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -30033,7 +30033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -33168,6 +33168,10 @@ MonoBehaviour:
   isBoosted: 0
   boostFactor: 0
   LBRBisPressed: 0
+  playerData:
+    runIndex: 0
+    nbArgent: 0
+    nbPlants: 
 --- !u!114 &1807526440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33437,7 +33441,7 @@ MonoBehaviour:
   previousTarget: {fileID: 0}
   isPlacing: 0
   buildObject: {fileID: 0}
-  isActive: 1
+  isActive: 0
   canUseTool: 1
   isPlaying: 0
   LBRBisPressed: 0

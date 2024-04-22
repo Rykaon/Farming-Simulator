@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Cinemachine.DocumentationSortingAttribute;
 using static Map.MapEvent;
@@ -81,6 +82,23 @@ namespace Map
             }
 
             GenerateMap();
+            StartCoroutine(StartGame());
+        }
+
+        private IEnumerator StartGame()
+        {
+            fondu.DOFade(0f, 1f);
+            yield return new WaitForSecondsRealtime(1f);
+            manager.PC_farm.isActive = true;
+        }
+
+        public IEnumerator EndGame()
+        {
+            manager.ChangeState(ControlState.World);
+            manager.PC_farm.isActive = false;
+            fondu.DOFade(1f, 1f);
+            yield return new WaitForSecondsRealtime(1.5f);
+            SceneManager.LoadScene("MenuScene");
         }
 
         public void GenerateMap()
@@ -363,7 +381,6 @@ namespace Map
                 {
                     int index = Utilities.FindIndexInList(mapEvent.eventNode, currentNode.toNodes);
                     time = currentNode.toNodesTime[index].ToString() + " secondes";
-                    Debug.Log("yo");
                 }
                 else
                 { 
@@ -460,7 +477,6 @@ namespace Map
         public void StartEvent(MapEvent mapEvent)
         {
             StartCoroutine(StartEventBehavior(mapEvent));
-            Debug.Log("monGrosBool");
         }
 
         public IEnumerator StartEventBehavior(MapEvent mapEvent)
@@ -497,7 +513,7 @@ namespace Map
             {
                 if (!onMap)
                 {
-                    Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
+                    //Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
                     timerUI.DisplayTime(travelTime - travelElapsedTime);
                     travelElapsedTime += Time.fixedDeltaTime;
                 }
@@ -534,6 +550,14 @@ namespace Map
             if(mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
             {
                 AudioManager.instance.Play("MusicFight");
+                if (mapEvent.eventType == MapEvent.EventType.Boss)
+                {
+                    manager.SetUnits(mapEvent.nbrUnits, true);
+                }
+                else
+                {
+                    manager.SetUnits(mapEvent.nbrUnits, false);
+                }
             }
             else
             {
@@ -569,15 +593,6 @@ namespace Map
 
                 manager.ResetStats();
 
-                if (mapEvent.eventType == MapEvent.EventType.Boss)
-                {
-                    manager.SetUnits(mapEvent.nbrUnits, true);
-                }
-                else
-                {
-                    manager.SetUnits(mapEvent.nbrUnits, false);
-                }
-
                 manager.turn = Turn.Player;
                 manager.ChangeState(ControlState.Fight);
 
@@ -603,9 +618,7 @@ namespace Map
             else if (mapEvent.eventType == MapEvent.EventType.End)
             {
                 manager.ChangeState(ControlState.World);
-
                 manager.PC_farm.CollectAll();
-                
             }
         }
 
@@ -674,12 +687,13 @@ namespace Map
             {
                 if (isRunLoose)
                 {
-                    // La run est loose
+                    StartCoroutine(EndGame());
                 }
                 else
                 {
                     manager.inventory.nbArgent += runIndex * nbrRunReward;
                     runIndex++;
+                    manager.saveSystem.SavePlayerData();
 
                     for (int i = objectsInUse.Count - 1; i > -1; --i)
                     {

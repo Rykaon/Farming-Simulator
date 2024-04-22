@@ -63,20 +63,49 @@ public class PlayerInventory : MonoBehaviour
 
         for (int i = 0; i < plantsList.Count; i++)
         {
-            Utilities.AddToDictionary(inventory, plantsList[i], nbStartPlants);
+            if (PC_Manager.playerData != null)
+            {
+                Utilities.AddToDictionary(inventory, plantsList[i], PC_Manager.playerData.nbPlants[i]);
+            }
+            else
+            {
+                Utilities.AddToDictionary(inventory, plantsList[i], nbStartPlants);
+            }
         }
         
         for (int i = 0; i < seedsList.Count; i++)
         {
-            Utilities.AddToDictionary(inventory, seedsList[i], nbStartSeeds);
+            if (PC_Manager.playerData != null)
+            {
+
+            }
+            else
+            {
+                Utilities.AddToDictionary(inventory, seedsList[i], nbStartSeeds);
+            }
         }
 
         for (int i = 0; i < objectsList.Count; i++)
         {
-            Utilities.AddToDictionary(inventory, objectsList[i], nbStartObjects);
+            if (PC_Manager.playerData != null)
+            {
+
+            }
+            else
+            {
+                Utilities.AddToDictionary(inventory, objectsList[i], nbStartObjects);
+            }
         }
 
-        nbArgent = nbStartArgent;
+        if (PC_Manager.playerData != null)
+        {
+            nbArgent = PC_Manager.playerData.nbArgent;
+        }
+        else
+        {
+            nbArgent = nbStartArgent;
+        }
+        
         PC_Manager.UpdateUIInventory();
     }
 

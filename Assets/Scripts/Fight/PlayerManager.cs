@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using Map;
+using System.IO;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -103,10 +104,24 @@ public class PlayerManager : MonoBehaviour
 
     private bool isPress;
     public bool LBRBisPressed = false;
+    public PlayerData playerData;
+    public SaveSystem saveSystem;
 
     private void Awake()
     {
         instance = this;
+        saveSystem = new SaveSystem();
+        string path = Application.persistentDataPath + "/player.data";
+        if (File.Exists(path))
+        {
+            playerData = saveSystem.LoadPlayerData();
+            mapGenerator.runIndex = playerData.runIndex;
+        }
+        else
+        {
+            playerData = null;
+        }
+
         playerControls = new PlayerControls();
         pathfinding = new Pathfinding(9, 15);
         turn = Turn.Player;
@@ -565,9 +580,8 @@ public class PlayerManager : MonoBehaviour
                     Destroy(unit);
                 }
                 unitList.Clear();
-                ChangeState(ControlState.World);
 
-                // fin de la run
+                StartCoroutine(mapGenerator.EndGame());
                 yield break;
             }
         }
@@ -775,6 +789,7 @@ public class PlayerManager : MonoBehaviour
                 virtualMouseManager.Disable(false);
             }*/
             
+            //SaveSystem.SavePlayerData();
         }
 
         if (isPress)

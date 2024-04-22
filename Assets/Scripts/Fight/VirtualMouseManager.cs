@@ -390,12 +390,13 @@ public class VirtualMouseManager : MonoBehaviour
                 }
                 else if (playerControls.UI.A.IsPressed())
                 {
-                    if (currentMapUIElement != null)
+                    if (currentMapUIElement != null && playerManager.controlState == ControlState.World)
                     {
                         if (currentMapUIElement.mapEvent.eventNode.x - playerManager.mapGenerator.currentNode.x == 1)
                         {
                             currentMapUIElement.Select();
                             AudioManager.instance.Play("MapSelection");
+                            Disable(false);
                         }
                     }
                 }

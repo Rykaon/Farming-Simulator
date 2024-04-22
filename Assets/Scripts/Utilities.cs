@@ -219,6 +219,27 @@ public static class Utilities
         }
     }
 
+    public static void SetNbrOfItemByPrefab(Dictionary<Type, Dictionary<IItems, int>> inventory, GameObject prefab, int value)
+    {
+        foreach (var type in inventory)
+        {
+            var itemDictionary = type.Value;
+            var itemType = type.Key;
+
+            var item = itemDictionary.Keys.OfType<IItems>().FirstOrDefault(i => i.Prefab == prefab);
+
+            if (item != null)
+            {
+                inventory[itemType][item] = value;
+                PlayerManager.instance.UpdateUIInventory();
+            }
+            else
+            {
+                Debug.Log("AUCUN ITEM CORRESPONDANT AU PREFAB TROUVÉ DANS L'INVENTAIRE");
+            }
+        }
+    }
+
     public static void RemoveItemByPrefab(Dictionary<Type, Dictionary<IItems, int>> inventory, GameObject prefab)
     {
         foreach (var type in inventory)

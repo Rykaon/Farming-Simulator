@@ -104,6 +104,5 @@ public class MapUIElement : MonoBehaviour
         yield return null;
 
         generator.StartEvent(mapEvent);
-        VirtualMouseManager.instance.Disable(false);
     }
 }
