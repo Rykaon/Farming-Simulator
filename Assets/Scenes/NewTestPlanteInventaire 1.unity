@@ -19588,7 +19588,91 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fedc7489297aea4e88cd4d6e384da9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sounds: []
+  sounds:
+  - name: MusicInterPhase
+    clip: {fileID: 8300000, guid: b899075e58671ba44a5e37cc11523749, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MusicFarming
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MusicFight
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: AlienEat
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlayerAttack
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlantAttack
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlantMove
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuOpen
+    clip: {fileID: 8300000, guid: 0c6dada32209b4c418099f707aaea056, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuClose
+    clip: {fileID: 8300000, guid: 8118029b267005f4e8dae60379ff10bd, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuChangeSelection
+    clip: {fileID: 8300000, guid: cc44b7fadcc4b244eb97bfc64eee2398, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuValid
+    clip: {fileID: 8300000, guid: 2b3155b6d78809045a16d8273c574ae6, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MapOpen
+    clip: {fileID: 8300000, guid: 498ab517865845743bffa2dd088785fa, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MapSelection
+    clip: {fileID: 8300000, guid: 5f1b0ecd313f3bc449a760af556691be, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SpaceTravel
+    clip: {fileID: 8300000, guid: 8ee4eb7cb2fdf0d4f89e5570ab1c14c1, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
 --- !u!1 &1110253568
 GameObject:
   m_ObjectHideFlags: 0
@@ -26030,7 +26114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.047753744, y: -0.000000025143994, z: 0.000000016769414, w: 0.9988591}
+  m_LocalRotation: {x: 0.047753744, y: 0.0000000034856025, z: -0.000000002324671, w: 0.9988591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
