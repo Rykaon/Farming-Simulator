@@ -12,7 +12,6 @@ public class DialogueTrigger : MonoBehaviour
 
     private bool playerInRange;
 
-    [SerializeField] private PlayerManager PC_Manager;
     private PlayerControls playerControls;
 
     private void Awake()
@@ -23,7 +22,7 @@ public class DialogueTrigger : MonoBehaviour
 
     private void Start()
     {
-        playerControls = PC_Manager.playerControls;
+        playerControls = PlayerManager.instance.playerControls;
     }
 
     private void Update()

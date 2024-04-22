@@ -78,6 +78,7 @@ public class UnitManager : MonoBehaviour
 
         ennemiAnimator.SetBool("Attack", true);
         BarkManager.instance.GetObjectFromPool(target, BarkManager.instance.EnnemiAttaque);
+        AudioManager.instance.PlayVariation("AlienEatForReal", 0.2f, 0.1f);
         BarkManager.instance.GetObjectFromPool(PlayerManager.instance.gameObject, BarkManager.instance.JoueurPerdUnePlante);
 
         bool isReactionSet = false;

@@ -17,6 +17,7 @@ namespace Map
     public class MapGenerator : MonoBehaviour
     {
         [SerializeField] private TextAsset randomJSON;
+        [SerializeField] private TimerUI timerUI;
         public GameObject particleSystem;
         public GameObject vfx;
         public GameObject shader;
@@ -475,6 +476,7 @@ namespace Map
             vfx.SetActive(true);
             shader.SetActive(true);
             ShowHideUIMap(false);
+            timerUI.transform.parent.gameObject.SetActive(true);
             fondu.DOFade(0f, 0.25f);
             manager.ChangeState(ControlState.Farm);
             manager.athFarm.SetActive(true);
@@ -486,17 +488,19 @@ namespace Map
             int thisMapEventIndex = Utilities.FindIndexInList(mapEvent.eventNode, currentNode.toNodes);
             travelElapsedTime = 0f;
             travelTime = currentNode.toNodesTime[thisMapEventIndex];
+            timerUI.ToggleBoomBoom(true);
             while (travelElapsedTime < travelTime)
             {
-                //Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
                 if (!onMap)
                 {
-                    travelElapsedTime += Time.deltaTime;
+                    Debug.Log("CURRENT TIME = " + travelElapsedTime + " // END TIME " + travelTime);
+                    timerUI.DisplayTime(travelTime - travelElapsedTime);
+                    travelElapsedTime += Time.fixedDeltaTime;
                 }
                 
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForFixedUpdate();
             }
-
+            timerUI.ToggleBoomBoom(false);
             currentNode.mapEvent.mapUIElement.UpdateSprite(false);
             currentNode = mapEvent.eventNode;
             currentNode.mapEvent.mapUIElement.UpdateSprite(true);
@@ -522,6 +526,7 @@ namespace Map
             vfx.SetActive(false);
             shader.SetActive(false);
             fondu.DOFade(0f, 0.25f);
+            timerUI.transform.parent.gameObject.SetActive(false);
             yield return new WaitForSecondsRealtime(0.5f);
             PlayerController_Farm.instance.isActive = true;
 

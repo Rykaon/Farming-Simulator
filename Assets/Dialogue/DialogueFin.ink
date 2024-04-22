@@ -30,6 +30,6 @@ Voulez-vous finir la partie ? #speaker:Narrateur #portrait:? #layout:left
 === debut ===
 Bonjour et bienvenue !
 Votre objectif est d'atteindre {NbrReward}$ d'ici la fin de votre voyage !
-N'oubliez d'acheter des plantes en cas de besoin pour vous défendre !
+N'oubliez pas d'acheter des plantes en cas de besoin pour vous défendre !
 Bonne chance !
 ->END

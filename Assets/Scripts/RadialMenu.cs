@@ -62,6 +62,8 @@ public class RadialMenu : MonoBehaviour {
 
     private PointerEventData pointer;
 
+    private int saveIndexForSound=-1;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Ce script fait un peu peur si tu l'as jamais ouvert, mais en vérité y'a pas énromément     //
     // de choses importante pour le reste de l'architecture. C'est essentiellement des fonctions  //
@@ -133,6 +135,7 @@ public class RadialMenu : MonoBehaviour {
         if (enabled)
         {
             isActive = true;
+            AudioManager.instance.PlayVariation("MenuOpen", 0.2f, 0.1f);
             if (PC_Manager.controlState == PlayerManager.ControlState.Farm)
             {
                 PC_Manager.ChangeState(PlayerManager.ControlState.FarmUI);
@@ -145,6 +148,7 @@ public class RadialMenu : MonoBehaviour {
         else
         {
             isActive = false;
+            AudioManager.instance.PlayVariation("MenuClose", 0.2f, 0.1f);
 
             if (elements[0].actionType == RadialMenuElement.ActionType.Push || elements[0].actionType == RadialMenuElement.ActionType.Pull || elements[0].actionType == RadialMenuElement.ActionType.Move)
             {
@@ -235,6 +239,13 @@ public class RadialMenu : MonoBehaviour {
                     {
                         //Select it.
                         selectButton(index);
+                        
+
+                        if (saveIndexForSound != index)
+                        {
+                            AudioManager.instance.PlayVariation("MenuChangeSelection", 0.2f, 0.1f);
+                            saveIndexForSound = index;
+                        }
 
                         //If we click or press a "submit" button (Button on joystick, enter, or spacebar), then we'll execut the OnClick() function for the button.
                         switch (PlayerManager.instance.controlState)
