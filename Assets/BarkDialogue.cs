@@ -51,6 +51,8 @@ public class BarkDialogue : MonoBehaviour
         {
             indexLetter++;
 
+            AudioManager.instance.PlayVariation("DialogueBoop", 0.1f, 0.5f);
+
             dialogueText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }

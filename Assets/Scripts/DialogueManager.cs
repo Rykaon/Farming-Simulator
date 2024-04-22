@@ -94,12 +94,17 @@ public class DialogueManager : MonoBehaviour
             if (canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
             {
                 ContinueStory();
+            }else if(canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count >= 1)
+            {
+
             }
 
             if (playerControls.UI.B.WasPressedThisFrame())
             {
                 StartCoroutine(ExitDialogueMode());
             }
+
+            
         }
     }
 
@@ -140,7 +145,6 @@ public class DialogueManager : MonoBehaviour
                 UpdateVariables();
             });
         }
-
 
         // Reset portrait, layout and speaker
         displayNameText.text = "???";
@@ -194,7 +198,22 @@ public class DialogueManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         dialogueVariables.StopListening(currentStory);
 
-        currentStory.UnbindExternalFunction("PlantSellBuy");
+        if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Random)
+        {
+            currentStory.UnbindExternalFunction("StealGive");
+        }
+        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Shop)
+        {
+            if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End)
+            {
+                currentStory.UnbindExternalFunction("CheckRun");
+            }
+
+            currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
+            {
+                currentStory.UnbindExternalFunction("PlantSellBuy");
+            });
+        }
 
         dialoguePanel.SetActive(false);
         dialogueText.text = "";
@@ -238,6 +257,8 @@ public class DialogueManager : MonoBehaviour
                 dialogueText.text = line;
                 break;
             }
+
+            AudioManager.instance.PlayVariation("DialogueBoop", 0.1f, 0.5f);
 
             indexLetter++;
 
@@ -329,6 +350,7 @@ public class DialogueManager : MonoBehaviour
     {
         if (canContinueToNextLine)
         {
+            Debug.Log("CHOICE HAS BEEN MADE");
             currentStory.ChooseChoiceIndex(choiceIndex);
             //ContinueStory();
         }

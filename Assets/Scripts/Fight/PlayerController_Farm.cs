@@ -96,15 +96,6 @@ public class PlayerController_Farm : MonoBehaviour
             {
                 PC_Manager.rigidBody.velocity = movement;
             }
-
-            if (value.magnitude > 0.1f)
-            {
-                PC_Manager.animator.SetBool("isMoving", true);
-            }
-            else
-            {
-                PC_Manager.animator.SetBool("isMoving", false);
-            }
             
             if (movement != Vector3.zero)
             {
@@ -192,8 +183,6 @@ public class PlayerController_Farm : MonoBehaviour
     private void ResetMovement()
     {
         movement = Vector3.zero;
-        PC_Manager.animator.SetBool(isWalking, false);
-        PC_Manager.animator.SetBool(isRunning, false);
         PC_Manager.rigidBody.velocity = Vector3.zero;
         hasMovementBeenReset = true;
     }

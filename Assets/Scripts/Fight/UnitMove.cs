@@ -34,19 +34,7 @@ public class UnitMove : MonoBehaviour, IUnitMove
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(velocityVector.normalized), 0.15f);
             
-            if (transform.tag == "Player")
-            {
-                PlayerManager.instance.animator.SetBool("isWalking", false);
-                PlayerManager.instance.animator.SetBool("isRunning", true);
-            }
-        }
-        else
-        {
-            if (transform.tag == "Player")
-            {
-                PlayerManager.instance.animator.SetBool("isWalking", false);
-                PlayerManager.instance.animator.SetBool("isRunning", false);
-            }
+            
         }
 
     }

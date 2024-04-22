@@ -195,6 +195,11 @@ public class PlantManager : MonoBehaviour
                 break;
         }
 
+        if (type == Type.Attack)
+        {
+            AudioManager.instance.PlayVariation("AlienEat",0.1f,0.2f);
+        }
+
         // Si à l'issue de ce calcule on a trouvé une target, alors l'action engendrera une réaction sur la target (en gros, comprends
         // que la target aussi va jouer une animation pour montrer qu'elle a été touchée par une attaque par exemple).
         if (target != null)

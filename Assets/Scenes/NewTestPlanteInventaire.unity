@@ -1092,14 +1092,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6301887, g: 0.6266216, b: 0.6266216, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: dca552656f4014eb7ae0c6981b4b840e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4279,7 +4279,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -7318,7 +7318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438863168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.06541952, y: 0.09558701, z: -0.06628686, w: 0.9910547}
+  m_LocalRotation: {x: 0.065419555, y: 0.095587075, z: -0.0662869, w: 0.9910548}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11429,7 +11429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640862369}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3275902, y: 0.10981279, z: -0.038366433, w: 0.937632}
+  m_LocalRotation: {x: 0.3275902, y: 0.109812856, z: -0.038366456, w: 0.9376321}
   m_LocalPosition: {x: -1.6174548, y: 7.59695, z: -6.8105683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -12328,6 +12328,141 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 606942157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &711453385
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 711453387}
+  - component: {fileID: 711453386}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &711453386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711453385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fedc7489297aea4e88cd4d6e384da9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: MusicInterPhase
+    clip: {fileID: 8300000, guid: 9a5cb5bdf7817344eac06bfcb65dbaf2, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MusicFarming
+    clip: {fileID: 8300000, guid: 0996c75df46d69447b0c631065949cdd, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MusicFight
+    clip: {fileID: 8300000, guid: 13464d7b014f5304d9c3577b08a64223, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: AlienEat
+    clip: {fileID: 8300000, guid: 319067f4dcf48984cad9d8d12e4d73c8, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlayerAttack
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlantAttack
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: PlantMove
+    clip: {fileID: 0}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuOpen
+    clip: {fileID: 8300000, guid: 0c6dada32209b4c418099f707aaea056, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuClose
+    clip: {fileID: 8300000, guid: 8118029b267005f4e8dae60379ff10bd, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuChangeSelection
+    clip: {fileID: 8300000, guid: cc44b7fadcc4b244eb97bfc64eee2398, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MenuValid
+    clip: {fileID: 8300000, guid: 2b3155b6d78809045a16d8273c574ae6, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: MapOpen
+    clip: {fileID: 8300000, guid: 498ab517865845743bffa2dd088785fa, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: MapSelection
+    clip: {fileID: 8300000, guid: 5f1b0ecd313f3bc449a760af556691be, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: SpaceTravel
+    clip: {fileID: 8300000, guid: 8ee4eb7cb2fdf0d4f89e5570ab1c14c1, type: 3}
+    volume: 0.483
+    pitch: 1
+    loop: 1
+    source: {fileID: 0}
+  - name: DialogueBoop
+    clip: {fileID: 8300000, guid: cc44b7fadcc4b244eb97bfc64eee2398, type: 3}
+    volume: 0.266
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+--- !u!4 &711453387
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 711453385}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -190.34093, y: -131.11678, z: 59.476368}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &713546226
 GameObject:
@@ -27160,7 +27295,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04742962, y: 0.09677389, z: -0.06454191, w: 0.9920785}
+  m_LocalRotation: {x: 0.04742956, y: 0.09677384, z: -0.06454188, w: 0.9920785}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -34969,7 +35104,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857220183}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08343551, y: 0.0943655, z: -0.0680146, w: 0.9897008}
+  m_LocalRotation: {x: 0.083435506, y: 0.09436554, z: -0.06801462, w: 0.98970085}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -40377,6 +40512,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 711453387}
   - {fileID: 1109723508}
   - {fileID: 509979865}
   - {fileID: 1672859027}

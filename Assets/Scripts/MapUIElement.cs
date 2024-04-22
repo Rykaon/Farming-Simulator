@@ -28,6 +28,7 @@ public class MapUIElement : MonoBehaviour
     public Sprite shopSprite;
     public Sprite fightSprite;
     public Sprite randomSprite;
+    public Sprite bossSprite;
 
     public void Hover(bool value)
     {
@@ -51,6 +52,10 @@ public class MapUIElement : MonoBehaviour
         else if (mapEvent.eventType == MapEvent.EventType.Random)
         {
             eventImage.sprite = randomSprite;
+        }
+        else if (mapEvent.eventType == MapEvent.EventType.Boss)
+        {
+            eventImage.sprite = bossSprite;
         }
     }
 

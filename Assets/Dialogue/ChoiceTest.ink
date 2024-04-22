@@ -1,5 +1,6 @@
 INCLUDE globals.ink
-EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
+//EXTERNAL PlantSellBuy(PlantToBuy, PlantPrice, SellOrBuy)
+->main
 
 === main ===
 Bienvenue au magasin ! Qu'est-ce que je peux faire pour vous ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layout:left
@@ -39,7 +40,7 @@ Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layo
         {PlayerArgent > Price :
             ~ PlayerArgent = PlayerArgent-Price
             ~ nbExemplaire++
-            ~ PlantSellBuy(Name, Price, false)
+            //~ PlantSellBuy(Name, Price, false)
             Merci pour l'achat ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
             - else :
             T'as pas assez d'argent mon pote ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
@@ -48,7 +49,7 @@ Laquelle voulez-vous vendre ? #speaker:Le Gros Ratz #portrait:Le Gros Ratz #layo
        {nbExemplaire > 0 :
             ~ PlayerArgent = PlayerArgent+Price
             ~ nbExemplaire--
-            ~ PlantSellBuy(Name, Price, true)
+            //~ PlantSellBuy(Name, Price, true)
             C'est un plaisir de faire affaire avec vous ! ({Price}) #speaker:Le Gros Rat #portrait:GrosRat #layout:left
             - else :
             Mais ... t'as aucune {Name} ! #speaker:Le Gros Rat #portrait:GrosRat #layout:left
