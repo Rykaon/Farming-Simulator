@@ -40,7 +40,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI plantes;
     [SerializeField] private TextMeshProUGUI actions;
 
-
     public enum ControlState
     {
         Farm,
@@ -80,6 +79,7 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] private GameObject groundTilePrefab;
     [SerializeField] private GameObject unitPrefab;
+    [SerializeField] private GameObject bossPrefab;
     [HideInInspector] public GameObject plantPrefab = null;
     [HideInInspector] public GameObject objectPrefab = null;
     public PathNode playerNode;
@@ -287,7 +287,7 @@ public class PlayerManager : MonoBehaviour
             if (isBoss && i == 0)
             {
                 // Changer en instantiation d'un Boss
-                unit = Instantiate(unitPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
+                unit = Instantiate(bossPrefab, new Vector3(emptyNodes[randomIndex].x, 1, emptyNodes[randomIndex].y), Quaternion.identity);
             }
             else
             {
@@ -522,6 +522,8 @@ public class PlayerManager : MonoBehaviour
                 athFarm.SetActive(true);
                 athFight.SetActive(false);
                 mapGenerator.TakeReward();
+                AudioManager.instance.Stop("MusicFight");
+                AudioManager.instance.Play("MusicInterPhase");
                 yield break;
             }
             Debug.Log("Plant " + i + " turn End");

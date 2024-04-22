@@ -43,7 +43,7 @@ namespace Map
         [SerializeField] private GameObject worldToSpawn;
         [SerializeField] private GameObject shopToSpawn;
         [SerializeField] private GameObject endToSpawn;
-        
+        [SerializeField] private GameObject asteroids;
 
         [Header("Grid References")]
         private GridMap<PathNode> nodeGrid;
@@ -476,7 +476,10 @@ namespace Map
             vfx.SetActive(true);
             shader.SetActive(true);
             ShowHideUIMap(false);
+            asteroids.SetActive(false);
             timerUI.transform.parent.gameObject.SetActive(true);
+            AudioManager.instance.Stop("MusicInterPhase");
+            AudioManager.instance.Play("MusicFarming");
             fondu.DOFade(0f, 0.25f);
             manager.ChangeState(ControlState.Farm);
             manager.athFarm.SetActive(true);
@@ -521,10 +524,20 @@ namespace Map
             if (worldToSpawn != null)
             {
                 this.worldToSpawn = Instantiate(worldToSpawn);
+                asteroids.SetActive(true);
             }
             particleSystem.SetActive(false);
             vfx.SetActive(false);
             shader.SetActive(false);
+            AudioManager.instance.Stop("MusicFarming");
+            if(mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
+            {
+                AudioManager.instance.Play("MusicFight");
+            }
+            else
+            {
+                AudioManager.instance.Play("MusicInterPhase");
+            }
             fondu.DOFade(0f, 0.25f);
             timerUI.transform.parent.gameObject.SetActive(false);
             yield return new WaitForSecondsRealtime(0.5f);

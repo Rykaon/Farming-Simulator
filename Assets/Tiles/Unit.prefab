@@ -372,6 +372,10 @@ PrefabInstance:
       value: SoucoupeEnnemi (1)
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 945a47d615559494b9df53a4354c5511, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 945a47d615559494b9df53a4354c5511, type: 3}
       propertyPath: m_TagString
       value: Unit
       objectReference: {fileID: 0}
