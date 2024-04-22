@@ -28,8 +28,8 @@ Voulez-vous finir la partie ? #speaker:Narrateur #portrait:Narrateur #layout:lef
     -> END
     
 === debut ===
-Bonjour et bienvenue !
-Votre objectif est d'atteindre {NbrReward}$ d'ici la fin de votre voyage !
-N'oubliez pas d'acheter des plantes en cas de besoin pour vous défendre !
+Bonjour et bienvenue ! #speaker:Narrateur #portrait:Narrateur #layout:left
+Votre objectif est d'atteindre {NbrReward}$ d'ici la fin de votre voyage ! #speaker:Narrateur #portrait:Narrateur #layout:left
+N'oubliez pas d'acheter des plantes en cas de besoin pour vous défendre ! #speaker:Narrateur #portrait:Narrateur #layout:left
 Bonne chance !
 ->END

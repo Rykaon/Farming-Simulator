@@ -28,25 +28,25 @@ La personne s'approche de vous.  #speaker:Narrateur #portrait:Narrateur #layout:
                     {Nbr<PlayerArgent:
                         Je veux te voler de l'argent, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     - else :
-                        Je voulais te voler de l'argent, t'en a pas assez. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je voulais te voler {Nbr}$, t'en a pas assez. #speaker:Inconnu #portrait:ManOutside #layout:right
                     }
                 - "Attack":
                     {NbPlant1!=0:
-                        Je veux te voler une plante {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je veux te voler {Nbr} plantes {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     - else :
                         Je voulais te voler une plante {Reward} mais t'as rien ! #speaker:Inconnu #portrait:ManOutside #layout:right
                     }
                 - "Move" :
                     {NbPlant2!=0:
-                        Je veux te voler une plante {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je veux te voler {Nbr} plantes {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     - else :
-                        Je veux te voler de l'argent, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je veux te voler {Nbr}$, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     }
                 - "Boost" :
                     {NbPlant3!=0:
-                        Je veux te voler une plante {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je veux te voler {Nbr} plantes {Reward}, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     - else :
-                        Je veux te voler de l'argent, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
+                        Je veux te voler {Nbr}$, merci. #speaker:Inconnu #portrait:ManOutside #layout:right
                     }
                 }
                - else :
