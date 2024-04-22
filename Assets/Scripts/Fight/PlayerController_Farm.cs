@@ -288,6 +288,11 @@ public class PlayerController_Farm : MonoBehaviour
                 break;
 
             case PlayerManager.ActionState.Water:
+                isActive = false;
+                water.SetActive(true);
+                yield return new WaitForSecondsRealtime(0.7f);
+                water.SetActive(false);
+                isActive = true;
                 if (node != null)
                 {
                     if (!node.isVirtual)
@@ -304,6 +309,11 @@ public class PlayerController_Farm : MonoBehaviour
                                 StopCoroutine(node.tileManager.sunToDirt);
                             }
 
+                            node.tileManager.ChangeTileState(TileManager.TileState.WetDirt);
+                        }
+
+                        if (node.tileManager.tileState == TileManager.TileState.Dirt)
+                        {
                             node.tileManager.ChangeTileState(TileManager.TileState.WetDirt);
                         }
                     }

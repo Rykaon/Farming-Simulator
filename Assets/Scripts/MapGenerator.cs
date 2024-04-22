@@ -16,6 +16,7 @@ namespace Map
 {
     public class MapGenerator : MonoBehaviour
     {
+        [SerializeField] private TextAsset randomJSON;
         public GameObject particleSystem;
         public GameObject vfx;
         public GameObject shader;
@@ -464,25 +465,20 @@ namespace Map
 
         public IEnumerator StartEventBehavior(MapEvent mapEvent)
         {
+            PlayerController_Farm.instance.isActive = false;
+            fondu.DOFade(1f, 0.25f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            // Dispawn World
             particleSystem.SetActive(true);
             vfx.SetActive(true);
             shader.SetActive(true);
             ShowHideUIMap(false);
-            float elapsedTime = 0f;
-            worldToSpawn.transform.DOMove(dispawnPoint.position, travelArrivalTime).SetEase(startAnimCurve);
-
-            while (elapsedTime < travelArrivalTime)
-            {
-                elapsedTime += Time.deltaTime;
-            }
-
-            Destroy(worldToSpawn);
-
-            // SetUp la phase Farm en attendant l'event
+            fondu.DOFade(0f, 0.25f);
             manager.ChangeState(ControlState.Farm);
-
             manager.athFarm.SetActive(true);
             manager.athFight.SetActive(false);
+            PlayerController_Farm.instance.isActive = true;
+            yield return new WaitForSecondsRealtime(0.5f);
 
             // La Coroutine pour la phase Farm
             int thisMapEventIndex = Utilities.FindIndexInList(mapEvent.eventNode, currentNode.toNodes);
@@ -524,13 +520,16 @@ namespace Map
             int index = UnityEngine.Random.Range(0, worldToSpawnList.Count);
             worldToSpawn = Instantiate(worldToSpawnList[index], spawnPoint.position, Quaternion.identity);
 
-            elapsedTime = 0f;
-            worldToSpawn.transform.DOMove(stopPoint.position, travelArrivalTime).SetEase(endAnimCurve);
-
-            while (elapsedTime < travelArrivalTime)
-            {
-                elapsedTime += Time.deltaTime;
-            }
+            fondu.DOFade(1f, 0.25f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            PlayerController_Farm.instance.isActive = false;
+            // Dispawn World
+            particleSystem.SetActive(false);
+            vfx.SetActive(false);
+            shader.SetActive(false);
+            fondu.DOFade(0f, 0.25f);
+            yield return new WaitForSecondsRealtime(0.5f);
+            PlayerController_Farm.instance.isActive = true;
 
             // SetUp la phase de l'event selectionné
             if (mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
@@ -585,6 +584,8 @@ namespace Map
             else if (mapEvent.eventType == MapEvent.EventType.Random)
             {
                 manager.ChangeState(ControlState.World);
+                mapEvent.isEventCheck = true;
+                DialogueManager.instance.EnterDialogueMode(randomJSON);
             }
             else if (mapEvent.eventType == MapEvent.EventType.End)
             {
