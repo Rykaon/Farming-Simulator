@@ -789,7 +789,7 @@ public class PlayerManager : MonoBehaviour
                 virtualMouseManager.Disable(false);
             }*/
             
-            //SaveSystem.SavePlayerData();
+            saveSystem.SavePlayerData();
         }
 
         if (isPress)

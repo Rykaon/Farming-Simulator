@@ -63,13 +63,27 @@ public class UnitOrderUI : MonoBehaviour
         if (PC_Manager.entitiesList != null)
         {
             currentElements.SetEntity(0);
+            bool hasReset = false;
+            int index = 0;
 
             for (int i = 0; i < elements.Count; i++)
             {
                 if (i < PC_Manager.entitiesList.Count)
                 {
-
                     elements[i].SetEntity(i);
+                }
+                else
+                {
+                    if (!hasReset)
+                    {
+                        elements[i].SetEntity(0);
+                        index = i;
+                        hasReset = true;
+                    }
+                    else
+                    {
+                        elements[i].SetEntity(i - index);
+                    }
                 }
             }
 
