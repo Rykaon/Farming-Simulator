@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 using static Cinemachine.DocumentationSortingAttribute;
 using static Map.MapEvent;
 using static PlayerManager;
@@ -16,6 +16,10 @@ namespace Map
 {
     public class MapGenerator : MonoBehaviour
     {
+        public GameObject particleSystem;
+        public GameObject vfx;
+        public GameObject shader;
+        public Image fondu;
         [SerializeField] PlayerManager manager;
         public int mapWidth, mapHeight;
         public int minEvents, maxEvents;
@@ -39,7 +43,7 @@ namespace Map
         [SerializeField] private List<GameObject> shopToSpawn;
         [SerializeField] private List<GameObject> randomToSpawn;
         [SerializeField] private List<GameObject> endToSpawn;
-        public Image fondu;
+        
 
         [Header("Grid References")]
         private GridMap<PathNode> nodeGrid;
@@ -238,6 +242,10 @@ namespace Map
         public void ShowHideUIMap(bool value)
         {
             mapParent.SetActive(value);
+            if (value)
+            {
+                AudioManager.instance.Play("MapOpen");
+            }
             onMap = value;
         }
 
@@ -456,6 +464,9 @@ namespace Map
 
         public IEnumerator StartEventBehavior(MapEvent mapEvent)
         {
+            particleSystem.SetActive(true);
+            vfx.SetActive(true);
+            shader.SetActive(true);
             ShowHideUIMap(false);
             float elapsedTime = 0f;
             worldToSpawn.transform.DOMove(dispawnPoint.position, travelArrivalTime).SetEase(startAnimCurve);
