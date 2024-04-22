@@ -94,9 +94,6 @@ public class DialogueManager : MonoBehaviour
             if (canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count == 0)
             {
                 ContinueStory();
-            }else if(canContinueToNextLine && playerControls.UI.A.WasPressedThisFrame() && currentStory.currentChoices.Count >= 1)
-            {
-
             }
 
             if (playerControls.UI.B.WasPressedThisFrame())
