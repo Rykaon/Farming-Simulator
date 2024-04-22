@@ -117,7 +117,7 @@ public class DialogueManager : MonoBehaviour
 
         UpdateVariables();
 
-        if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Random)
+        /*if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Random)
         {
             currentStory.BindExternalFunction("StealGive", (string RewardType, int NbrReward, bool IsBonus) =>
             {
@@ -125,9 +125,9 @@ public class DialogueManager : MonoBehaviour
                 UpdateVariables();
             });
         }
-        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Shop)
+        else if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Start || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Shop)
         {
-            if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End)
+            if (PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.End || PC_Manager.mapGenerator.currentNode.mapEvent.eventType == Map.MapEvent.EventType.Start)
             {
                 currentStory.BindExternalFunction("CheckRun", () =>
                 {
@@ -141,7 +141,25 @@ public class DialogueManager : MonoBehaviour
                 inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
                 UpdateVariables();
             });
-        }
+        }*/
+
+        currentStory.BindExternalFunction("StealGive", (string RewardType, int NbrReward, bool IsBonus) =>
+        {
+            PC_Manager.mapGenerator.TakeReward();
+            UpdateVariables();
+        });
+
+        currentStory.BindExternalFunction("CheckRun", () =>
+        {
+            PC_Manager.mapGenerator.TakeReward();
+            UpdateVariables();
+        });
+
+        currentStory.BindExternalFunction("PlantSellBuy", (string PlantToBuy, int PlantPrice, bool SellOrBuy) =>
+        {
+            inventory.SellBuyItem(PlantToBuy, PlantPrice, SellOrBuy);
+            UpdateVariables();
+        });
 
         // Reset portrait, layout and speaker
         displayNameText.text = "???";
@@ -358,12 +376,12 @@ public class DialogueManager : MonoBehaviour
         if (enabled)
         {
             isActive = true;
-            PC_Manager.ChangeState(PlayerManager.ControlState.FarmUI);
+            PC_Manager.ChangeState(PlayerManager.ControlState.WorldUI);
         }
         else
         {
             isActive = false;
-            PC_Manager.ChangeState(PlayerManager.ControlState.Farm);
+            PC_Manager.ChangeState(PlayerManager.ControlState.World);
         }
     }
 }
