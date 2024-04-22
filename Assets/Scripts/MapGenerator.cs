@@ -219,6 +219,17 @@ namespace Map
                     temp.sizeDelta = new Vector2(Mathf.Sqrt((widthUnit * widthUnit) + ((absDiff * heightUnit) * (absDiff * heightUnit))), 10f);
                     temp.rotation = Quaternion.Euler(0, 0, -Mathf.Atan((diff * heightUnit) / widthUnit) * (180 / Mathf.PI));
                 }
+
+                mapUIElement.mapEvent.mapUIElement = mapUIElement;
+                mapUIElement.InitializeSprite();
+                if (mapUIElement.mapEvent.eventNode == currentNode)
+                {
+                    mapUIElement.UpdateSprite(true);
+                }
+                else
+                {
+                    mapUIElement.UpdateSprite(false);
+                }
             }
         }
 
@@ -475,7 +486,9 @@ namespace Map
                 yield return new WaitForEndOfFrame();
             }
 
+            currentNode.mapEvent.mapUIElement.UpdateSprite(false);
             currentNode = mapEvent.eventNode;
+            currentNode.mapEvent.mapUIElement.UpdateSprite(true);
             List<GameObject> worldToSpawnList = new List<GameObject>();
 
             if (mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
@@ -684,6 +697,7 @@ namespace Map
         public string rewardName;
         public PathNode eventNode;
         public bool isEventCheck;
+        public MapUIElement mapUIElement;
 
         // Fight values
         public int nbrUnits;
