@@ -1,5 +1,7 @@
 INCLUDE globals.ink
 EXTERNAL StealGive(RewardType, NbrReward, IsBonus)
+->main
+
 
 === main ===
 Vous entendez un bruit dehors. Une personne veut rentrer. #speaker:Narrateur #portrait:? #layout:left
@@ -7,19 +9,19 @@ Vous entendez un bruit dehors. Une personne veut rentrer. #speaker:Narrateur #po
 
 === event ===
     + [Le laisser rentrer]
-        -> letIn (RewardType, NbrReward, IsBonus)
+        -> letIn 
     + [Le laisser dehors]
         -> letOut
 
-=== letIn (Reward, Nbr, Bonus) ===
+=== letIn  ===
     Vous le laisser rentrer. #speaker:Narrateur #portrait:? #layout:left
     Hello ! #speaker:Random #portrait:?? #layout:right
-            + [Bonjour !]
-                ->DONE
-            + [Coucou !)]
-                ->DONE
-               
-    La personne s'approche de vous.  #speaker:Narrateur #portrait:? #layout:left
+            * [Bonjour !]
+            * [Coucou !]
+    --> monGrosBool(RewardType, NbrReward, IsBonus)
+
+=== monGrosBool (Reward, Nbr, Bonus)===
+La personne s'approche de vous.  #speaker:Narrateur #portrait:? #layout:left
             {Bonus == false :
                 {Reward: 
                 - "Gold":
@@ -52,8 +54,7 @@ Vous entendez un bruit dehors. Une personne veut rentrer. #speaker:Narrateur #po
             }
     ~ StealGive(Reward, Nbr, Bonus)
     -> END
-                
-
+    
 === letOut ===
 La personne continue de flotter dans l'espace et vous continuez votre route. #speaker:Narrateur #portrait:? #layout:left
             -> END

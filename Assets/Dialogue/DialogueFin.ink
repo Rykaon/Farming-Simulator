@@ -11,9 +11,9 @@ Voulez-vous finir la partie ? #speaker:Narrateur #portrait:? #layout:left
 === event ===
     + [Oui]
         Est-tu sûr ? Tu peux toujours passer au marchand pour avoir {NbrReward} $. #speaker:Narrateur #portrait:? #layout:left
-        + [Oui]
+        ++ [Oui]
             -> FinPartie
-        + [Non]
+        ++ [Non]
         -> END
     + [Non]
         -> END

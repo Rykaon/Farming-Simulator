@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 using static Cinemachine.DocumentationSortingAttribute;
 using static Map.MapEvent;
 using static PlayerManager;
@@ -38,6 +39,7 @@ namespace Map
         [SerializeField] private List<GameObject> shopToSpawn;
         [SerializeField] private List<GameObject> randomToSpawn;
         [SerializeField] private List<GameObject> endToSpawn;
+        public Image fondu;
 
         [Header("Grid References")]
         private GridMap<PathNode> nodeGrid;

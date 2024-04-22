@@ -6,6 +6,9 @@ using static PlayerManager;
 
 public class RandomTrigger : InteractionTrigger
 {
+    [Header("Ink JSON")]
+    [SerializeField] private TextAsset inkJSON;
+
     protected override void Awake()
     {
         base.Awake();
@@ -23,11 +26,12 @@ public class RandomTrigger : InteractionTrigger
             if (PC_Manager.controlState == PlayerManager.ControlState.World)
             {
                 visualCue.SetActive(true);
-                if (playerControls.Gamepad.A.IsPressed())
+                if (playerControls.Gamepad.A.WasPressedThisFrame())
                 {
                     if (!PC_Manager.mapGenerator.currentNode.mapEvent.isEventCheck)
                     {
                         PC_Manager.mapGenerator.currentNode.mapEvent.isEventCheck = true;
+                        DialogueManager.instance.EnterDialogueMode(inkJSON);
                         // Lancer le dialogue du randomEvent
 
                         // Il faudra appeler en fin de dialogue la fonction TakeReward du MapGenerator

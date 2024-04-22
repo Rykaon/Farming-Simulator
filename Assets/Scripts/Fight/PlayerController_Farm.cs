@@ -16,6 +16,7 @@ public class PlayerController_Farm : MonoBehaviour
     private PlayerControls playerControls;
     private Pathfinding pathfinding;
     public RadialMenu rm;
+    [SerializeField] GameObject water;
 
     [Header("Properties")]
     [SerializeField] float moveSpeed;
