@@ -3525,7 +3525,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 722398541}
+      - m_Target: {fileID: 1807526440}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -7318,7 +7318,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438863168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.065419555, y: 0.095587075, z: -0.0662869, w: 0.9910548}
+  m_LocalRotation: {x: 0.06541952, y: 0.09558701, z: -0.06628686, w: 0.9910547}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11429,7 +11429,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640862369}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3275902, y: 0.109812856, z: -0.038366456, w: 0.9376321}
+  m_LocalRotation: {x: 0.3275902, y: 0.10981279, z: -0.038366433, w: 0.937632}
   m_LocalPosition: {x: -1.6174548, y: 7.59695, z: -6.8105683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -16962,7 +16962,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914548008}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aa058fc197c8c234889d51b40b6f565e, type: 3}
   m_Name: 
@@ -16998,7 +16998,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 914548008}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bd0b64bb10ef4e47b4239ea813ea126, type: 3}
   m_Name: 
@@ -18899,7 +18899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1010745453
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21405,7 +21405,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 722398541}
+      - m_Target: {fileID: 1807526440}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -26009,7 +26009,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 722398541}
+      - m_Target: {fileID: 1807526440}
         m_TargetAssemblyTypeName: DialogueManager, Assembly-CSharp
         m_MethodName: MakeChoice
         m_Mode: 3
@@ -35104,7 +35104,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857220183}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.083435506, y: 0.09436554, z: -0.06801462, w: 0.98970085}
+  m_LocalRotation: {x: 0.08343548, y: 0.09436549, z: -0.06801459, w: 0.9897008}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
