@@ -305,7 +305,7 @@ public class VirtualMouseManager : MonoBehaviour
             {
                 if (result.gameObject.transform.childCount != 0)
                 {
-                    return result.gameObject.transform.parent.GetComponent<MapUIElement>();
+                    return result.gameObject.GetComponent<MapUIElement>();
                 }
                 else
                 {
