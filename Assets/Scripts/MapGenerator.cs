@@ -40,10 +40,8 @@ namespace Map
         [SerializeField] private float travelArrivalTime;
         [SerializeField] private Transform spawnPoint, dispawnPoint, stopPoint;
         [SerializeField] private GameObject worldToSpawn;
-        [SerializeField] private List<GameObject> fightToSpawn;
-        [SerializeField] private List<GameObject> shopToSpawn;
-        [SerializeField] private List<GameObject> randomToSpawn;
-        [SerializeField] private List<GameObject> endToSpawn;
+        [SerializeField] private GameObject shopToSpawn;
+        [SerializeField] private GameObject endToSpawn;
         
 
         [Header("Grid References")]
@@ -468,7 +466,11 @@ namespace Map
             PlayerController_Farm.instance.isActive = false;
             fondu.DOFade(1f, 0.25f);
             yield return new WaitForSecondsRealtime(0.5f);
-            // Dispawn World
+            if (this.worldToSpawn != null)
+            {
+                Destroy(this.worldToSpawn);
+                this.worldToSpawn = null;
+            }
             particleSystem.SetActive(true);
             vfx.SetActive(true);
             shader.SetActive(true);
@@ -498,32 +500,24 @@ namespace Map
             currentNode.mapEvent.mapUIElement.UpdateSprite(false);
             currentNode = mapEvent.eventNode;
             currentNode.mapEvent.mapUIElement.UpdateSprite(true);
-            List<GameObject> worldToSpawnList = new List<GameObject>();
 
-            if (mapEvent.eventType == MapEvent.EventType.Boss || mapEvent.eventType == MapEvent.EventType.Fight)
+            GameObject worldToSpawn = null;
+            if (mapEvent.eventType == MapEvent.EventType.End || mapEvent.eventType == MapEvent.EventType.Start)
             {
-                worldToSpawnList = fightToSpawn;
+                worldToSpawn = null;
             }
             else if (mapEvent.eventType == MapEvent.EventType.Shop)
             {
-                worldToSpawnList = shopToSpawn;
+                worldToSpawn = shopToSpawn;
             }
-            else if (mapEvent.eventType == MapEvent.EventType.Random)
-            {
-                worldToSpawnList = randomToSpawn;
-            }
-            else if (mapEvent.eventType == MapEvent.EventType.End)
-            {
-                worldToSpawnList = endToSpawn;
-            }
-
-            int index = UnityEngine.Random.Range(0, worldToSpawnList.Count);
-            worldToSpawn = Instantiate(worldToSpawnList[index], spawnPoint.position, Quaternion.identity);
 
             fondu.DOFade(1f, 0.25f);
             yield return new WaitForSecondsRealtime(0.5f);
             PlayerController_Farm.instance.isActive = false;
-            // Dispawn World
+            if (worldToSpawn != null)
+            {
+                this.worldToSpawn = Instantiate(worldToSpawn);
+            }
             particleSystem.SetActive(false);
             vfx.SetActive(false);
             shader.SetActive(false);

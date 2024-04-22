@@ -395,6 +395,7 @@ public class VirtualMouseManager : MonoBehaviour
                         if (currentMapUIElement.mapEvent.eventNode.x - playerManager.mapGenerator.currentNode.x == 1)
                         {
                             currentMapUIElement.Select();
+                            AudioManager.instance.Play("MapSelection");
                         }
                     }
                 }
