@@ -19590,25 +19590,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sounds:
   - name: MusicInterPhase
-    clip: {fileID: 8300000, guid: b899075e58671ba44a5e37cc11523749, type: 3}
+    clip: {fileID: 8300000, guid: 9a5cb5bdf7817344eac06bfcb65dbaf2, type: 3}
     volume: 0.483
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: MusicFarming
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 0996c75df46d69447b0c631065949cdd, type: 3}
     volume: 0.483
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: MusicFight
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 13464d7b014f5304d9c3577b08a64223, type: 3}
     volume: 0.483
     pitch: 1
     loop: 1
     source: {fileID: 0}
   - name: AlienEat
-    clip: {fileID: 0}
+    clip: {fileID: 8300000, guid: 319067f4dcf48984cad9d8d12e4d73c8, type: 3}
     volume: 0.483
     pitch: 1
     loop: 0
@@ -26114,7 +26114,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.047753744, y: 0.0000000034856025, z: -0.000000002324671, w: 0.9988591}
+  m_LocalRotation: {x: 0.047753744, y: -0.000000025143994, z: 0.000000016769414, w: 0.9988591}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
