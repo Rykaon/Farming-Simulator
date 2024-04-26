@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using Ink.Parsed;
 using Story = Ink.Runtime.Story;
 using Choice = Ink.Runtime.Choice;
-using Ink.UnityIntegration;
+//using Ink.UnityIntegration;
 using System.Linq.Expressions;
 
 public class DialogueManager : MonoBehaviour
@@ -16,7 +16,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private float typingSpeed = 0.04f;
 
     [Header("Globals Ink File")]
-    [SerializeField] private InkFile globalsInkFile;
+    [SerializeField] private TextAsset globalsInkFile;
 
     [Header("Dialogue UI")]
     [SerializeField] private GameObject dialoguePanel;
@@ -60,7 +60,7 @@ public class DialogueManager : MonoBehaviour
 
         instance = this;
 
-        dialogueVariables= new DialogueVariables(globalsInkFile.filePath);
+        dialogueVariables= new DialogueVariables(globalsInkFile);
     }
 
     public static DialogueManager GetInstance()

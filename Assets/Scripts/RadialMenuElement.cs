@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using static MenuAction;
-using UnityEditor.Experimental.GraphView;
 
 public class RadialMenuElement : MonoBehaviour {
     public enum ActionType

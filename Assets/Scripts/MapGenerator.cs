@@ -1,6 +1,4 @@
 using DG.Tweening;
-using JetBrains.Annotations;
-using Palmmedia.ReportGenerator.Core;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,8 +7,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static Cinemachine.DocumentationSortingAttribute;
-using static Map.MapEvent;
 using static PlayerManager;
 
 namespace Map

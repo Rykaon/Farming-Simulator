@@ -3022,6 +3022,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 808754733}
     m_Modifications:
+    - target: {fileID: 2860758865297131892, guid: 7d817163d0a46214a89b5e9a6ca0225f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3642500697617313655, guid: 7d817163d0a46214a89b5e9a6ca0225f, type: 3}
       propertyPath: m_Name
       value: cascade1
@@ -3029,6 +3033,10 @@ PrefabInstance:
     - target: {fileID: 3642500697617313655, guid: 7d817163d0a46214a89b5e9a6ca0225f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5790404455567639771, guid: 7d817163d0a46214a89b5e9a6ca0225f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5842496126207141755, guid: 7d817163d0a46214a89b5e9a6ca0225f, type: 3}
       propertyPath: m_LocalScale.x
@@ -7229,7 +7237,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 438863168}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.065419555, y: 0.09558706, z: -0.06628689, w: 0.9910548}
+  m_LocalRotation: {x: 0.06541952, y: 0.09558701, z: -0.06628686, w: 0.9910547}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11413,7 +11421,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640862369}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3275902, y: 0.10981285, z: -0.03836645, w: 0.9376321}
+  m_LocalRotation: {x: 0.3275902, y: 0.10981279, z: -0.038366433, w: 0.937632}
   m_LocalPosition: {x: -1.6174548, y: 7.59695, z: -6.8105683}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -26269,7 +26277,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1434603768}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.04742956, y: 0.09677384, z: -0.06454188, w: 0.9920785}
+  m_LocalRotation: {x: 0.04742959, y: 0.09677386, z: -0.0645419, w: 0.9920785}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33185,18 +33193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   typingSpeed: 0.04
-  globalsInkFile:
-    inkAsset: {fileID: 102900000, guid: 41756462ddfebe243972f5d9bbf10aae, type: 3}
-    jsonAssetDirectory: {fileID: 0}
-    jsonAsset: {fileID: 0}
-    unhandledCompileErrors: []
-    recursiveIncludeErrorPaths: []
-    errors: []
-    warnings: []
-    todos: []
-    masterInkAssets: []
-    localIncludePaths: []
-    includes: []
+  globalsInkFile: {fileID: 4900000, guid: 4acf1548d6406d24882426beb4b9a057, type: 3}
   dialoguePanel: {fileID: 1010745452}
   dialogueText: {fileID: 1897448305}
   displayNameText: {fileID: 80384627}
@@ -34569,7 +34566,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857220183}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.08343545, y: 0.09436549, z: -0.068014584, w: 0.9897008}
+  m_LocalRotation: {x: 0.08343551, y: 0.0943655, z: -0.0680146, w: 0.9897008}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

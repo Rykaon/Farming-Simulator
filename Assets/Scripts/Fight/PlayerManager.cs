@@ -6,7 +6,6 @@ using System.Linq;
 using static Cinemachine.DocumentationSortingAttribute;
 using UnityEngine.InputSystem;
 using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using Map;
 using System.IO;
 
@@ -528,6 +527,7 @@ public class PlayerManager : MonoBehaviour
 
             if (CheckWinCondition())
             {
+                SetCameraTarget(transform, transform);
                 fightOrderUI.gameObject.SetActive(false);
                 foreach (GameObject unit in unitList)
                 {
@@ -572,6 +572,7 @@ public class PlayerManager : MonoBehaviour
 
             if (CheckLooseCondition())
             {
+                SetCameraTarget(transform, transform);
                 foreach (GameObject unit in unitList)
                 {
                     unit.GetComponent<UnitManager>().unitNode.isContainingUnit = false;
